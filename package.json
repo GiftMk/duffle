@@ -1,0 +1,20 @@
+{
+	"name": "duffle",
+	"module": "index.ts",
+	"type": "module",
+	"private": true,
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"lint:unsafe": "biome lint --write --unsafe",
+		"check": "biome check --write"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.3.10",
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
+}
