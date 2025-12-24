@@ -7,7 +7,8 @@
     "packages/*"
   ],
   "scripts": {
-    "check": "biome lint --write --unsafe && biome check --write"
+    "check": "biome lint --write --unsafe && biome check --write",
+    "dev": "bun -F app dev"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.10",

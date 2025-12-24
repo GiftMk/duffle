@@ -1,8 +1,10 @@
-import { FC } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { TaskCard } from "./task-card";
 import { eq, useLiveQuery } from "@tanstack/react-db";
+import { FC } from "react";
 import { columnCollection } from "@/state/collections";
+import { TaskCard } from "./task-card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Droppable } from "@hello-pangea/dnd";
+import { cn } from "@/lib/utils";
 
 type ColumnCardProps = {
   id: string;
@@ -26,10 +28,24 @@ export const ColumnCard: FC<ColumnCardProps> = ({ id }) => {
       <CardHeader>
         <CardTitle>{column.title}</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-6">
-        {column.tasks.map((id) => (
-          <TaskCard key={id} id={id} />
-        ))}
+      <CardContent>
+        <Droppable droppableId={id}>
+          {(provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className={cn("flex h-full w-full flex-col p-4", {
+                "-outline-offset-8 outline-dashed outline-2 outline-stone-100":
+                  snapshot.isDraggingOver,
+              })}
+            >
+              {column?.tasks.map((id, i) => (
+                <TaskCard key={id} id={id} index={i} />
+              ))}
+              <div>{provided.placeholder}</div>
+            </div>
+          )}
+        </Droppable>
       </CardContent>
     </Card>
   );
