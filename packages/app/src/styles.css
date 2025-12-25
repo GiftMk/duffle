@@ -3,6 +3,10 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/inter";
 
+@theme {
+	--breakpoint-3xl: 120rem;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {

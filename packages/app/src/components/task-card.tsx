@@ -1,6 +1,6 @@
 import { Draggable } from '@hello-pangea/dnd'
 import { eq, useLiveQuery } from '@tanstack/react-db'
-import { FC } from 'react'
+import type { FC } from 'react'
 import { cn } from '@/lib/utils'
 import { taskCollection } from '@/state/collections'
 import { Badge } from './ui/badge'
@@ -35,17 +35,19 @@ export const TaskCard: FC<TaskCardProps> = ({ id, index, className }) => {
 		<Draggable draggableId={id} index={index}>
 			{(provided) => (
 				<Card
-					className={cn('w-full', className)}
+					className={cn('w-full cursor-grab shadow-xs', className)}
 					ref={provided.innerRef}
 					{...provided.draggableProps}
 					{...provided.dragHandleProps}
 				>
 					<CardHeader>
 						<CardTitle className='capitalize'>{task.title}</CardTitle>
-						<CardDescription>{task.description}</CardDescription>
+						<CardDescription className='truncate'>
+							{task.description}
+						</CardDescription>
 					</CardHeader>
 					<CardFooter className='justify-between border-0'>
-						<Badge className='text-xs bg-muted-foreground'>{task.code}</Badge>
+						<Badge className='bg-muted-foreground text-xs'>{task.code}</Badge>
 					</CardFooter>
 				</Card>
 			)}

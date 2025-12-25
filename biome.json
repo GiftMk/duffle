@@ -18,7 +18,7 @@
 		}
 	},
 	"linter": {
-		"includes": ["*", "!**/components/ui/**"],
+		"includes": ["**", "!**/components/ui/**", "!**/routeTree.gen.ts"],
 		"enabled": true,
 		"rules": {
 			"recommended": true,

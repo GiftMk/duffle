@@ -1,9 +1,6 @@
-import { Droppable } from '@hello-pangea/dnd'
 import { eq, useLiveQuery } from '@tanstack/react-db'
-import { FC } from 'react'
-import { cn } from '@/lib/utils'
+import type { FC } from 'react'
 import { columnCollection } from '@/state/collections'
-import { TaskCard } from './task-card'
 import { TaskList } from './task-list'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 
@@ -25,7 +22,7 @@ export const ColumnCard: FC<ColumnCardProps> = ({ id }) => {
 	}
 
 	return (
-		<Card className='w-full max-w-1/6 h-full bg-transparent ring-0 border-dashed'>
+		<Card className='h-full w-[384px] shrink-0 border-dashed bg-background ring-0'>
 			<CardHeader>
 				<CardTitle>{column.title}</CardTitle>
 			</CardHeader>

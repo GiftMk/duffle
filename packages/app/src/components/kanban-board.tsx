@@ -1,6 +1,6 @@
-import { DragDropContext, DropResult } from '@hello-pangea/dnd'
+import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 import { eq, useLiveQuery } from '@tanstack/react-db'
-import { FC } from 'react'
+import type { FC } from 'react'
 import { moveTasks } from '@/lib/dnd'
 import { boardCollection } from '@/state/collections'
 import { ColumnCard } from './column-card'
@@ -41,9 +41,9 @@ export const KanbanBoard: FC<KanbanProps> = ({ id }) => {
 
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>
-			<div className='w-full overflow-x-auto h-full items-start justify-center flex gap-2'>
+			<div className='mx-auto flex h-full w-fit items-start gap-2 overflow-x-auto p-8'>
 				{board.columns.map((id) => (
-					<ColumnCard id={id} />
+					<ColumnCard key={id} id={id} />
 				))}
 			</div>
 		</DragDropContext>

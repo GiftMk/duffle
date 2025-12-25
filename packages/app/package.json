@@ -6,7 +6,8 @@
 		"dev": "vite dev --port 3000",
 		"build": "vite build",
 		"preview": "vite preview",
-		"test": "vitest run"
+		"test": "vitest run",
+		"tidy": "biome lint . --write --unsafe && biome check . --write"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.0.0",

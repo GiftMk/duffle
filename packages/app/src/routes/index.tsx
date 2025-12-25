@@ -6,10 +6,12 @@ export const App = () => {
 	useSampleData()
 
 	return (
-		<main className='w-full h-full flex justify-center p-8'>
+		<main className='flex h-full w-full justify-center'>
+			{/** biome-ignore lint/style/noNonNullAssertion: dont care right now */}
+			{/** biome-ignore lint/suspicious/noNonNullAssertedOptionalChain: no. care */}
 			<KanbanBoard id={boards[0]?.id!} />
 		</main>
 	)
 }
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute('/')({ component: App, ssr: false })

@@ -1,5 +1,5 @@
 import { Droppable } from '@hello-pangea/dnd'
-import { FC } from 'react'
+import type { FC } from 'react'
 import { cn } from '@/lib/utils'
 import { TaskCard } from './task-card'
 
@@ -18,7 +18,7 @@ export const TaskList: FC<TaskListProps> = ({ columnId, taskIds }) => {
 					className={cn(
 						'flex h-full w-full flex-col transition-all duration-100',
 						{
-							'outline-offset-8 outline-dashed outline-2 outline-foreground-muted':
+							'outline-dashed outline-2 outline-foreground-muted outline-offset-8':
 								snapshot.isDraggingOver,
 						},
 					)}

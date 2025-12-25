@@ -1,6 +1,8 @@
+/** biome-ignore-all lint/style/noNonNullAssertion: sample data, dont care */
+/** biome-ignore-all lint/suspicious/noNonNullAssertedOptionalChain: sample data, dont care */
 import { useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import { Board, Column, Task } from '@/models'
+import type { Board, Column, Task } from '@/models'
 import {
 	boardCollection,
 	columnCollection,

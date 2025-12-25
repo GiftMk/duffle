@@ -7,7 +7,7 @@
 		"packages/*"
 	],
 	"scripts": {
-		"check": "biome lint --write --unsafe && biome check --write",
+		"tidy": "bun -F app --if-present tidy",
 		"dev": "bun -F app dev"
 	},
 	"devDependencies": {
