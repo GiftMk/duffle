@@ -26,7 +26,7 @@ export const ColumnCard: FC<ColumnCardProps> = ({ id }) => {
 			<CardHeader>
 				<CardTitle>{column.title}</CardTitle>
 			</CardHeader>
-			<CardContent>
+			<CardContent className='h-full'>
 				<TaskList columnId={id} taskIds={column.tasks} />
 			</CardContent>
 		</Card>

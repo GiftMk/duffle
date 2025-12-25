@@ -6,6 +6,7 @@
 		"useIgnoreFile": true
 	},
 	"files": {
+		"includes": ["**", "!**/components/ui", "!**/routeTree.gen.ts"],
 		"ignoreUnknown": false
 	},
 	"formatter": {
@@ -18,7 +19,6 @@
 		}
 	},
 	"linter": {
-		"includes": ["**", "!**/components/ui/**", "!**/routeTree.gen.ts"],
 		"enabled": true,
 		"rules": {
 			"recommended": true,
