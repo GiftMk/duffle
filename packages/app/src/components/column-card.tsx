@@ -24,7 +24,9 @@ export const ColumnCard: FC<ColumnCardProps> = ({ id }) => {
 	return (
 		<Card className='h-full w-[384px] shrink-0 border-dashed bg-background ring-0'>
 			<CardHeader>
-				<CardTitle>{column.title}</CardTitle>
+				<CardTitle className='text-muted-foreground font-semibold'>
+					{column.title}
+				</CardTitle>
 			</CardHeader>
 			<CardContent className='h-full'>
 				<TaskList columnId={id} taskIds={column.tasks} />
