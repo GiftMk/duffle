@@ -1,0 +1,22 @@
+import { Milkdown, MilkdownProvider } from '@milkdown/react'
+import type { Note } from '../types/note'
+import './markdown-editor.css'
+import { useFormattedPaste } from './hooks/use-formatted-paste'
+import { useMarkdownEditor } from './hooks/use-markdown-editor'
+
+const MarkdownContainer = ({ content }: { content: string }) => {
+	const { ref } = useMarkdownEditor(content)
+	useFormattedPaste(ref)
+
+	return <Milkdown />
+}
+
+export const MarkdownEditor = ({ note }: { note: Note }) => {
+	return (
+		<div className='h-full w-full max-w-xl'>
+			<MilkdownProvider key={note.id}>
+				<MarkdownContainer content={note.content} />
+			</MilkdownProvider>
+		</div>
+	)
+}

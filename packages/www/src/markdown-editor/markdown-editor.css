@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+.milkdown * {
+	outline: none;
+}
+
+.milkdown .ProseMirror {
+	font-family: var(--font-default);
+	font-family: var(--font-default);
+	font-size: var(--text-base);
+	line-height: var(--leading-normal);
+	color: var(--color-typography);
+	caret-color: var(--color-primary);
+}
+
+.milkdown .ProseMirror h1 {
+	font-size: var(--text-3xl);
+	font-weight: var(--font-weight-medium);
+	line-height: calc(var(--spacing) * 12);
+	border-bottom: solid var(--color-border);
+	margin-top: calc(var(--spacing) * 16);
+	margin-bottom: calc(var(--spacing) * 6);
+	padding-bottom: calc(var(--spacing) * 6);
+}
+
+.milkdown .ProseMirror h2,
+h3,
+h4 {
+	line-height: calc(var(--spacing) * 6);
+	margin-top: calc(var(--spacing) * 10);
+	margin-bottom: calc(var(--spacing) * 5);
+	font-weight: var(--font-weight-semibold);
+}
+
+.milkdown .ProseMirror h2 {
+	font-size: var(--text-2xl);
+}
+
+.milkdown .ProseMirror h3 {
+	font-size: var(--text-xl);
+}
+
+.milkdown .ProseMirror h4 {
+	font-size: var(--text-lg);
+}
+
+.milkdown .ProseMirror h5,
+h6 {
+	line-height: calc(var(--spacing) * 6);
+	margin-top: calc(var(--spacing) * 8);
+	margin-bottom: calc(var(--spacing) * 3);
+	font-weight: var(--font-weight-semibold);
+}
+
+.milkdown .ProseMirror h6 {
+	color: var(--color-typography-light);
+}

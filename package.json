@@ -1,0 +1,24 @@
+{
+	"name": "duffle",
+	"module": "index.ts",
+	"type": "module",
+	"private": true,
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"dev": "bun --filter ./packages/app dev",
+		"tidy": "biome check --write --unsafe ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.4",
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"@tailwindcss/vite": "^4.2.2",
+		"tailwindcss": "^4.2.2"
+	}
+}
