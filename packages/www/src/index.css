@@ -6,10 +6,10 @@
 }
 
 @theme {
-	--color-background: #f3f2ee;
+	--color-background: oklch(96.08% 0.0054 95.1);
 	--color-typography: oklch(17.63% 0.039 21.78);
 	--color-typography-light: oklch(57.63% 0.039 21.78);
-	--color-border: #c5c5c5;
+	--color-border: oklch(0.8234 0 0);
 	--color-primary: oklch(0.61 0.14 39);
 }
 
