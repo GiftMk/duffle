@@ -1,18 +1,5 @@
 @import "tailwindcss";
 
-.milkdown * {
-	outline: none;
-}
-
-.milkdown .ProseMirror {
-	font-family: var(--font-default);
-	font-family: var(--font-default);
-	font-size: var(--text-base);
-	line-height: var(--leading-normal);
-	color: var(--color-typography);
-	caret-color: var(--color-primary);
-}
-
 .milkdown .ProseMirror h1,
 h2 {
 	font-weight: var(--font-weight-medium);

@@ -1,8 +1,10 @@
 import { Milkdown, MilkdownProvider } from '@milkdown/react'
 import type { Note } from '../types/note'
-import './markdown-editor.css'
 import { useFormattedPaste } from './hooks/use-formatted-paste'
 import { useMarkdownEditor } from './hooks/use-markdown-editor'
+import './css/base.css'
+import './css/headings.css'
+import './css/lists.css'
 
 const MarkdownContainer = ({ content }: { content: string }) => {
 	const { ref } = useMarkdownEditor(content)
