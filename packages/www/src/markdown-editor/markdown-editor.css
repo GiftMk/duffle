@@ -21,7 +21,7 @@ h2 {
 .milkdown .ProseMirror h1 {
 	font-size: var(--text-3xl);
 	line-height: calc(var(--spacing) * 12);
-	border-bottom: solid var(--color-border);
+	border-bottom: 1px solid var(--color-border);
 	margin-top: calc(var(--spacing) * 11);
 	margin-bottom: calc(var(--spacing) * 6);
 	padding-bottom: calc(var(--spacing) * 6);
