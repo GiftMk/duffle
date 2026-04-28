@@ -9,6 +9,7 @@
 	],
 	"scripts": {
 		"dev": "concurrently -c \"blue,magenta\" -n \"API,WWW\" \"bun --filter ./apps/api dev\" \"bun --filter ./apps/www dev\"",
+		"db": "psql -d duffle",
 		"tidy": "biome check --write --unsafe ."
 	},
 	"devDependencies": {
