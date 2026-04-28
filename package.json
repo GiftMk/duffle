@@ -4,15 +4,17 @@
 	"type": "module",
 	"private": true,
 	"workspaces": [
+		"apps/*",
 		"packages/*"
 	],
 	"scripts": {
-		"dev": "bun --filter ./packages/app dev",
+		"dev": "concurrently -c \"blue,magenta\" -n \"API,WWW\" \"bun --filter ./apps/api dev\" \"bun --filter ./apps/www dev\"",
 		"tidy": "biome check --write --unsafe ."
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.4",
-		"@types/bun": "latest"
+		"@types/bun": "latest",
+		"concurrently": "^9.2.1"
 	},
 	"peerDependencies": {
 		"typescript": "^5"
