@@ -5,8 +5,8 @@
 }
 
 .milkdown .ProseMirror {
-	font-family: var(--font-default);
-	font-family: var(--font-default);
+	font-family: var(--font-sans);
+	font-family: var(--font-sans);
 	font-size: var(--text-base);
 	line-height: var(--leading-normal);
 	color: var(--color-typography);

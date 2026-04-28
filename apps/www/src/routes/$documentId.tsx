@@ -2,7 +2,7 @@ import { createFileRoute, notFound } from '@tanstack/react-router'
 import { getDocument } from '../lib/api'
 import { MarkdownEditor } from '../markdown-editor'
 
-export const Route = createFileRoute('/edit/$documentId')({
+export const Route = createFileRoute('/$documentId')({
 	component: RouteComponent,
 	loader: async ({ params }) => {
 		const { data } = await getDocument(params.documentId)

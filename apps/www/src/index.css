@@ -2,15 +2,18 @@
 @import "tailwindcss";
 
 :root {
-	--font-default: "Avenir Next", -apple-system, BlinkMacSystemFont, sans-serif;
+	--font-sans: "Avenir Next", -apple-system, BlinkMacSystemFont, sans-serif;
+	--font-serif: "Lora";
 }
 
 @theme {
 	--color-background: oklch(96.08% 0.0054 95.1);
-	--color-typography: oklch(17.63% 0.039 21.78);
+	--color-typography: oklch(11.63% 0.039 21.78);
 	--color-typography-light: oklch(57.63% 0.039 21.78);
+	--color-typography-white: oklch(99.63% 0.039 21.78);
 	--color-border: oklch(0.8234 0 0);
 	--color-primary: oklch(0.61 0.14 39);
+	--color-primary-hover: oklch(0.57 0.14 39);
 }
 
 html {
@@ -19,7 +22,7 @@ html {
 }
 
 body {
-	min-height: 100%;
+	height: 100%;
 }
 
 #root {
