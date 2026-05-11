@@ -1,20 +1,13 @@
-import { type Editor, editorViewCtx, parserCtx } from '@milkdown/kit/core'
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
-export const formatOnPaste = (editor: Editor, e: ClipboardEvent) => {
-	const text = e.clipboardData?.getData('text/plain')
-	if (!text) {
-		return
-	}
+export const cn = (...inputs: ClassValue[]) => {
+	return twMerge(clsx(inputs))
+}
 
-	e.preventDefault()
-	e.stopPropagation()
+export const randInt = (min: number, max: number) => {
+	const maxFloor = Math.floor(max)
+	const minCeil = Math.ceil(min)
 
-	editor.action((ctx) => {
-		const parser = ctx.get(parserCtx)
-		const view = ctx.get(editorViewCtx)
-		const doc = parser(text)
-		const { state, dispatch } = view
-		const tr = state.tr.replaceSelectionWith(doc)
-		dispatch(tr)
-	})
+	return Math.floor(Math.random() * (maxFloor - minCeil + 1) + minCeil)
 }

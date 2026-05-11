@@ -1,7 +1,9 @@
 import { ArrowFatRightIcon } from '@phosphor-icons/react/dist/ssr'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
+import { uuidv7 } from 'uuidv7'
+import { documentCollection } from '../lib/collections'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,
@@ -19,7 +21,7 @@ const Heading = () => (
 
 const SubHeading = () => (
 	<TypeAnimation
-		className='text-2xl'
+		className='text-pretty text-2xl'
 		sequence={[
 			1000,
 			'A happy place for your writing.',
@@ -39,6 +41,20 @@ const SubHeading = () => (
 )
 
 const ActionButton = () => {
+	const navigate = useNavigate()
+
+	const handleClick = async () => {
+		const id = uuidv7()
+
+		documentCollection.insert({
+			id,
+			markdown: '# ',
+			createdAt: new Date().toISOString(),
+		})
+
+		navigate({ to: '/docs/$documentId', params: { documentId: id } })
+	}
+
 	return (
 		<motion.div
 			initial={{ opacity: 0, scale: 0.8, y: -300 }}
@@ -47,7 +63,8 @@ const ActionButton = () => {
 		>
 			<button
 				type='button'
-				className='rounded-sm border border-primary px-5 py-2 font-sans text-primary transition-all duration-200 hover:scale-110 hover:bg-primary/10'
+				onClick={handleClick}
+				className='rounded-sm border border-primary px-5 py-2 text-primary transition-all duration-200 hover:scale-110 hover:bg-primary/10'
 			>
 				<ArrowFatRightIcon
 					size={22}
@@ -61,7 +78,7 @@ const ActionButton = () => {
 
 function RouteComponent() {
 	return (
-		<main className='flex h-5/6 w-full flex-col items-center justify-center gap-12 text-center font-serif text-typography'>
+		<main className='flex h-5/6 w-full flex-col items-center justify-center gap-12 text-center text-typography'>
 			<Heading />
 			<SubHeading />
 			<ActionButton />

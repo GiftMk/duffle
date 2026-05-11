@@ -1,23 +1,35 @@
+import type { App } from '@duffle/api'
 import { edenFetch } from '@elysia/eden/fetch'
-import type { App } from 'api'
+import { env } from '../environment'
 
-export const fetch = edenFetch<App>(import.meta.env.VITE_API_URL ?? '')
+export const fetch = edenFetch<App>(env.VITE_API_URL)
 
-export const createDocument = (markdown: string) => {
+export const createDocument = (
+	id: string,
+	markdown: string,
+	createdAt: string,
+) => {
 	return fetch('/api/documents/create', {
 		method: 'POST',
 		body: {
+			id,
 			markdown,
+			createdAt,
 		},
 	})
 }
 
-export const updateDocument = (id: string, markdown: string) => {
+export const updateDocument = (
+	id: string,
+	markdown: string,
+	updatedAt: string,
+) => {
 	return fetch('/api/documents/update', {
 		method: 'PUT',
 		body: {
 			id,
 			markdown,
+			updatedAt,
 		},
 	})
 }
@@ -36,6 +48,15 @@ export const getDocuments = (q?: string) => {
 		method: 'GET',
 		query: {
 			q,
+		},
+	})
+}
+
+export const deleteDocument = (id: string) => {
+	return fetch('/api/documents/:id', {
+		method: 'DELETE',
+		params: {
+			id,
 		},
 	})
 }

@@ -1,0 +1,125 @@
+@import "tailwindcss";
+@import "./code-mirror.css";
+
+.milkdown * {
+	outline: none;
+}
+
+.milkdown .ProseMirror {
+	font-family: var(--font-sans);
+	font-family: var(--font-sans);
+	font-size: var(--text-base);
+	line-height: var(--leading-normal);
+	color: var(--color-typography);
+	caret-color: var(--color-primary);
+}
+
+.milkdown .ProseMirror > *:first-child {
+	margin-top: 0;
+}
+
+.milkdown .ProseMirror .heading-active {
+	position: relative;
+}
+
+.milkdown .ProseMirror .heading-active::before {
+	content: attr(data-heading-level);
+	position: absolute;
+	left: calc(var(--spacing) * -8);
+	top: 50%;
+	color: var(--color-typography-light);
+	opacity: 0.6;
+	transform: translateY(-50%);
+	font-size: var(--text-sm);
+	font-weight: var(--font-weight-bold);
+	pointer-events: none;
+	user-select: none;
+}
+
+.milkdown .ProseMirror h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--font-sans);
+	font-weight: var(--font-weight-bold);
+}
+
+.milkdown .ProseMirror h1 {
+	font-size: var(--text-3xl);
+	line-height: calc(var(--spacing) * 10);
+	margin-top: calc(var(--spacing) * 5);
+	margin-bottom: calc(var(--spacing) * 4);
+}
+
+.milkdown .ProseMirror h2,
+h3,
+h4 {
+	line-height: calc(var(--spacing) * 6);
+}
+
+.milkdown .ProseMirror h2 {
+	font-size: var(--text-2xl);
+	margin-top: calc(var(--spacing) * 5);
+	margin-bottom: calc(var(--spacing) * 4);
+}
+
+.milkdown .ProseMirror h3 {
+	margin-top: calc(var(--spacing) * 5);
+	margin-bottom: calc(var(--spacing) * 3);
+}
+
+.milkdown .ProseMirror h3 {
+	font-size: var(--text-xl);
+}
+
+.milkdown .ProseMirror h4 {
+	margin-top: calc(var(--spacing) * 4);
+	margin-bottom: calc(var(--spacing) * 2);
+	font-size: var(--text-lg);
+}
+
+.milkdown .ProseMirror h5,
+h6 {
+	line-height: calc(var(--spacing) * 6);
+	margin-top: calc(var(--spacing) * 2);
+	margin-bottom: calc(var(--spacing) * 1);
+}
+
+.milkdown .ProseMirror h6 {
+	color: var(--color-typography-light);
+}
+
+.milkdown .ProseMirror p {
+	line-height: calc(var(--spacing) * 7);
+}
+
+.milkdown hr {
+	height: 1px;
+	color: var(--color-border);
+	margin: calc(var(--spacing) * 5) 0;
+}
+
+.milkdown ul,
+ol {
+	margin-top: calc(var(--spacing) * 3);
+	margin-bottom: calc(var(--spacing) * 3);
+	padding-left: calc(var(--spacing) * 4);
+}
+
+.milkdown ul {
+	list-style-type: disc;
+}
+
+.milkdown ol {
+	list-style-type: decimal;
+}
+
+.milkdown li {
+	margin-top: calc(var(--spacing) * 2);
+}
+
+.milkdown li::marker {
+	color: var(--color-typography);
+}

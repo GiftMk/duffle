@@ -1,5 +1,4 @@
 {
-	"name": "duffle",
 	"module": "index.ts",
 	"type": "module",
 	"private": true,
@@ -8,7 +7,7 @@
 		"packages/*"
 	],
 	"scripts": {
-		"dev": "concurrently -c \"blue,magenta\" -n \"API,WWW\" \"bun --filter ./apps/api dev\" \"bun --filter ./apps/www dev\"",
+		"dev": "concurrently -c \"blue,magenta\" -n \"API,WWW\" \"bun --elide-lines=0 --filter ./apps/api dev\" \"bun --elide-lines=0 --filter ./apps/www dev\"",
 		"db": "psql -d duffle",
 		"tidy": "biome check --write --unsafe ."
 	},

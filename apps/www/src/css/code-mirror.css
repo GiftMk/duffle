@@ -1,0 +1,76 @@
+.milkdown {
+	.cm-gutters {
+		background-color: transparent;
+	}
+
+	.cm-editor {
+		background-color: oklch(94.8% 0.0054 95.1);
+		padding: calc(var(--spacing) * 3);
+		border-radius: 0 0 var(--radius-md) var(--radius-md);
+
+		.cm-content {
+			font-family: "iA Writer Mono", monospace;
+		}
+
+		.cm-activeLine {
+			background-color: oklch(97.08% 0.0054 95.1);
+		}
+
+		.cm-activeLineGutter {
+			background-color: oklch(97.08% 0.0054 95.1);
+		}
+
+		.cm-panels {
+			background-color: transparent;
+			backdrop-filter: blur(10px);
+			border-top: 0;
+			padding: 8px;
+			border-radius: var(--radius-md);
+
+			.cm-button {
+				background-color: white;
+				background-image: none;
+				border: none;
+				border-radius: var(--radius-md);
+				padding: 6px 10px;
+				color: var(--color-st one-900);
+				text-transform: capitalize;
+			}
+		}
+
+		.cm-panel.cm-search {
+			input {
+				background-image: none;
+				border: none;
+				border-radius: var(--radius-md);
+				padding: 6px 10px;
+				outline: none;
+			}
+
+			br {
+				display: none;
+			}
+
+			label {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				text-transform: capitalize;
+			}
+
+			button[name="close"] {
+				font-size: var(--text-xl);
+			}
+		}
+	}
+
+	.cm-tooltip-autocomplete {
+		background-color: oklch(97.08% 0.0054 95.1);
+		border-radius: var(--radius-md);
+		border: 1px solid var(--color-border);
+	}
+
+	.cm-focused {
+		outline: none;
+	}
+}
