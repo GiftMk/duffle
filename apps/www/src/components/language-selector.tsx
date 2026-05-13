@@ -1,8 +1,8 @@
 import { Autocomplete } from '@base-ui/react/autocomplete'
-import { useState } from 'react'
-import type { LanguageRecord } from '../lib/language-collection'
 import type { Atom } from '@xstate/store'
 import { useAtom } from '@xstate/store-react'
+import { useState } from 'react'
+import type { LanguageRecord } from '../lib/language-collection'
 
 type LanguageSelectorProps = {
 	language: Atom<LanguageRecord | null>

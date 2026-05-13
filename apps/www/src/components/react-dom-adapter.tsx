@@ -1,12 +1,12 @@
+import type { Atom } from '@xstate/store'
 import { createRoot } from 'react-dom/client'
-import { CodeEditor } from './code-block'
 import type { CodeMirrorBridge } from '../lib/code-mirror-bridge'
 import type {
 	LanguageCollection,
 	LanguageRecord,
 } from '../lib/language-collection'
 import type { LazyCodeMirror } from '../lib/lazy-code-mirror'
-import type { Atom } from '@xstate/store'
+import { CodeEditor } from './code-block'
 
 type ReactDomAdapterParams = {
 	codeMirror: LazyCodeMirror

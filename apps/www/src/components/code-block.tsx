@@ -1,8 +1,8 @@
 import type { EditorView as CodeMirror } from '@codemirror/view'
+import type { Atom } from '@xstate/store'
 import { useEffect, useRef } from 'react'
 import type { LanguageRecord } from '../lib/language-collection'
 import { LanguageSelector } from './language-selector'
-import type { Atom } from '@xstate/store'
 import './code-mirror.css'
 
 type CodeEditorProps = {

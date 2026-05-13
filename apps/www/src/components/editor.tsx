@@ -12,7 +12,7 @@ import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react'
 import { ProsemirrorAdapterProvider } from '@prosemirror-adapter/react'
 import { useAutoSave } from '../hooks/use-auto-save'
 import { headingLevelIndicator } from '../lib/heading-level-plugin'
-import { codeBlock, codeBlockCtx } from '../../code-block/plugin'
+import { codeBlock, codeBlockCtx } from '../lib/plugin'
 import './editor.css'
 
 const EditorContent = ({ document }: { document: Document }) => {
