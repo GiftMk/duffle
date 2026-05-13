@@ -1,11 +1,9 @@
 import { Autocomplete } from '@base-ui/react/autocomplete'
-import type { Atom } from '@xstate/store'
-import { useAtom } from '@xstate/store-react'
 import { useState } from 'react'
 import type { LanguageRecord } from '../lib/language-collection'
 
 type LanguageSelectorProps = {
-	language: Atom<LanguageRecord | null>
+	language: LanguageRecord | null
 	languages: LanguageRecord[]
 	onChange: (value: LanguageRecord) => void
 }
@@ -14,8 +12,7 @@ export const LanguageSelector = ({
 	languages,
 	language,
 }: LanguageSelectorProps) => {
-	const currentLanguage = useAtom(language)
-	const [value, setValue] = useState(currentLanguage?.name)
+	const [value, setValue] = useState(language?.name)
 
 	return (
 		<Autocomplete.Root value={value} onValueChange={setValue} items={languages}>

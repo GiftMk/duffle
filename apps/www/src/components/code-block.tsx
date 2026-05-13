@@ -7,20 +7,21 @@ import './code-mirror.css'
 import { useAtom } from '@xstate/store-react'
 
 type CodeEditorProps = {
-	codeMirror: Atom<CodeMirror | null>
-	language: Atom<LanguageRecord | null>
+	codeMirrorAtom: Atom<CodeMirror | null>
+	languageAtom: Atom<LanguageRecord | null>
 	languages: LanguageRecord[]
 	onLanguageChange: (value: LanguageRecord) => void
 }
 
 export const CodeEditor = ({
-	codeMirror: codeMirrorAtom,
-	language,
+	codeMirrorAtom,
+	languageAtom,
 	languages,
 	onLanguageChange,
 }: CodeEditorProps) => {
 	const ref = useRef<HTMLDivElement | null>(null)
 	const codeMirror = useAtom(codeMirrorAtom)
+	const language = useAtom(languageAtom)
 
 	useEffect(() => {
 		const current = ref.current

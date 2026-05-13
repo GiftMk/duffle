@@ -44,12 +44,12 @@ export class CodeMirrorBridge {
 
 	get extensions() {
 		return [
-			CodeMirror.updateListener.of((update) => this.pushContent(update)),
+			CodeMirror.updateListener.of((update) => this.writeDocument(update)),
 			this.compartment.of([]),
 		]
 	}
 
-	pushContent(update: ViewUpdate) {
+	writeDocument(update: ViewUpdate) {
 		if (!this) {
 			return
 		}
@@ -100,7 +100,7 @@ export class CodeMirrorBridge {
 		}
 	}
 
-	pullContent(node: Node): boolean {
+	readDocument(node: Node): boolean {
 		const codeMirror = this.codeMirror.get()
 
 		if (!codeMirror || node.type !== this.node.type) {
@@ -113,7 +113,7 @@ export class CodeMirrorBridge {
 			return true
 		}
 
-		this.pullLanguage()
+		this.readLanguage()
 
 		const currentText = codeMirror.state.doc.toString()
 		const newText = node.textContent
@@ -156,7 +156,7 @@ export class CodeMirrorBridge {
 		return true
 	}
 
-	pullLanguage() {
+	readLanguage() {
 		const codeMirror = this.codeMirror.get()
 		const langauge = this.language.get()
 		const languageId = this.node.attrs.language as string
@@ -182,7 +182,7 @@ export class CodeMirrorBridge {
 			.catch(console.error)
 	}
 
-	pushLanguage(language: LanguageRecord) {
+	writeLanguage(language: LanguageRecord) {
 		this.view.dispatch(
 			this.view.state.tr.setNodeAttribute(
 				this.getPosition() ?? 0,
@@ -193,7 +193,7 @@ export class CodeMirrorBridge {
 		this.language.set(language)
 	}
 
-	pullSelection(anchor: number, head: number) {
+	readSelection(anchor: number, head: number) {
 		const codeMirror = this.codeMirror.get()
 
 		if (!codeMirror) {
@@ -201,7 +201,7 @@ export class CodeMirrorBridge {
 		}
 
 		if (!codeMirror.dom.isConnected) {
-			requestAnimationFrame(() => this.pullSelection(anchor, head))
+			requestAnimationFrame(() => this.readSelection(anchor, head))
 			return
 		}
 

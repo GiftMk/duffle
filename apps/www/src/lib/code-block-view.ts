@@ -42,11 +42,11 @@ export class CodeBlockView implements NodeView {
 	}
 
 	setSelection(anchor: number, head: number) {
-		this.bridge.pullSelection(anchor, head)
+		this.bridge.readSelection(anchor, head)
 	}
 
 	update(node: Node): boolean {
-		return this.bridge.pullContent(node)
+		return this.bridge.readDocument(node)
 	}
 
 	selectNode() {

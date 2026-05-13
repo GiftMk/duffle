@@ -54,8 +54,8 @@ export const codeBlock = $view(
 				codeMirror,
 			})
 			const domAdapter = new ReactDomAdapter({
-				codeMirror,
-				language,
+				codeMirrorAtom: codeMirror,
+				languageAtom: language,
 				languages,
 				bridge,
 			})
@@ -76,7 +76,7 @@ export const codeBlock = $view(
 				]),
 			})
 			domAdapter.render()
-			bridge.pullLanguage()
+			bridge.readLanguage()
 
 			return codeBlockView
 		}

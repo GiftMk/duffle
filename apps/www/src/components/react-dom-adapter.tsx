@@ -9,8 +9,8 @@ import type {
 import { CodeEditor } from './code-block'
 
 type ReactDomAdapterParams = {
-	codeMirror: Atom<CodeMirror | null>
-	language: Atom<LanguageRecord | null>
+	codeMirrorAtom: Atom<CodeMirror | null>
+	languageAtom: Atom<LanguageRecord | null>
 	languages: LanguageCollection
 	bridge: CodeMirrorBridge
 }
@@ -20,8 +20,8 @@ export class ReactDomAdapter {
 	readonly render: () => void
 
 	constructor({
-		codeMirror,
-		language,
+		codeMirrorAtom,
+		languageAtom,
 		languages,
 		bridge,
 	}: ReactDomAdapterParams) {
@@ -29,10 +29,10 @@ export class ReactDomAdapter {
 		this.render = () => {
 			createRoot(this.root).render(
 				<CodeEditor
-					codeMirror={codeMirror}
-					onLanguageChange={(value) => bridge.pushLanguage(value)}
+					codeMirrorAtom={codeMirrorAtom}
+					onLanguageChange={(value) => bridge.writeLanguage(value)}
 					languages={languages.values}
-					language={language}
+					languageAtom={languageAtom}
 				/>,
 			)
 		}
