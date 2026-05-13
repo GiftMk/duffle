@@ -1,5 +1,5 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
-import '../index.css'
+import '../common/css/index.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 export const Route = createRootRoute({ component: RootLayout })

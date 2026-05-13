@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
 import { uuidv7 } from 'uuidv7'
-import { documentCollection } from '../lib/collections'
+import { documentCollection } from '../common/lib/collections'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,

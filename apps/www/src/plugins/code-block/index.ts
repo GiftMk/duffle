@@ -9,11 +9,14 @@ import { $ctx, $view } from '@milkdown/utils'
 import { createAtom } from '@xstate/store'
 import type { EditorView as CodeMirror } from 'codemirror'
 import { basicSetup } from 'codemirror'
-import { ReactDomAdapter } from '../components/react-dom-adapter'
-import { CodeBlockView } from './code-block-view'
-import { CodeMirrorBridge } from './code-mirror-bridge'
-import { KeymapExtension } from './keymap-extension'
-import { LanguageCollection, type LanguageRecord } from './language-collection'
+import { ReactDomAdapter } from './components/react-dom-adapter'
+import { CodeBlockView } from './lib/code-block-view'
+import { CodeMirrorBridge } from './lib/code-mirror-bridge'
+import { KeymapExtension } from './lib/keymap-extension'
+import {
+	LanguageCollection,
+	type LanguageRecord,
+} from './lib/language-collection'
 
 type CodeBlockContext = {
 	languages: LanguageDescription[]

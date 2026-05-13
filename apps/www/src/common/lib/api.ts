@@ -1,6 +1,6 @@
 import type { App } from '@duffle/api'
 import { edenFetch } from '@elysia/eden/fetch'
-import { env } from '../environment'
+import { env } from '../../environment'
 
 export const fetch = edenFetch<App>(env.VITE_API_URL)
 
