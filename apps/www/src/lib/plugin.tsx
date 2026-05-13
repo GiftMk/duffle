@@ -7,13 +7,13 @@ import { codeBlockSchema } from '@milkdown/kit/preset/commonmark'
 import type { NodeViewConstructor } from '@milkdown/prose/view'
 import { $ctx, $view } from '@milkdown/utils'
 import { createAtom } from '@xstate/store'
+import type { EditorView as CodeMirror } from 'codemirror'
 import { basicSetup } from 'codemirror'
 import { ReactDomAdapter } from '../components/react-dom-adapter'
 import { CodeBlockView } from './code-block-view'
 import { CodeMirrorBridge } from './code-mirror-bridge'
 import { KeymapExtension } from './keymap-extension'
 import { LanguageCollection, type LanguageRecord } from './language-collection'
-import type { EditorView as CodeMirror } from 'codemirror'
 
 type CodeBlockContext = {
 	languages: LanguageDescription[]

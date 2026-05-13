@@ -4,8 +4,8 @@ import type { Node } from '@milkdown/prose/model'
 import { TextSelection } from '@milkdown/prose/state'
 import type { EditorView } from '@milkdown/prose/view'
 import { EditorView as CodeMirror } from 'codemirror'
-import type { LanguageCollection, LanguageRecord } from './language-collection'
 import type { External } from './external'
+import type { LanguageCollection, LanguageRecord } from './language-collection'
 
 type CodeMirrorBridgeParams = {
 	node: Node

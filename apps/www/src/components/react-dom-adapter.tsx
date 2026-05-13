@@ -1,4 +1,5 @@
 import type { Atom } from '@xstate/store'
+import type { EditorView as CodeMirror } from 'codemirror'
 import { createRoot } from 'react-dom/client'
 import type { CodeMirrorBridge } from '../lib/code-mirror-bridge'
 import type {
@@ -6,7 +7,6 @@ import type {
 	LanguageRecord,
 } from '../lib/language-collection'
 import { CodeEditor } from './code-block'
-import type { EditorView as CodeMirror } from 'codemirror'
 
 type ReactDomAdapterParams = {
 	codeMirror: Atom<CodeMirror | null>

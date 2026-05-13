@@ -6,8 +6,8 @@ import { redo, undo } from '@milkdown/prose/history'
 import type { Node } from '@milkdown/prose/model'
 import { TextSelection } from '@milkdown/prose/state'
 import type { EditorView } from '@milkdown/prose/view'
-import type { External } from './external'
 import type { EditorView as CodeMirror } from 'codemirror'
+import type { External } from './external'
 
 type KeymapExtensionParams = {
 	view: EditorView
