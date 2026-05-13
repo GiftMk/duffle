@@ -5,18 +5,13 @@ import { TextSelection } from '@milkdown/prose/state'
 import type { EditorView } from '@milkdown/prose/view'
 import { EditorView as CodeMirror } from 'codemirror'
 import type { LanguageCollection, LanguageRecord } from './language-collection'
-import type { LazyCodeMirror } from './lazy-code-mirror'
-
-type Observable<T> = {
-	get: () => T
-	set: (value: T) => void
-}
+import type { External } from './external'
 
 type CodeMirrorBridgeParams = {
 	node: Node
 	view: EditorView
-	codeMirror: LazyCodeMirror
-	language: Observable<LanguageRecord | null>
+	codeMirror: External<CodeMirror | null>
+	language: External<LanguageRecord | null>
 	languages: LanguageCollection
 	getPosition: () => number | undefined
 }
@@ -24,9 +19,9 @@ type CodeMirrorBridgeParams = {
 export class CodeMirrorBridge {
 	private node: Node
 	private readonly view: EditorView
-	private readonly codeMirror: LazyCodeMirror
+	private readonly codeMirror: External<CodeMirror | null>
 	private readonly getPosition: () => number | undefined
-	private readonly language: Observable<LanguageRecord | null>
+	private readonly language: External<LanguageRecord | null>
 	private readonly languages: LanguageCollection
 	private readonly compartment = new Compartment()
 	private isUpdating = false
@@ -59,9 +54,9 @@ export class CodeMirrorBridge {
 			return
 		}
 
-		const codeMirror = this.codeMirror.value
+		const codeMirror = this.codeMirror.get()
 
-		if (this.isUpdating || !codeMirror.hasFocus) {
+		if (this.isUpdating || !codeMirror || !codeMirror.hasFocus) {
 			return
 		}
 
@@ -106,9 +101,9 @@ export class CodeMirrorBridge {
 	}
 
 	pullContent(node: Node): boolean {
-		const codeMirror = this.codeMirror.value
+		const codeMirror = this.codeMirror.get()
 
-		if (node.type !== this.node.type) {
+		if (!codeMirror || node.type !== this.node.type) {
 			return false
 		}
 
@@ -162,11 +157,12 @@ export class CodeMirrorBridge {
 	}
 
 	pullLanguage() {
-		const codeMirror = this.codeMirror.value
+		const codeMirror = this.codeMirror.get()
+		const langauge = this.language.get()
 		const languageId = this.node.attrs.language as string
-		const language = this.languages.getById(languageId)
+		const languageDescription = this.languages.getById(languageId)
 
-		if (languageId === this.language.get()?.id || !language) {
+		if (!codeMirror || languageId === langauge?.id || !languageDescription) {
 			return
 		}
 
@@ -181,7 +177,7 @@ export class CodeMirrorBridge {
 					effects: this.compartment.reconfigure(value),
 				})
 
-				this.language.set({ id: languageId, name: language.name })
+				this.language.set({ id: languageId, name: languageDescription.name })
 			})
 			.catch(console.error)
 	}
@@ -198,7 +194,11 @@ export class CodeMirrorBridge {
 	}
 
 	pullSelection(anchor: number, head: number) {
-		const codeMirror = this.codeMirror.value
+		const codeMirror = this.codeMirror.get()
+
+		if (!codeMirror) {
+			return
+		}
 
 		if (!codeMirror.dom.isConnected) {
 			requestAnimationFrame(() => this.pullSelection(anchor, head))

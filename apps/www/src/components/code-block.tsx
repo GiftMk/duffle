@@ -4,31 +4,33 @@ import { useEffect, useRef } from 'react'
 import type { LanguageRecord } from '../lib/language-collection'
 import { LanguageSelector } from './language-selector'
 import './code-mirror.css'
+import { useAtom } from '@xstate/store-react'
 
 type CodeEditorProps = {
-	codeMirror: CodeMirror
+	codeMirror: Atom<CodeMirror | null>
 	language: Atom<LanguageRecord | null>
 	languages: LanguageRecord[]
 	onLanguageChange: (value: LanguageRecord) => void
 }
 
 export const CodeEditor = ({
-	codeMirror,
+	codeMirror: codeMirrorAtom,
 	language,
 	languages,
 	onLanguageChange,
 }: CodeEditorProps) => {
 	const ref = useRef<HTMLDivElement | null>(null)
+	const codeMirror = useAtom(codeMirrorAtom)
 
 	useEffect(() => {
 		const current = ref.current
 
-		if (!current) {
+		if (!current || !codeMirror) {
 			return
 		}
 
 		current.appendChild(codeMirror.dom)
-	}, [codeMirror.dom])
+	}, [codeMirror])
 
 	return (
 		<div>

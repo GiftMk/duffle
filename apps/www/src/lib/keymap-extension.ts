@@ -6,19 +6,20 @@ import { redo, undo } from '@milkdown/prose/history'
 import type { Node } from '@milkdown/prose/model'
 import { TextSelection } from '@milkdown/prose/state'
 import type { EditorView } from '@milkdown/prose/view'
-import type { LazyCodeMirror } from './lazy-code-mirror'
+import type { External } from './external'
+import type { EditorView as CodeMirror } from 'codemirror'
 
 type KeymapExtensionParams = {
 	view: EditorView
 	node: Node
-	codeMirror: LazyCodeMirror
+	codeMirror: External<CodeMirror | null>
 	getPosition: () => number | undefined
 }
 
 export class KeymapExtension {
 	private readonly view: EditorView
 	private readonly node: Node
-	private readonly codeMirror: LazyCodeMirror
+	private readonly codeMirror: External<CodeMirror | null>
 	private readonly getPosition: () => number | undefined
 
 	constructor({ view, node, codeMirror, getPosition }: KeymapExtensionParams) {
@@ -68,7 +69,12 @@ export class KeymapExtension {
 			{
 				key: 'Backspace',
 				run: () => {
-					const codeMirror = this.codeMirror.value
+					const codeMirror = this.codeMirror.get()
+
+					if (!codeMirror) {
+						return false
+					}
+
 					const ranges = codeMirror.state.selection.ranges
 
 					if (ranges.length > 1) {
@@ -106,7 +112,11 @@ export class KeymapExtension {
 	}
 
 	maybeEscape(unit: 'line' | 'char', direction: 1 | -1): boolean {
-		const { state } = this.codeMirror.value
+		const state = this.codeMirror.get()?.state
+
+		if (!state) {
+			return false
+		}
 
 		let main: SelectionRange | Line = state.selection.main
 

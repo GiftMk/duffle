@@ -13,7 +13,7 @@ import { CodeBlockView } from './code-block-view'
 import { CodeMirrorBridge } from './code-mirror-bridge'
 import { KeymapExtension } from './keymap-extension'
 import { LanguageCollection, type LanguageRecord } from './language-collection'
-import { LazyCodeMirror } from './lazy-code-mirror'
+import type { EditorView as CodeMirror } from 'codemirror'
 
 type CodeBlockContext = {
 	languages: LanguageDescription[]
@@ -31,12 +31,14 @@ const baseExtensions = [basicSetup, drawSelection(), catppuccinLatte]
 export const codeBlock = $view(
 	codeBlockSchema.node,
 	(ctx): NodeViewConstructor => {
-		const { languages: languageDefinitions } = ctx.get(codeBlockCtx.key)
+		const languages = new LanguageCollection(
+			ctx.get(codeBlockCtx.key).languages,
+		)
 		const language = createAtom<LanguageRecord | null>(null)
+		const codeMirror = createAtom<CodeMirror | null>(null)
+		const dynamicExtensions = new Compartment()
 
 		return (node, view, getPosition) => {
-			const codeMirror = new LazyCodeMirror()
-			const languages = new LanguageCollection(languageDefinitions)
 			const bridge = new CodeMirrorBridge({
 				node,
 				view,
@@ -57,7 +59,6 @@ export const codeBlock = $view(
 				languages,
 				bridge,
 			})
-			const dynamicExtensions = new Compartment()
 			const codeBlockView = new CodeBlockView({
 				node,
 				view,

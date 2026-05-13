@@ -5,11 +5,11 @@ import type {
 	LanguageCollection,
 	LanguageRecord,
 } from '../lib/language-collection'
-import type { LazyCodeMirror } from '../lib/lazy-code-mirror'
 import { CodeEditor } from './code-block'
+import type { EditorView as CodeMirror } from 'codemirror'
 
 type ReactDomAdapterParams = {
-	codeMirror: LazyCodeMirror
+	codeMirror: Atom<CodeMirror | null>
 	language: Atom<LanguageRecord | null>
 	languages: LanguageCollection
 	bridge: CodeMirrorBridge
@@ -29,7 +29,7 @@ export class ReactDomAdapter {
 		this.render = () => {
 			createRoot(this.root).render(
 				<CodeEditor
-					codeMirror={codeMirror.value}
+					codeMirror={codeMirror}
 					onLanguageChange={(value) => bridge.pushLanguage(value)}
 					languages={languages.values}
 					language={language}
