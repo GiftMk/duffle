@@ -1,11 +1,16 @@
 import { createRoot } from 'react-dom/client'
-import { CodeEditor } from './code-editor'
-import type { CodeMirrorBridge } from './code-mirror-bridge'
-import type { LanguageCollection } from './language-collection'
-import type { LazyCodeMirror } from './lazy-code-mirror'
+import { CodeEditor } from './code-block'
+import type { CodeMirrorBridge } from '../lib/code-mirror-bridge'
+import type {
+	LanguageCollection,
+	LanguageRecord,
+} from '../lib/language-collection'
+import type { LazyCodeMirror } from '../lib/lazy-code-mirror'
+import type { Atom } from '@xstate/store'
 
 type ReactDomAdapterParams = {
 	codeMirror: LazyCodeMirror
+	language: Atom<LanguageRecord | null>
 	languages: LanguageCollection
 	bridge: CodeMirrorBridge
 }
@@ -14,7 +19,12 @@ export class ReactDomAdapter {
 	readonly root: HTMLElement
 	readonly render: () => void
 
-	constructor({ codeMirror, languages, bridge }: ReactDomAdapterParams) {
+	constructor({
+		codeMirror,
+		language,
+		languages,
+		bridge,
+	}: ReactDomAdapterParams) {
 		this.root = document.createElement('div')
 		this.render = () => {
 			createRoot(this.root).render(
@@ -22,7 +32,7 @@ export class ReactDomAdapter {
 					codeMirror={codeMirror.value}
 					onLanguageChange={(value) => bridge.pushLanguage(value)}
 					languages={languages.values}
-					language={bridge.language}
+					language={language}
 				/>,
 			)
 		}

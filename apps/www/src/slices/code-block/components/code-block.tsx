@@ -1,14 +1,15 @@
 import type { EditorView as CodeMirror } from '@codemirror/view'
 import { useEffect, useRef } from 'react'
-import type { LanguageMeta } from './language-collection'
+import type { LanguageRecord } from '../lib/language-collection'
 import { LanguageSelector } from './language-selector'
-import type { Observable } from './observable'
+import type { Atom } from '@xstate/store'
+import './code-mirror.css'
 
 type CodeEditorProps = {
 	codeMirror: CodeMirror
-	language: Observable<LanguageMeta | null>
-	languages: LanguageMeta[]
-	onLanguageChange: (value: LanguageMeta) => void
+	language: Atom<LanguageRecord | null>
+	languages: LanguageRecord[]
+	onLanguageChange: (value: LanguageRecord) => void
 }
 
 export const CodeEditor = ({

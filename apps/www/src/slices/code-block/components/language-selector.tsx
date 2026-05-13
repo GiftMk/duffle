@@ -1,20 +1,20 @@
 import { Autocomplete } from '@base-ui/react/autocomplete'
 import { useState } from 'react'
-import type { LanguageMeta } from './language-collection'
-import type { Observable } from './observable'
-import { useObservable } from './use-observable'
+import type { LanguageRecord } from '../lib/language-collection'
+import type { Atom } from '@xstate/store'
+import { useAtom } from '@xstate/store-react'
 
 type LanguageSelectorProps = {
-	language: Observable<LanguageMeta | null>
-	languages: LanguageMeta[]
-	onChange: (value: LanguageMeta) => void
+	language: Atom<LanguageRecord | null>
+	languages: LanguageRecord[]
+	onChange: (value: LanguageRecord) => void
 }
 
 export const LanguageSelector = ({
 	languages,
 	language,
 }: LanguageSelectorProps) => {
-	const currentLanguage = useObservable(language)
+	const currentLanguage = useAtom(language)
 	const [value, setValue] = useState(currentLanguage?.name)
 
 	return (

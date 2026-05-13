@@ -11,8 +11,9 @@ import { commonmark } from '@milkdown/kit/preset/commonmark'
 import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react'
 import { ProsemirrorAdapterProvider } from '@prosemirror-adapter/react'
 import { useAutoSave } from '../hooks/use-auto-save'
-import { headingLevelIndicator } from '../lib/heading-level-indicator'
-import { codeBlock, codeBlockCtx } from './code-block/plugin'
+import { headingLevelIndicator } from '../lib/heading-level-plugin'
+import { codeBlock, codeBlockCtx } from '../../code-block/plugin'
+import './editor.css'
 
 const EditorContent = ({ document }: { document: Document }) => {
 	useEditor((root) => {

@@ -6,7 +6,7 @@ import {
 	usePacedMutations,
 } from '@tanstack/react-db'
 import { useEffect } from 'react'
-import { documentCollection, handleUpdate } from '../lib/collections'
+import { documentCollection, handleUpdate } from '../../../lib/collections'
 import { useEditorInstance } from './use-editor-instance'
 
 export const useAutoSave = (id: string, delayMs = 1000) => {

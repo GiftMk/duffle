@@ -1,6 +1,6 @@
 import { eq, useLiveQuery } from '@tanstack/react-db'
 import { createFileRoute } from '@tanstack/react-router'
-import { MarkdownEditor } from '../components/editor'
+import { MarkdownEditor } from '../slices/markdown-editor/components/editor'
 import { ErrorPage } from '../components/error-page'
 import { LoadingPage } from '../components/loading-page'
 import { documentCollection } from '../lib/collections'

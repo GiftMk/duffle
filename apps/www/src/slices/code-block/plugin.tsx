@@ -7,12 +7,16 @@ import { codeBlockSchema } from '@milkdown/kit/preset/commonmark'
 import type { NodeViewConstructor } from '@milkdown/prose/view'
 import { $ctx, $view } from '@milkdown/utils'
 import { basicSetup } from 'codemirror'
-import { CodeBlockView } from './code-block-view'
-import { CodeMirrorBridge } from './code-mirror-bridge'
-import { KeymapExtension } from './keymap-extension'
-import { LanguageCollection } from './language-collection'
-import { LazyCodeMirror } from './lazy-code-mirror'
-import { ReactDomAdapter } from './react-dom-adapter'
+import { CodeBlockView } from './lib/code-block-view'
+import { CodeMirrorBridge } from './lib/code-mirror-bridge'
+import { KeymapExtension } from './lib/keymap-extension'
+import {
+	LanguageCollection,
+	type LanguageRecord,
+} from './lib/language-collection'
+import { LazyCodeMirror } from './lib/lazy-code-mirror'
+import { ReactDomAdapter } from './components/react-dom-adapter'
+import { createAtom } from '@xstate/store'
 
 type CodeBlockContext = {
 	languages: LanguageDescription[]
@@ -31,6 +35,7 @@ export const codeBlock = $view(
 	codeBlockSchema.node,
 	(ctx): NodeViewConstructor => {
 		const { languages: languageDefinitions } = ctx.get(codeBlockCtx.key)
+		const language = createAtom<LanguageRecord | null>(null)
 
 		return (node, view, getPosition) => {
 			const codeMirror = new LazyCodeMirror()
@@ -40,6 +45,7 @@ export const codeBlock = $view(
 				view,
 				getPosition,
 				languages,
+				language,
 				codeMirror,
 			})
 			const keymapExtension = new KeymapExtension({
@@ -50,6 +56,7 @@ export const codeBlock = $view(
 			})
 			const domAdapter = new ReactDomAdapter({
 				codeMirror,
+				language,
 				languages,
 				bridge,
 			})

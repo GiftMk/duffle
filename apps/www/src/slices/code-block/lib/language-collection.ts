@@ -1,6 +1,6 @@
 import type { LanguageDescription, LanguageSupport } from '@codemirror/language'
 
-export type LanguageMeta = {
+export type LanguageRecord = {
 	id: string
 	name: string
 }
@@ -32,7 +32,7 @@ export class LanguageCollection {
 		return language.load()
 	}
 
-	get values(): LanguageMeta[] {
+	get values(): LanguageRecord[] {
 		return [...this.map.entries()].map((entry) => ({
 			id: entry[0],
 			name: entry[1].name,

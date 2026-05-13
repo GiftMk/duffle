@@ -4,14 +4,19 @@ import type { Node } from '@milkdown/prose/model'
 import { TextSelection } from '@milkdown/prose/state'
 import type { EditorView } from '@milkdown/prose/view'
 import { EditorView as CodeMirror } from 'codemirror'
-import type { LanguageCollection, LanguageMeta } from './language-collection'
+import type { LanguageCollection, LanguageRecord } from './language-collection'
 import type { LazyCodeMirror } from './lazy-code-mirror'
-import { Observable } from './observable'
+
+type Observable<T> = {
+	get: () => T
+	set: (value: T) => void
+}
 
 type CodeMirrorBridgeParams = {
 	node: Node
 	view: EditorView
 	codeMirror: LazyCodeMirror
+	language: Observable<LanguageRecord | null>
 	languages: LanguageCollection
 	getPosition: () => number | undefined
 }
@@ -21,22 +26,24 @@ export class CodeMirrorBridge {
 	private readonly view: EditorView
 	private readonly codeMirror: LazyCodeMirror
 	private readonly getPosition: () => number | undefined
+	private readonly language: Observable<LanguageRecord | null>
 	private readonly languages: LanguageCollection
 	private readonly compartment = new Compartment()
 	private isUpdating = false
-	private _language: Observable<LanguageMeta | null> = new Observable(null)
 
 	constructor({
 		node,
 		view,
 		codeMirror,
 		getPosition,
+		language,
 		languages,
 	}: CodeMirrorBridgeParams) {
 		this.node = node
 		this.view = view
 		this.codeMirror = codeMirror
 		this.getPosition = getPosition
+		this.language = language
 		this.languages = languages
 	}
 
@@ -45,10 +52,6 @@ export class CodeMirrorBridge {
 			CodeMirror.updateListener.of((update) => this.pushContent(update)),
 			this.compartment.of([]),
 		]
-	}
-
-	get language() {
-		return this._language
 	}
 
 	pushContent(update: ViewUpdate) {
@@ -163,7 +166,7 @@ export class CodeMirrorBridge {
 		const languageId = this.node.attrs.language as string
 		const language = this.languages.getById(languageId)
 
-		if (languageId === this._language.snapshot?.id || !language) {
+		if (languageId === this.language.get()?.id || !language) {
 			return
 		}
 
@@ -178,12 +181,12 @@ export class CodeMirrorBridge {
 					effects: this.compartment.reconfigure(value),
 				})
 
-				this._language.update({ id: languageId, name: language.name })
+				this.language.set({ id: languageId, name: language.name })
 			})
 			.catch(console.error)
 	}
 
-	pushLanguage(language: LanguageMeta) {
+	pushLanguage(language: LanguageRecord) {
 		this.view.dispatch(
 			this.view.state.tr.setNodeAttribute(
 				this.getPosition() ?? 0,
@@ -191,7 +194,7 @@ export class CodeMirrorBridge {
 				language.id,
 			),
 		)
-		this._language.update(language)
+		this.language.set(language)
 	}
 
 	pullSelection(anchor: number, head: number) {
