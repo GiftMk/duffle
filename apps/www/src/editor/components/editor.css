@@ -1,124 +1,122 @@
 @import "tailwindcss";
 
-.milkdown * {
-	outline: none;
-}
+.milkdown {
+	* {
+		outline: none;
+	}
 
-.milkdown .ProseMirror {
-	font-family: var(--font-sans);
-	font-family: var(--font-sans);
-	font-size: var(--text-base);
-	line-height: var(--leading-normal);
-	color: var(--color-typography);
-	caret-color: var(--color-primary);
-}
+	hr {
+		height: 1px;
+		color: var(--color-border);
+		margin: calc(var(--spacing) * 5) 0;
+	}
 
-.milkdown .ProseMirror > *:first-child {
-	margin-top: 0;
-}
+	ul,
+	ol {
+		margin-top: calc(var(--spacing) * 3);
+		margin-bottom: calc(var(--spacing) * 3);
+		padding-left: calc(var(--spacing) * 4);
+	}
 
-.milkdown .ProseMirror .heading-active {
-	position: relative;
-}
+	ul {
+		list-style-type: disc;
+	}
 
-.milkdown .ProseMirror .heading-active::before {
-	content: attr(data-heading-level);
-	position: absolute;
-	left: calc(var(--spacing) * -8);
-	top: 50%;
-	color: var(--color-typography-light);
-	opacity: 0.6;
-	transform: translateY(-50%);
-	font-size: var(--text-sm);
-	font-weight: var(--font-weight-bold);
-	pointer-events: none;
-	user-select: none;
-}
+	ol {
+		list-style-type: decimal;
+	}
 
-.milkdown .ProseMirror h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-family: var(--font-sans);
-	font-weight: var(--font-weight-bold);
-}
+	li {
+		margin-top: calc(var(--spacing) * 2);
 
-.milkdown .ProseMirror h1 {
-	font-size: var(--text-3xl);
-	line-height: calc(var(--spacing) * 10);
-	margin-top: calc(var(--spacing) * 5);
-	margin-bottom: calc(var(--spacing) * 4);
-}
+		&::marker {
+			color: var(--color-typography);
+		}
+	}
 
-.milkdown .ProseMirror h2,
-h3,
-h4 {
-	line-height: calc(var(--spacing) * 6);
-}
+	.ProseMirror {
+		font-family: var(--font-sans);
+		font-size: var(--text-base);
+		line-height: var(--leading-normal);
+		color: var(--color-typography);
+		caret-color: var(--color-primary);
 
-.milkdown .ProseMirror h2 {
-	font-size: var(--text-2xl);
-	margin-top: calc(var(--spacing) * 5);
-	margin-bottom: calc(var(--spacing) * 4);
-}
+		> *:first-child {
+			margin-top: 0;
+		}
 
-.milkdown .ProseMirror h3 {
-	margin-top: calc(var(--spacing) * 5);
-	margin-bottom: calc(var(--spacing) * 3);
-}
+		.heading-active {
+			position: relative;
 
-.milkdown .ProseMirror h3 {
-	font-size: var(--text-xl);
-}
+			&::before {
+				content: attr(data-heading-level);
+				position: absolute;
+				left: calc(var(--spacing) * -8);
+				top: 50%;
+				color: var(--color-typography-light);
+				opacity: 0.6;
+				transform: translateY(-50%);
+				font-size: var(--text-sm);
+				font-weight: var(--font-weight-bold);
+				pointer-events: none;
+				user-select: none;
+			}
+		}
 
-.milkdown .ProseMirror h4 {
-	margin-top: calc(var(--spacing) * 4);
-	margin-bottom: calc(var(--spacing) * 2);
-	font-size: var(--text-lg);
-}
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			font-family: var(--font-sans);
+			font-weight: var(--font-weight-bold);
+		}
 
-.milkdown .ProseMirror h5,
-h6 {
-	line-height: calc(var(--spacing) * 6);
-	margin-top: calc(var(--spacing) * 2);
-	margin-bottom: calc(var(--spacing) * 1);
-}
+		h1 {
+			font-size: var(--text-3xl);
+			line-height: calc(var(--spacing) * 10);
+			margin-top: calc(var(--spacing) * 5);
+			margin-bottom: calc(var(--spacing) * 4);
+		}
 
-.milkdown .ProseMirror h6 {
-	color: var(--color-typography-light);
-}
+		h2,
+		h3,
+		h4 {
+			line-height: calc(var(--spacing) * 6);
+		}
 
-.milkdown .ProseMirror p {
-	line-height: calc(var(--spacing) * 7);
-}
+		h2 {
+			font-size: var(--text-2xl);
+			margin-top: calc(var(--spacing) * 5);
+			margin-bottom: calc(var(--spacing) * 4);
+		}
 
-.milkdown hr {
-	height: 1px;
-	color: var(--color-border);
-	margin: calc(var(--spacing) * 5) 0;
-}
+		h3 {
+			font-size: var(--text-xl);
+			margin-top: calc(var(--spacing) * 5);
+			margin-bottom: calc(var(--spacing) * 3);
+		}
 
-.milkdown ul,
-ol {
-	margin-top: calc(var(--spacing) * 3);
-	margin-bottom: calc(var(--spacing) * 3);
-	padding-left: calc(var(--spacing) * 4);
-}
+		h4 {
+			font-size: var(--text-lg);
+			margin-top: calc(var(--spacing) * 4);
+			margin-bottom: calc(var(--spacing) * 2);
+		}
 
-.milkdown ul {
-	list-style-type: disc;
-}
+		h5,
+		h6 {
+			line-height: calc(var(--spacing) * 6);
+			margin-top: calc(var(--spacing) * 2);
+			margin-bottom: calc(var(--spacing) * 1);
+		}
 
-.milkdown ol {
-	list-style-type: decimal;
-}
+		h6 {
+			color: var(--color-typography-light);
+		}
 
-.milkdown li {
-	margin-top: calc(var(--spacing) * 2);
-}
-
-.milkdown li::marker {
-	color: var(--color-typography);
+		p {
+			line-height: calc(var(--spacing) * 7);
+		}
+	}
 }
