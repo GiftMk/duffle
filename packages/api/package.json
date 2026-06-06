@@ -6,11 +6,16 @@
 		".": "./src/exports.ts"
 	},
 	"scripts": {
+		"predev": "bun run db:push",
 		"dev": "bun run --hot src/index.ts",
-		"push": "bunx drizzle-kit push"
+		"db:push": "bunx drizzle-kit push",
+		"db:clean": "rm -rf .pglite"
 	},
 	"dependencies": {
+		"@electric-sql/pglite": "^0.5.1",
+		"@electric-sql/pglite-pgvector": "^0.0.2",
 		"@elysiajs/cors": "^1.4.2",
+		"@orpc/server": "^1.14.5",
 		"@t3-oss/env-core": "^0.13.11",
 		"drizzle-orm": "^0.45.2",
 		"elysia": "^1.4.28",

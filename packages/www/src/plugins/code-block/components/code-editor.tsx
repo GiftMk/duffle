@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { LanguageSelector } from './language-selector'
-import './code-mirror.css'
-import { useCodeEditor } from '../state/code-editor-context'
+import { useCodeEditor } from '../context/code-editor-context'
 
 export const CodeEditor = () => {
 	const ref = useRef<HTMLDivElement | null>(null)

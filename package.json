@@ -6,7 +6,7 @@
 		"packages/*"
 	],
 	"scripts": {
-		"dev": "concurrently -c \"blue,magenta\" -n \"API,WWW\" \"bun --elide-lines=0 --filter ./apps/api dev\" \"bun --elide-lines=0 --filter ./apps/www dev\"",
+		"dev": "concurrently -c \"blue,magenta\" -n \"API,WWW\" \"bun --elide-lines=0 --filter ./packages/api dev\" \"bun --elide-lines=0 --filter ./packages/www dev\"",
 		"db": "psql -d duffle",
 		"tidy": "biome check --write --unsafe ."
 	},

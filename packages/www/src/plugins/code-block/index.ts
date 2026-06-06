@@ -31,7 +31,7 @@ export const codeBlockCtx = $ctx<CodeBlockContext, 'codeBlockContext'>(
 
 const baseExtensions = [basicSetup, drawSelection(), catppuccinLatte]
 
-export const codeBlock = $view(
+export const codeBlockView = $view(
 	codeBlockSchema.node,
 	(ctx): NodeViewConstructor => {
 		const languages = new LanguageCollection(
@@ -85,3 +85,5 @@ export const codeBlock = $view(
 		}
 	},
 )
+
+export const codeBlock = [codeBlockCtx, codeBlockView]

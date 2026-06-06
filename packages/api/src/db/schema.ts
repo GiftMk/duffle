@@ -1,6 +1,6 @@
 import { type SQL, sql } from 'drizzle-orm'
 import { index, pgTable } from 'drizzle-orm/pg-core'
-import { customType } from 'drizzle-orm/pg-core'
+import { tsvector } from './types'
 
 export const documents = pgTable(
 	'documents',
@@ -16,7 +16,3 @@ export const documents = pgTable(
 	}),
 	(t) => [index('documents_text_fts').using('gin', t.searchVector)],
 )
-
-export const tsvector = customType<{ data: string }>({
-	dataType: () => 'tsvector',
-})

@@ -6,7 +6,7 @@ import type {
 	LanguageRecord,
 } from '../lib/language-collection'
 import type { Observable } from '../lib/observable'
-import { CodeEditorProvider } from '../state/code-editor-context'
+import { CodeEditorProvider } from '../context/code-editor-context'
 import { CodeEditor } from './code-editor'
 
 type ReactDomAdapterParams = {
