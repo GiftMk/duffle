@@ -1,12 +1,12 @@
 import type { EditorView as CodeMirror } from 'codemirror'
 import { createRoot } from 'react-dom/client'
+import { CodeEditorProvider } from '../context/code-editor-context'
 import type { CodeMirrorBridge } from '../lib/code-mirror-bridge'
 import type {
 	LanguageCollection,
 	LanguageRecord,
 } from '../lib/language-collection'
 import type { Observable } from '../lib/observable'
-import { CodeEditorProvider } from '../context/code-editor-context'
 import { CodeEditor } from './code-editor'
 
 type ReactDomAdapterParams = {

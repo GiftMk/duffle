@@ -1,6 +1,6 @@
 import { Autocomplete } from '@base-ui/react/autocomplete'
-import { useCodeEditor } from '../context/code-editor-context'
 import { useState } from 'react'
+import { useCodeEditor } from '../context/code-editor-context'
 
 type Item = {
 	id: string

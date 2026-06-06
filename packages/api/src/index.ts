@@ -1,7 +1,7 @@
 import cors from '@elysiajs/cors'
 import logixlysia from 'logixlysia'
-import { app } from './app'
 import { env } from '../environment'
+import { app } from './app'
 import { runMigrations } from './db'
 
 await runMigrations()

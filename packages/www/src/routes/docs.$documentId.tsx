@@ -1,9 +1,9 @@
 import { eq, useLiveQuery } from '@tanstack/react-db'
 import { createFileRoute } from '@tanstack/react-router'
+import { MarkdownEditor } from '../components/editor'
 import { ErrorPage } from '../components/error-page'
 import { LoadingPage } from '../components/loading-page'
 import { documentCollection } from '../lib/collections'
-import { MarkdownEditor } from '../components/editor'
 
 export const Route = createFileRoute('/docs/$documentId')({
 	component: RouteComponent,

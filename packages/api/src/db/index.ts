@@ -1,8 +1,8 @@
-import { drizzle } from 'drizzle-orm/pglite'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { PGlite } from '@electric-sql/pglite'
 import { vector } from '@electric-sql/pglite-pgvector'
-import { fileURLToPath } from 'node:url'
-import path from 'node:path'
+import { drizzle } from 'drizzle-orm/pglite'
 import { migrate } from 'drizzle-orm/pglite/migrator'
 import { env } from '../../environment'
 

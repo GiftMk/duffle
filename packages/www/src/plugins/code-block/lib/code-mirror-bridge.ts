@@ -8,206 +8,206 @@ import type { LanguageCollection, LanguageRecord } from './language-collection'
 import type { Observable } from './observable'
 
 type CodeMirrorBridgeParams = {
-  node: Node
-  view: EditorView
-  codeMirror: Observable<CodeMirror | null>
-  language: Observable<LanguageRecord | null>
-  languages: LanguageCollection
-  getPosition: () => number | undefined
+	node: Node
+	view: EditorView
+	codeMirror: Observable<CodeMirror | null>
+	language: Observable<LanguageRecord | null>
+	languages: LanguageCollection
+	getPosition: () => number | undefined
 }
 
 export class CodeMirrorBridge {
-  private node: Node
-  private readonly view: EditorView
-  private readonly codeMirror: Observable<CodeMirror | null>
-  private readonly getPosition: () => number | undefined
-  private readonly language: Observable<LanguageRecord | null>
-  private readonly languages: LanguageCollection
-  private readonly compartment = new Compartment()
-  private isUpdating = false
+	private node: Node
+	private readonly view: EditorView
+	private readonly codeMirror: Observable<CodeMirror | null>
+	private readonly getPosition: () => number | undefined
+	private readonly language: Observable<LanguageRecord | null>
+	private readonly languages: LanguageCollection
+	private readonly compartment = new Compartment()
+	private isUpdating = false
 
-  constructor({
-    node,
-    view,
-    codeMirror,
-    getPosition,
-    language,
-    languages,
-  }: CodeMirrorBridgeParams) {
-    this.node = node
-    this.view = view
-    this.codeMirror = codeMirror
-    this.getPosition = getPosition
-    this.language = language
-    this.languages = languages
-  }
+	constructor({
+		node,
+		view,
+		codeMirror,
+		getPosition,
+		language,
+		languages,
+	}: CodeMirrorBridgeParams) {
+		this.node = node
+		this.view = view
+		this.codeMirror = codeMirror
+		this.getPosition = getPosition
+		this.language = language
+		this.languages = languages
+	}
 
-  get extensions() {
-    return [
-      CodeMirror.updateListener.of((update) => this.writeDocument(update)),
-      this.compartment.of([]),
-    ]
-  }
+	get extensions() {
+		return [
+			CodeMirror.updateListener.of((update) => this.writeDocument(update)),
+			this.compartment.of([]),
+		]
+	}
 
-  writeDocument(update: ViewUpdate) {
-    if (!this) {
-      return
-    }
+	writeDocument(update: ViewUpdate) {
+		if (!this) {
+			return
+		}
 
-    const codeMirror = this.codeMirror.get()
+		const codeMirror = this.codeMirror.get()
 
-    if (this.isUpdating || !codeMirror || !codeMirror.hasFocus) {
-      return
-    }
+		if (this.isUpdating || !codeMirror || !codeMirror.hasFocus) {
+			return
+		}
 
-    let offset = (this.getPosition() ?? 0) + 1
-    const { main } = update.state.selection
+		let offset = (this.getPosition() ?? 0) + 1
+		const { main } = update.state.selection
 
-    const codeMirrorSelection = {
-      from: offset + main.from,
-      to: offset + main.to,
-    }
-    const proseMirrorSelection = this.view.state.selection
+		const codeMirrorSelection = {
+			from: offset + main.from,
+			to: offset + main.to,
+		}
+		const proseMirrorSelection = this.view.state.selection
 
-    if (
-      update.docChanged ||
-      proseMirrorSelection.from !== codeMirrorSelection.from ||
-      proseMirrorSelection.to !== codeMirrorSelection.to
-    ) {
-      const transaction = this.view.state.tr
+		if (
+			update.docChanged ||
+			proseMirrorSelection.from !== codeMirrorSelection.from ||
+			proseMirrorSelection.to !== codeMirrorSelection.to
+		) {
+			const transaction = this.view.state.tr
 
-      update.changes.iterChanges((fromA, toA, fromB, toB, text) => {
-        if (text.length) {
-          transaction.replaceWith(
-            offset + fromA,
-            offset + toA,
-            this.view.state.schema.text(text.toString()),
-          )
-        } else {
-          transaction.delete(offset + fromA, offset + toA)
-        }
-        offset += toB - fromB - (toA - fromA)
-      })
+			update.changes.iterChanges((fromA, toA, fromB, toB, text) => {
+				if (text.length) {
+					transaction.replaceWith(
+						offset + fromA,
+						offset + toA,
+						this.view.state.schema.text(text.toString()),
+					)
+				} else {
+					transaction.delete(offset + fromA, offset + toA)
+				}
+				offset += toB - fromB - (toA - fromA)
+			})
 
-      transaction.setSelection(
-        TextSelection.create(
-          transaction.doc,
-          codeMirrorSelection.from,
-          codeMirrorSelection.to,
-        ),
-      )
-      this.view.dispatch(transaction)
-    }
-  }
+			transaction.setSelection(
+				TextSelection.create(
+					transaction.doc,
+					codeMirrorSelection.from,
+					codeMirrorSelection.to,
+				),
+			)
+			this.view.dispatch(transaction)
+		}
+	}
 
-  readDocument(node: Node): boolean {
-    const codeMirror = this.codeMirror.get()
+	readDocument(node: Node): boolean {
+		const codeMirror = this.codeMirror.get()
 
-    if (!codeMirror || node.type !== this.node.type) {
-      return false
-    }
+		if (!codeMirror || node.type !== this.node.type) {
+			return false
+		}
 
-    this.node = node
+		this.node = node
 
-    if (this.isUpdating) {
-      return true
-    }
+		if (this.isUpdating) {
+			return true
+		}
 
-    this.readLanguage()
+		this.readLanguage()
 
-    const currentText = codeMirror.state.doc.toString()
-    const newText = node.textContent
+		const currentText = codeMirror.state.doc.toString()
+		const newText = node.textContent
 
-    if (currentText === newText) {
-      return true
-    }
+		if (currentText === newText) {
+			return true
+		}
 
-    let start = 0
-    let currentEnd = currentText.length
-    let newEnd = newText.length
+		let start = 0
+		let currentEnd = currentText.length
+		let newEnd = newText.length
 
-    while (
-      start < currentEnd &&
-      currentText.charCodeAt(start) === newText.charCodeAt(start)
-    ) {
-      start++
-    }
+		while (
+			start < currentEnd &&
+			currentText.charCodeAt(start) === newText.charCodeAt(start)
+		) {
+			start++
+		}
 
-    while (
-      currentEnd > start &&
-      newEnd > start &&
-      currentText.charCodeAt(currentEnd - 1) === newText.charCodeAt(newEnd - 1)
-    ) {
-      currentEnd--
-      newEnd--
-    }
+		while (
+			currentEnd > start &&
+			newEnd > start &&
+			currentText.charCodeAt(currentEnd - 1) === newText.charCodeAt(newEnd - 1)
+		) {
+			currentEnd--
+			newEnd--
+		}
 
-    this.isUpdating = true
-    codeMirror.dispatch({
-      changes: {
-        from: start,
-        to: currentEnd,
-        insert: newText.slice(start, newEnd),
-      },
-      scrollIntoView: true,
-    })
-    this.isUpdating = false
+		this.isUpdating = true
+		codeMirror.dispatch({
+			changes: {
+				from: start,
+				to: currentEnd,
+				insert: newText.slice(start, newEnd),
+			},
+			scrollIntoView: true,
+		})
+		this.isUpdating = false
 
-    return true
-  }
+		return true
+	}
 
-  readLanguage() {
-    const codeMirror = this.codeMirror.get()
-    const langauge = this.language.get()
-    const languageId = this.node.attrs.language as string
-    const languageDescription = this.languages.getById(languageId)
+	readLanguage() {
+		const codeMirror = this.codeMirror.get()
+		const langauge = this.language.get()
+		const languageId = this.node.attrs.language as string
+		const languageDescription = this.languages.getById(languageId)
 
-    if (!codeMirror || languageId === langauge?.id || !languageDescription) {
-      return
-    }
+		if (!codeMirror || languageId === langauge?.id || !languageDescription) {
+			return
+		}
 
-    this.languages
-      .getExtensionsAysnc(languageId.toLowerCase())
-      .then((value) => {
-        if (!value) {
-          return
-        }
+		this.languages
+			.getExtensionsAysnc(languageId.toLowerCase())
+			.then((value) => {
+				if (!value) {
+					return
+				}
 
-        codeMirror.dispatch({
-          effects: this.compartment.reconfigure(value),
-        })
+				codeMirror.dispatch({
+					effects: this.compartment.reconfigure(value),
+				})
 
-        this.language.set({ id: languageId, name: languageDescription.name })
-      })
-      .catch(console.error)
-  }
+				this.language.set({ id: languageId, name: languageDescription.name })
+			})
+			.catch(console.error)
+	}
 
-  writeLanguage(language: LanguageRecord) {
-    this.view.dispatch(
-      this.view.state.tr.setNodeAttribute(
-        this.getPosition() ?? 0,
-        'language',
-        language.id,
-      ),
-    )
-    this.language.set(language)
-  }
+	writeLanguage(language: LanguageRecord) {
+		this.view.dispatch(
+			this.view.state.tr.setNodeAttribute(
+				this.getPosition() ?? 0,
+				'language',
+				language.id,
+			),
+		)
+		this.language.set(language)
+	}
 
-  readSelection(anchor: number, head: number) {
-    const codeMirror = this.codeMirror.get()
+	readSelection(anchor: number, head: number) {
+		const codeMirror = this.codeMirror.get()
 
-    if (!codeMirror) {
-      return
-    }
+		if (!codeMirror) {
+			return
+		}
 
-    if (!codeMirror.dom.isConnected) {
-      requestAnimationFrame(() => this.readSelection(anchor, head))
-      return
-    }
+		if (!codeMirror.dom.isConnected) {
+			requestAnimationFrame(() => this.readSelection(anchor, head))
+			return
+		}
 
-    codeMirror.focus()
-    this.isUpdating = true
-    codeMirror.dispatch({ selection: { anchor, head } })
-    this.isUpdating = false
-  }
+		codeMirror.focus()
+		this.isUpdating = true
+		codeMirror.dispatch({ selection: { anchor, head } })
+		this.isUpdating = false
+	}
 }
