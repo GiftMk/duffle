@@ -6,7 +6,6 @@ import { drawSelection } from '@codemirror/view'
 import { codeBlockSchema } from '@milkdown/kit/preset/commonmark'
 import type { NodeViewConstructor } from '@milkdown/prose/view'
 import { $ctx, $view } from '@milkdown/utils'
-import { createAtom } from '@xstate/store'
 import type { EditorView as CodeMirror } from 'codemirror'
 import { basicSetup } from 'codemirror'
 import { ReactDomAdapter } from './components/react-dom-adapter'
@@ -17,6 +16,7 @@ import {
 	LanguageCollection,
 	type LanguageRecord,
 } from './lib/language-collection'
+import { observable } from './lib/observable'
 
 type CodeBlockContext = {
 	languages: LanguageDescription[]
@@ -37,8 +37,8 @@ export const codeBlock = $view(
 		const languages = new LanguageCollection(
 			ctx.get(codeBlockCtx.key).languages,
 		)
-		const language = createAtom<LanguageRecord | null>(null)
-		const codeMirror = createAtom<CodeMirror | null>(null)
+		const language = observable<LanguageRecord | null>(null)
+		const codeMirror = observable<CodeMirror | null>(null)
 		const dynamicExtensions = new Compartment()
 
 		return (node, view, getPosition) => {
@@ -57,8 +57,8 @@ export const codeBlock = $view(
 				codeMirror,
 			})
 			const domAdapter = new ReactDomAdapter({
-				codeMirrorAtom: codeMirror,
-				languageAtom: language,
+				codeMirror,
+				language,
 				languages,
 				bridge,
 			})
