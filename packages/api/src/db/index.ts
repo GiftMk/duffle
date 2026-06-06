@@ -1,9 +1,3 @@
-import { drizzle } from 'drizzle-orm/node-postgres'
-import { Pool } from 'pg'
-import { env } from '../environment'
+import { drizzle } from 'drizzle-orm/pglite'
 
-const pool = new Pool({
-	connectionString: env.DATABASE_URL,
-})
-
-export const db = drizzle({ client: pool, casing: 'snake_case' })
+export const db = drizzle({ casing: 'snake_case' })
