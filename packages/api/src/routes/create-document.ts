@@ -2,7 +2,7 @@ import Elysia, { InternalServerError } from 'elysia'
 import z from 'zod'
 import { db } from '../db'
 import { documents } from '../db/schema'
-import { stripMarkdown } from '../lib/strip-markdown'
+import { stripMarkdown } from '../lib/utils'
 import type { Document, Transactional } from './types'
 import { documentProjection, toDto, txIdProjection } from './types'
 
