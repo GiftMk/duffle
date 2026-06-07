@@ -12,8 +12,13 @@ type CodeMirrorBridgeParams = {
 	view: EditorView
 	getPos: () => number | undefined
 	codeMirrorAtom: Atom<CodeMirror | null>
-	languageAtom: Atom<LanguageRecord | null>
 	languageRepository: LanguageRepository
+}
+
+type Subscription = 'language'
+
+type Subscriber = {
+	notify: () => void
 }
 
 export class CodeMirrorBridge {
@@ -21,24 +26,24 @@ export class CodeMirrorBridge {
 	private readonly view: EditorView
 	private readonly getPos: () => number | undefined
 	private readonly codeMirrorAtom: Atom<CodeMirror | null>
-	private readonly languageAtom: Atom<LanguageRecord | null>
 	private readonly languageRepository: LanguageRepository
 	private readonly compartment = new Compartment()
 	private isUpdating = false
+	private readonly subscribers: Record<Subscription, Subscriber[]> = {
+		language: [],
+	}
 
 	constructor({
 		node,
 		view,
 		getPos,
 		codeMirrorAtom,
-		languageAtom,
 		languageRepository,
 	}: CodeMirrorBridgeParams) {
 		this.node = node
 		this.view = view
 		this.getPos = getPos
 		this.codeMirrorAtom = codeMirrorAtom
-		this.languageAtom = languageAtom
 		this.languageRepository = languageRepository
 	}
 
@@ -47,6 +52,21 @@ export class CodeMirrorBridge {
 			CodeMirror.updateListener.of((update) => this.writeContent(update)),
 			this.compartment.of([]),
 		]
+	}
+
+	get language(): string {
+		return this.node.attrs.language as string
+	}
+
+	subscribe(subscription: Subscription, subscriber: Subscriber) {
+		const index = this.subscribers[subscription].push(subscriber)
+		return () => this.subscribers[subscription].splice(index - 1, 1)
+	}
+
+	private notifySubscribers(subscription: Subscription) {
+		for (const subscriber of this.subscribers[subscription]) {
+			subscriber.notify()
+		}
 	}
 
 	writeContent(update: ViewUpdate) {
@@ -158,12 +178,11 @@ export class CodeMirrorBridge {
 
 	readLanguage() {
 		const codeMirror = this.codeMirrorAtom.get()
-		const langauge = this.languageAtom.get()
 		const languageId = this.node.attrs.language as string
 		const languageDescription =
 			this.languageRepository.getDescriptionById(languageId)
 
-		if (!codeMirror || languageId === langauge?.id || !languageDescription) {
+		if (!codeMirror || !languageDescription) {
 			return
 		}
 
@@ -174,19 +193,11 @@ export class CodeMirrorBridge {
 					return
 				}
 
-				console.log('language', {
-					id: languageId,
-					name: languageDescription.name,
-				})
-
 				codeMirror.dispatch({
 					effects: this.compartment.reconfigure(value),
 				})
 
-				this.languageAtom.set({
-					id: languageId,
-					name: languageDescription.name,
-				})
+				this.notifySubscribers('language')
 			})
 			.catch(console.error)
 	}
@@ -199,7 +210,8 @@ export class CodeMirrorBridge {
 				language.id,
 			),
 		)
-		this.languageAtom.set(language)
+		this.readLanguage()
+		this.notifySubscribers('language')
 	}
 
 	readSelection(anchor: number, head: number) {

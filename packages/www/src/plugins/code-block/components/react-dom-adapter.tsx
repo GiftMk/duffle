@@ -2,16 +2,12 @@ import type { EditorView as CodeMirror } from 'codemirror'
 import { createRoot } from 'react-dom/client'
 import { CodeEditorProvider } from '../context/code-editor-context'
 import type { CodeMirrorBridge } from '../lib/code-mirror-bridge'
-import type {
-	LanguageRepository,
-	LanguageRecord,
-} from '../lib/language-repository'
+import type { LanguageRepository } from '../lib/language-repository'
 import { CodeEditor } from './code-editor'
 import type { Atom } from '@tanstack/react-store'
 
 type ReactDomAdapterParams = {
 	codeMirrorAtom: Atom<CodeMirror | null>
-	languageAtom: Atom<LanguageRecord | null>
 	languageRepository: LanguageRepository
 	bridge: CodeMirrorBridge
 }

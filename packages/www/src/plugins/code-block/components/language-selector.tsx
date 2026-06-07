@@ -1,39 +1,14 @@
 import { Autocomplete } from '@base-ui/react/autocomplete'
-import { useAtom } from '@tanstack/react-store'
-import { useState } from 'react'
-import { useCodeEditor } from '../context/code-editor-context'
-
-type Item = {
-	id: string
-	value: string
-}
+import { useLanguage } from '../hooks/use-language'
 
 export const LanguageSelector = () => {
-	const { languageAtom, languageRepository, bridge } = useCodeEditor()
-	const [language, setLanguage] = useAtom(languageAtom)
-	const [value, setValue] = useState(() => language?.id)
-	const items: Item[] = languageRepository.records.map((language) => ({
-		id: language.id,
-		value: language.name,
-	}))
-
-	const handleValueChange = (value: string) => {
-		setValue(value)
-
-		const record = languageRepository.getRecordById(value)
-		console.log(value, record)
-		if (record) {
-			setLanguage(record)
-			bridge.readLanguage()
-			bridge.writeLanguage(record)
-		}
-	}
+	const { language, setLanguage, items } = useLanguage()
 
 	return (
 		<Autocomplete.Root
 			items={items}
-			value={value}
-			onValueChange={handleValueChange}
+			value={language}
+			onValueChange={setLanguage}
 		>
 			<Autocomplete.Input
 				id='language-selector'

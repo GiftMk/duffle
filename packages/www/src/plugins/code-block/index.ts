@@ -13,10 +13,7 @@ import { ReactDomAdapter } from './components/react-dom-adapter'
 import { CodeBlockView } from './lib/code-block-view'
 import { CodeMirrorBridge } from './lib/code-mirror-bridge'
 import { KeymapExtension } from './lib/keymap-extension'
-import {
-	type LanguageRecord,
-	LanguageRepository,
-} from './lib/language-repository'
+import { LanguageRepository } from './lib/language-repository'
 
 type CodeBlockContext = {
 	languages: LanguageDescription[]
@@ -37,7 +34,6 @@ export const codeBlockView = $view(
 		const languageRepository = new LanguageRepository(
 			ctx.get(codeBlockCtx.key).languages,
 		)
-		const languageAtom = createAtom<LanguageRecord | null>(null)
 		const codeMirrorAtom = createAtom<CodeMirror | null>(null)
 		const dynamicExtensions = new Compartment()
 
@@ -47,7 +43,6 @@ export const codeBlockView = $view(
 				view,
 				getPos,
 				languageRepository,
-				languageAtom,
 				codeMirrorAtom,
 			})
 			const keymapExtension = new KeymapExtension({
@@ -58,7 +53,6 @@ export const codeBlockView = $view(
 			})
 			const domAdapter = new ReactDomAdapter({
 				codeMirrorAtom,
-				languageAtom,
 				languageRepository,
 				bridge,
 			})
