@@ -2,11 +2,12 @@ import { Autocomplete } from '@base-ui/react/autocomplete'
 import { useEffect, useRef } from 'react'
 import { useCodeEditor } from '../context/code-editor-context'
 import { useLanguage } from '../hooks/use-language'
+import type { LanguageRecord } from '../lib/language-repository'
 
 export const LanguageSelector = () => {
-	const { language, setLanguage, items } = useLanguage()
-	const inputRef = useRef<HTMLInputElement | null>(null)
+	const { language, setLanguage, languages } = useLanguage()
 	const { languageInput } = useCodeEditor()
+	const inputRef = useRef<HTMLInputElement | null>(null)
 
 	useEffect(() => {
 		const input = inputRef.current
@@ -20,9 +21,11 @@ export const LanguageSelector = () => {
 
 	return (
 		<Autocomplete.Root
-			items={items}
+			items={languages}
 			value={language}
 			onValueChange={setLanguage}
+			itemToStringValue={(item) => item.name}
+			autoHighlight={'always'}
 		>
 			<Autocomplete.Input
 				ref={inputRef}
@@ -40,15 +43,15 @@ export const LanguageSelector = () => {
 							<p className='px-4 py-1.5'>No languages found.</p>
 						</Autocomplete.Empty>
 						<Autocomplete.List className='max-h-96 min-h-42 min-w-52 overflow-y-auto overscroll-contain rounded-sm p-1'>
-							{(item: { id: string; value: string }) => (
+							{(item: LanguageRecord) => (
 								<Autocomplete.Item
 									className={
-										'px-4 py-1.5 hover:bg-zinc-300 data-highlighted:bg-zinc-300'
+										'px-4 py-1.5 text-sm hover:bg-zinc-300 data-highlighted:bg-zinc-300'
 									}
 									key={item.id}
-									value={item.id}
+									value={item}
 								>
-									{item.value}
+									{item.name}
 								</Autocomplete.Item>
 							)}
 						</Autocomplete.List>
