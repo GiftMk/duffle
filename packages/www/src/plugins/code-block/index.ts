@@ -6,6 +6,7 @@ import { drawSelection } from '@codemirror/view'
 import { codeBlockSchema } from '@milkdown/kit/preset/commonmark'
 import type { NodeViewConstructor } from '@milkdown/prose/view'
 import { $ctx, $view } from '@milkdown/utils'
+import { createAtom } from '@tanstack/react-store'
 import type { EditorView as CodeMirror } from 'codemirror'
 import { basicSetup } from 'codemirror'
 import { ReactDomAdapter } from './components/react-dom-adapter'
@@ -13,10 +14,9 @@ import { CodeBlockView } from './lib/code-block-view'
 import { CodeMirrorBridge } from './lib/code-mirror-bridge'
 import { KeymapExtension } from './lib/keymap-extension'
 import {
-	LanguageCollection,
 	type LanguageRecord,
-} from './lib/language-collection'
-import { observable } from './lib/observable'
+	LanguageRepository,
+} from './lib/language-repository'
 
 type CodeBlockContext = {
 	languages: LanguageDescription[]
@@ -34,44 +34,43 @@ const baseExtensions = [basicSetup, drawSelection(), catppuccinLatte]
 export const codeBlockView = $view(
 	codeBlockSchema.node,
 	(ctx): NodeViewConstructor => {
-		const languages = new LanguageCollection(
+		const languageRepository = new LanguageRepository(
 			ctx.get(codeBlockCtx.key).languages,
 		)
-		const language = observable<LanguageRecord | null>(null)
-		const codeMirror = observable<CodeMirror | null>(null)
+		const languageAtom = createAtom<LanguageRecord | null>(null)
+		const codeMirrorAtom = createAtom<CodeMirror | null>(null)
 		const dynamicExtensions = new Compartment()
 
-		return (node, view, getPosition) => {
+		return (node, view, getPos) => {
 			const bridge = new CodeMirrorBridge({
 				node,
 				view,
-				getPosition,
-				languages,
-				language,
-				codeMirror,
+				getPos,
+				languageRepository,
+				languageAtom,
+				codeMirrorAtom,
 			})
 			const keymapExtension = new KeymapExtension({
 				view,
 				node,
-				getPosition,
-				codeMirror,
+				getPos,
+				codeMirrorAtom,
 			})
 			const domAdapter = new ReactDomAdapter({
-				codeMirror,
-				language,
-				languages,
+				codeMirrorAtom,
+				languageAtom,
+				languageRepository,
 				bridge,
 			})
 			const codeBlockView = new CodeBlockView({
 				node,
 				view,
-				getPosition,
 				bridge,
 				dom: domAdapter.root,
 				extensions: dynamicExtensions.of([]),
 			})
 
-			codeMirror.set(codeBlockView.codeMirror)
+			codeMirrorAtom.set(codeBlockView.codeMirror)
 			codeBlockView.codeMirror.dispatch({
 				effects: dynamicExtensions.reconfigure([
 					...baseExtensions,

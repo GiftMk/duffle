@@ -7,7 +7,6 @@ import type { CodeMirrorBridge } from './code-mirror-bridge'
 export type CodeBlockViewParams = {
 	node: Node
 	view: EditorView
-	getPosition: () => number | undefined
 	bridge: CodeMirrorBridge
 	dom: HTMLElement
 	extensions?: Extension
@@ -15,27 +14,20 @@ export type CodeBlockViewParams = {
 
 export class CodeBlockView implements NodeView {
 	readonly codeMirror: CodeMirror
-	private node: Node
 	private bridge: CodeMirrorBridge
-	protected readonly view: EditorView
-	protected readonly getPosition: () => number | undefined
 	readonly dom: HTMLElement
 
 	constructor({
 		node,
 		view,
-		getPosition,
 		bridge,
 		dom,
 		extensions = [],
 	}: CodeBlockViewParams) {
-		this.node = node
-		this.view = view
-		this.getPosition = getPosition
 		this.bridge = bridge
 		this.codeMirror = new CodeMirror({
-			doc: this.node.textContent,
-			root: this.view.root,
+			doc: node.textContent,
+			root: view.root,
 			extensions: [extensions, this.bridge.extensions],
 		})
 		this.dom = dom
@@ -46,7 +38,7 @@ export class CodeBlockView implements NodeView {
 	}
 
 	update(node: Node): boolean {
-		return this.bridge.readDocument(node)
+		return this.bridge.readContent(node)
 	}
 
 	selectNode() {

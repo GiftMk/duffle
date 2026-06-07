@@ -3,32 +3,27 @@ import { createRoot } from 'react-dom/client'
 import { CodeEditorProvider } from '../context/code-editor-context'
 import type { CodeMirrorBridge } from '../lib/code-mirror-bridge'
 import type {
-	LanguageCollection,
+	LanguageRepository,
 	LanguageRecord,
-} from '../lib/language-collection'
-import type { Observable } from '../lib/observable'
+} from '../lib/language-repository'
 import { CodeEditor } from './code-editor'
+import type { Atom } from '@tanstack/react-store'
 
 type ReactDomAdapterParams = {
-	codeMirror: Observable<CodeMirror | null>
-	language: Observable<LanguageRecord | null>
-	languages: LanguageCollection
+	codeMirrorAtom: Atom<CodeMirror | null>
+	languageAtom: Atom<LanguageRecord | null>
+	languageRepository: LanguageRepository
 	bridge: CodeMirrorBridge
 }
 
 export class ReactDomAdapter {
-	readonly root: HTMLElement
+	readonly root: HTMLElement = document.createElement('div')
 	readonly render: () => void
 
-	constructor({ codeMirror, language, languages }: ReactDomAdapterParams) {
-		this.root = document.createElement('div')
+	constructor(props: ReactDomAdapterParams) {
 		this.render = () => {
 			createRoot(this.root).render(
-				<CodeEditorProvider
-					language={language}
-					languages={languages.values}
-					codeMirror={codeMirror}
-				>
+				<CodeEditorProvider {...props}>
 					<CodeEditor />
 				</CodeEditorProvider>,
 			)

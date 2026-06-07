@@ -1,12 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+	--color-code-block: oklch(94.8% 0.0054 95.1);
+}
+
 .milkdown {
 	.cm-gutters {
 		background-color: transparent;
 	}
 
 	.cm-editor {
-		background-color: oklch(94.8% 0.0054 95.1);
+		background-color: var(--color-code-block);
 		padding: calc(var(--spacing) * 3);
-		border-radius: 0 0 var(--radius-md) var(--radius-md);
+		padding-top: 0;
 
 		.cm-content {
 			font-family: "iA Writer Mono", monospace;

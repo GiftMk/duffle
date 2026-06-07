@@ -1,39 +1,29 @@
+import type { Atom } from '@tanstack/react-store'
 import type { EditorView as CodeMirror } from 'codemirror'
 import { createContext, type PropsWithChildren, useContext } from 'react'
-import { useObservable } from '../hooks/use-observable'
-import type { LanguageRecord } from '../lib/language-collection'
-import type { Observable } from '../lib/observable'
+import type {
+	LanguageRecord,
+	LanguageRepository,
+} from '../lib/language-repository'
+import type { CodeMirrorBridge } from '../lib/code-mirror-bridge'
 
 type CodeEditorState = {
-	codeMirror: CodeMirror | null
-	language: LanguageRecord | null
-	languages: LanguageRecord[]
-	setLanguage: (language: LanguageRecord) => void
+	codeMirrorAtom: Atom<CodeMirror | null>
+	languageAtom: Atom<LanguageRecord | null>
+	languageRepository: LanguageRepository
+	bridge: CodeMirrorBridge
 }
 
 const CodeEditorContext = createContext<CodeEditorState | null>(null)
 
-type CodeEditorProviderProps = {
-	codeMirror: Observable<CodeMirror | null>
-	language: Observable<LanguageRecord | null>
-	languages: LanguageRecord[]
-} & PropsWithChildren
+type CodeEditorProviderProps = CodeEditorState & PropsWithChildren
 
 export const CodeEditorProvider = ({
-	language: languageObservable,
-	codeMirror: codeMirrorObservable,
-	languages,
 	children,
+	...state
 }: CodeEditorProviderProps) => {
-	const language = useObservable(languageObservable)
-	const codeMirror = useObservable(codeMirrorObservable)
-	const setLanguage = (language: LanguageRecord) =>
-		languageObservable.set(language)
-
 	return (
-		<CodeEditorContext.Provider
-			value={{ language, codeMirror, languages, setLanguage }}
-		>
+		<CodeEditorContext.Provider value={state}>
 			{children}
 		</CodeEditorContext.Provider>
 	)

@@ -3,64 +3,64 @@ import type { ViewUpdate } from '@codemirror/view'
 import type { Node } from '@milkdown/prose/model'
 import { TextSelection } from '@milkdown/prose/state'
 import type { EditorView } from '@milkdown/prose/view'
+import type { Atom } from '@tanstack/react-store'
 import { EditorView as CodeMirror } from 'codemirror'
-import type { LanguageCollection, LanguageRecord } from './language-collection'
-import type { Observable } from './observable'
+import type { LanguageRecord, LanguageRepository } from './language-repository'
 
 type CodeMirrorBridgeParams = {
 	node: Node
 	view: EditorView
-	codeMirror: Observable<CodeMirror | null>
-	language: Observable<LanguageRecord | null>
-	languages: LanguageCollection
-	getPosition: () => number | undefined
+	getPos: () => number | undefined
+	codeMirrorAtom: Atom<CodeMirror | null>
+	languageAtom: Atom<LanguageRecord | null>
+	languageRepository: LanguageRepository
 }
 
 export class CodeMirrorBridge {
 	private node: Node
 	private readonly view: EditorView
-	private readonly codeMirror: Observable<CodeMirror | null>
-	private readonly getPosition: () => number | undefined
-	private readonly language: Observable<LanguageRecord | null>
-	private readonly languages: LanguageCollection
+	private readonly getPos: () => number | undefined
+	private readonly codeMirrorAtom: Atom<CodeMirror | null>
+	private readonly languageAtom: Atom<LanguageRecord | null>
+	private readonly languageRepository: LanguageRepository
 	private readonly compartment = new Compartment()
 	private isUpdating = false
 
 	constructor({
 		node,
 		view,
-		codeMirror,
-		getPosition,
-		language,
-		languages,
+		getPos,
+		codeMirrorAtom,
+		languageAtom,
+		languageRepository,
 	}: CodeMirrorBridgeParams) {
 		this.node = node
 		this.view = view
-		this.codeMirror = codeMirror
-		this.getPosition = getPosition
-		this.language = language
-		this.languages = languages
+		this.getPos = getPos
+		this.codeMirrorAtom = codeMirrorAtom
+		this.languageAtom = languageAtom
+		this.languageRepository = languageRepository
 	}
 
 	get extensions() {
 		return [
-			CodeMirror.updateListener.of((update) => this.writeDocument(update)),
+			CodeMirror.updateListener.of((update) => this.writeContent(update)),
 			this.compartment.of([]),
 		]
 	}
 
-	writeDocument(update: ViewUpdate) {
+	writeContent(update: ViewUpdate) {
 		if (!this) {
 			return
 		}
 
-		const codeMirror = this.codeMirror.get()
+		const codeMirror = this.codeMirrorAtom.get()
 
 		if (this.isUpdating || !codeMirror || !codeMirror.hasFocus) {
 			return
 		}
 
-		let offset = (this.getPosition() ?? 0) + 1
+		let offset = (this.getPos() ?? 0) + 1
 		const { main } = update.state.selection
 
 		const codeMirrorSelection = {
@@ -100,8 +100,8 @@ export class CodeMirrorBridge {
 		}
 	}
 
-	readDocument(node: Node): boolean {
-		const codeMirror = this.codeMirror.get()
+	readContent(node: Node): boolean {
+		const codeMirror = this.codeMirrorAtom.get()
 
 		if (!codeMirror || node.type !== this.node.type) {
 			return false
@@ -157,27 +157,36 @@ export class CodeMirrorBridge {
 	}
 
 	readLanguage() {
-		const codeMirror = this.codeMirror.get()
-		const langauge = this.language.get()
+		const codeMirror = this.codeMirrorAtom.get()
+		const langauge = this.languageAtom.get()
 		const languageId = this.node.attrs.language as string
-		const languageDescription = this.languages.getById(languageId)
+		const languageDescription =
+			this.languageRepository.getDescriptionById(languageId)
 
 		if (!codeMirror || languageId === langauge?.id || !languageDescription) {
 			return
 		}
 
-		this.languages
-			.getExtensionsAysnc(languageId.toLowerCase())
+		this.languageRepository
+			.getExtensions(languageId.toLowerCase())
 			.then((value) => {
 				if (!value) {
 					return
 				}
 
+				console.log('language', {
+					id: languageId,
+					name: languageDescription.name,
+				})
+
 				codeMirror.dispatch({
 					effects: this.compartment.reconfigure(value),
 				})
 
-				this.language.set({ id: languageId, name: languageDescription.name })
+				this.languageAtom.set({
+					id: languageId,
+					name: languageDescription.name,
+				})
 			})
 			.catch(console.error)
 	}
@@ -185,16 +194,16 @@ export class CodeMirrorBridge {
 	writeLanguage(language: LanguageRecord) {
 		this.view.dispatch(
 			this.view.state.tr.setNodeAttribute(
-				this.getPosition() ?? 0,
+				this.getPos() ?? 0,
 				'language',
 				language.id,
 			),
 		)
-		this.language.set(language)
+		this.languageAtom.set(language)
 	}
 
 	readSelection(anchor: number, head: number) {
-		const codeMirror = this.codeMirror.get()
+		const codeMirror = this.codeMirrorAtom.get()
 
 		if (!codeMirror) {
 			return

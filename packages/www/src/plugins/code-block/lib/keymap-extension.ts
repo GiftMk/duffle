@@ -6,27 +6,27 @@ import { redo, undo } from '@milkdown/prose/history'
 import type { Node } from '@milkdown/prose/model'
 import { TextSelection } from '@milkdown/prose/state'
 import type { EditorView } from '@milkdown/prose/view'
+import type { Atom } from '@tanstack/react-store'
 import type { EditorView as CodeMirror } from 'codemirror'
-import type { Observable } from './observable'
 
 type KeymapExtensionParams = {
 	view: EditorView
 	node: Node
-	codeMirror: Observable<CodeMirror | null>
-	getPosition: () => number | undefined
+	getPos: () => number | undefined
+	codeMirrorAtom: Atom<CodeMirror | null>
 }
 
 export class KeymapExtension {
 	private readonly view: EditorView
 	private readonly node: Node
-	private readonly codeMirror: Observable<CodeMirror | null>
-	private readonly getPosition: () => number | undefined
+	private readonly getPos: () => number | undefined
+	private readonly codeMirrorAtom: Atom<CodeMirror | null>
 
-	constructor({ view, node, codeMirror, getPosition }: KeymapExtensionParams) {
+	constructor({ view, node, codeMirrorAtom, getPos }: KeymapExtensionParams) {
 		this.view = view
 		this.node = node
-		this.codeMirror = codeMirror
-		this.getPosition = getPosition
+		this.getPos = getPos
+		this.codeMirrorAtom = codeMirrorAtom
 	}
 
 	get extension() {
@@ -81,7 +81,7 @@ export class KeymapExtension {
 			{
 				key: 'Backspace',
 				run: () => {
-					const codeMirror = this.codeMirror.get()
+					const codeMirror = this.codeMirrorAtom.get()
 
 					if (!codeMirror) {
 						return false
@@ -104,7 +104,7 @@ export class KeymapExtension {
 					}
 
 					const state = this.view.state
-					const position = this.getPosition() ?? 0
+					const position = this.getPos() ?? 0
 					const transaction = state.tr.replaceWith(
 						position,
 						position + this.node.nodeSize,
@@ -124,7 +124,7 @@ export class KeymapExtension {
 	}
 
 	maybeEscape(unit: 'line' | 'char', direction: 1 | -1): boolean {
-		const state = this.codeMirror.get()?.state
+		const state = this.codeMirrorAtom.get()?.state
 
 		if (!state) {
 			return false
@@ -149,16 +149,18 @@ export class KeymapExtension {
 		}
 
 		const targetPosition =
-			this.getPosition() ?? 0 + (direction < 0 ? 0 : this.node.nodeSize)
+			this.getPos() ?? 0 + (direction < 0 ? 0 : this.node.nodeSize)
 		const selection = TextSelection.near(
 			this.view.state.doc.resolve(targetPosition),
 			direction,
 		)
+
 		const transaction = this.view.state.tr
 			.setSelection(selection)
 			.scrollIntoView()
 		this.view.dispatch(transaction)
 		this.view.focus()
+
 		return true
 	}
 }
