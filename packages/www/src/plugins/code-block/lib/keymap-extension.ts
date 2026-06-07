@@ -6,27 +6,27 @@ import { redo, undo } from '@milkdown/prose/history'
 import type { Node } from '@milkdown/prose/model'
 import { TextSelection } from '@milkdown/prose/state'
 import type { EditorView } from '@milkdown/prose/view'
-import type { Atom } from '@tanstack/react-store'
 import type { EditorView as CodeMirror } from 'codemirror'
+import type { Lazy } from './lazy'
 
 type KeymapExtensionParams = {
 	view: EditorView
 	node: Node
 	getPos: () => number | undefined
-	codeMirrorAtom: Atom<CodeMirror | null>
+	codeMirror: Lazy<CodeMirror>
 }
 
 export class KeymapExtension {
 	private readonly view: EditorView
 	private readonly node: Node
 	private readonly getPos: () => number | undefined
-	private readonly codeMirrorAtom: Atom<CodeMirror | null>
+	private readonly codeMirror: Lazy<CodeMirror>
 
-	constructor({ view, node, codeMirrorAtom, getPos }: KeymapExtensionParams) {
+	constructor({ view, node, codeMirror, getPos }: KeymapExtensionParams) {
 		this.view = view
 		this.node = node
 		this.getPos = getPos
-		this.codeMirrorAtom = codeMirrorAtom
+		this.codeMirror = codeMirror
 	}
 
 	get extension() {
@@ -81,12 +81,11 @@ export class KeymapExtension {
 			{
 				key: 'Backspace',
 				run: () => {
-					const codeMirror = this.codeMirrorAtom.get()
-
-					if (!codeMirror) {
+					if (!this.codeMirror.hasValue) {
 						return false
 					}
 
+					const codeMirror = this.codeMirror.value
 					const ranges = codeMirror.state.selection.ranges
 
 					if (ranges.length > 1) {
@@ -124,7 +123,9 @@ export class KeymapExtension {
 	}
 
 	maybeEscape(unit: 'line' | 'char', direction: 1 | -1): boolean {
-		const state = this.codeMirrorAtom.get()?.state
+		const state = this.codeMirror.hasValue
+			? this.codeMirror.value.state
+			: undefined
 
 		if (!state) {
 			return false

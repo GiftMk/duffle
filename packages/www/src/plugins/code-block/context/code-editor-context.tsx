@@ -1,11 +1,10 @@
-import type { Atom } from '@tanstack/react-store'
 import type { EditorView as CodeMirror } from 'codemirror'
 import { createContext, type PropsWithChildren, useContext } from 'react'
-import type { LanguageRepository } from '../lib/language-repository'
 import type { CodeMirrorBridge } from '../lib/code-mirror-bridge'
+import type { LanguageRepository } from '../lib/language-repository'
 
 type CodeEditorState = {
-	codeMirrorAtom: Atom<CodeMirror | null>
+	codeMirror: CodeMirror
 	languageRepository: LanguageRepository
 	bridge: CodeMirrorBridge
 }

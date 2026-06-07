@@ -6,14 +6,13 @@ import { drawSelection } from '@codemirror/view'
 import { codeBlockSchema } from '@milkdown/kit/preset/commonmark'
 import type { NodeViewConstructor } from '@milkdown/prose/view'
 import { $ctx, $view } from '@milkdown/utils'
-import { createAtom } from '@tanstack/react-store'
-import type { EditorView as CodeMirror } from 'codemirror'
-import { basicSetup } from 'codemirror'
+import { basicSetup, type EditorView as CodeMirror } from 'codemirror'
 import { ReactDomAdapter } from './components/react-dom-adapter'
 import { CodeBlockView } from './lib/code-block-view'
 import { CodeMirrorBridge } from './lib/code-mirror-bridge'
 import { KeymapExtension } from './lib/keymap-extension'
 import { LanguageRepository } from './lib/language-repository'
+import { Lazy } from './lib/lazy'
 
 type CodeBlockContext = {
 	languages: LanguageDescription[]
@@ -34,7 +33,7 @@ export const codeBlockView = $view(
 		const languageRepository = new LanguageRepository(
 			ctx.get(codeBlockCtx.key).languages,
 		)
-		const codeMirrorAtom = createAtom<CodeMirror | null>(null)
+		const codeMirror = new Lazy<CodeMirror>()
 		const dynamicExtensions = new Compartment()
 
 		return (node, view, getPos) => {
@@ -43,16 +42,16 @@ export const codeBlockView = $view(
 				view,
 				getPos,
 				languageRepository,
-				codeMirrorAtom,
+				codeMirror,
 			})
 			const keymapExtension = new KeymapExtension({
 				view,
 				node,
 				getPos,
-				codeMirrorAtom,
+				codeMirror,
 			})
 			const domAdapter = new ReactDomAdapter({
-				codeMirrorAtom,
+				codeMirror,
 				languageRepository,
 				bridge,
 			})
@@ -64,7 +63,7 @@ export const codeBlockView = $view(
 				extensions: dynamicExtensions.of([]),
 			})
 
-			codeMirrorAtom.set(codeBlockView.codeMirror)
+			codeMirror.set(codeBlockView.codeMirror)
 			codeBlockView.codeMirror.dispatch({
 				effects: dynamicExtensions.reconfigure([
 					...baseExtensions,

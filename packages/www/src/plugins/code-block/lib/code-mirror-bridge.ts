@@ -3,15 +3,15 @@ import type { ViewUpdate } from '@codemirror/view'
 import type { Node } from '@milkdown/prose/model'
 import { TextSelection } from '@milkdown/prose/state'
 import type { EditorView } from '@milkdown/prose/view'
-import type { Atom } from '@tanstack/react-store'
 import { EditorView as CodeMirror } from 'codemirror'
 import type { LanguageRecord, LanguageRepository } from './language-repository'
+import type { Lazy } from './lazy'
 
 type CodeMirrorBridgeParams = {
 	node: Node
 	view: EditorView
 	getPos: () => number | undefined
-	codeMirrorAtom: Atom<CodeMirror | null>
+	codeMirror: Lazy<CodeMirror>
 	languageRepository: LanguageRepository
 }
 
@@ -25,7 +25,7 @@ export class CodeMirrorBridge {
 	private node: Node
 	private readonly view: EditorView
 	private readonly getPos: () => number | undefined
-	private readonly codeMirrorAtom: Atom<CodeMirror | null>
+	private readonly codeMirror: Lazy<CodeMirror>
 	private readonly languageRepository: LanguageRepository
 	private readonly compartment = new Compartment()
 	private isUpdating = false
@@ -37,13 +37,13 @@ export class CodeMirrorBridge {
 		node,
 		view,
 		getPos,
-		codeMirrorAtom,
+		codeMirror,
 		languageRepository,
 	}: CodeMirrorBridgeParams) {
 		this.node = node
 		this.view = view
 		this.getPos = getPos
-		this.codeMirrorAtom = codeMirrorAtom
+		this.codeMirror = codeMirror
 		this.languageRepository = languageRepository
 	}
 
@@ -74,9 +74,11 @@ export class CodeMirrorBridge {
 			return
 		}
 
-		const codeMirror = this.codeMirrorAtom.get()
-
-		if (this.isUpdating || !codeMirror || !codeMirror.hasFocus) {
+		if (
+			this.isUpdating ||
+			!this.codeMirror.hasValue ||
+			!this.codeMirror.value.hasFocus
+		) {
 			return
 		}
 
@@ -121,12 +123,11 @@ export class CodeMirrorBridge {
 	}
 
 	readContent(node: Node): boolean {
-		const codeMirror = this.codeMirrorAtom.get()
-
-		if (!codeMirror || node.type !== this.node.type) {
+		if (!this.codeMirror.hasValue || node.type !== this.node.type) {
 			return false
 		}
 
+		const codeMirror = this.codeMirror.value
 		this.node = node
 
 		if (this.isUpdating) {
@@ -177,15 +178,15 @@ export class CodeMirrorBridge {
 	}
 
 	readLanguage() {
-		const codeMirror = this.codeMirrorAtom.get()
 		const languageId = this.node.attrs.language as string
 		const languageDescription =
 			this.languageRepository.getDescriptionById(languageId)
 
-		if (!codeMirror || !languageDescription) {
+		if (!this.codeMirror.hasValue || !languageDescription) {
 			return
 		}
 
+		const codeMirror = this.codeMirror.value
 		this.languageRepository
 			.getExtensions(languageId.toLowerCase())
 			.then((value) => {
@@ -215,12 +216,11 @@ export class CodeMirrorBridge {
 	}
 
 	readSelection(anchor: number, head: number) {
-		const codeMirror = this.codeMirrorAtom.get()
-
-		if (!codeMirror) {
+		if (!this.codeMirror.hasValue) {
 			return
 		}
 
+		const codeMirror = this.codeMirror.value
 		if (!codeMirror.dom.isConnected) {
 			requestAnimationFrame(() => this.readSelection(anchor, head))
 			return

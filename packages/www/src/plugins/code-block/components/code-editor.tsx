@@ -1,4 +1,3 @@
-import { useAtom } from '@tanstack/react-store'
 import { useEffect, useRef } from 'react'
 import { useCodeEditor } from '../context/code-editor-context'
 import { LanguageSelector } from './language-selector'
@@ -6,8 +5,7 @@ import './code-mirror.css'
 
 export const CodeEditor = () => {
 	const ref = useRef<HTMLDivElement | null>(null)
-	const { codeMirrorAtom } = useCodeEditor()
-	const [codeMirror] = useAtom(codeMirrorAtom)
+	const { codeMirror } = useCodeEditor()
 
 	useEffect(() => {
 		const current = ref.current
@@ -24,7 +22,7 @@ export const CodeEditor = () => {
 	}, [codeMirror])
 
 	return (
-		<div className='bg-code-block rounded-md overflow-hidden'>
+		<div className='overflow-hidden rounded-md bg-code-block'>
 			<LanguageSelector />
 			<div ref={ref} />
 		</div>
