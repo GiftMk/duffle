@@ -34,6 +34,7 @@ export const codeBlockView = $view(
 			ctx.get(codeBlockCtx.key).languages,
 		)
 		const codeMirror = new Lazy<CodeMirror>()
+		const languageInput = new Lazy<HTMLInputElement>()
 		const dynamicExtensions = new Compartment()
 
 		return (node, view, getPos) => {
@@ -49,11 +50,13 @@ export const codeBlockView = $view(
 				node,
 				getPos,
 				codeMirror,
+				languageInput,
 			})
 			const domAdapter = new ReactDomAdapter({
 				codeMirror,
 				languageRepository,
 				bridge,
+				languageInput,
 			})
 			const codeBlockView = new CodeBlockView({
 				node,

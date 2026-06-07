@@ -14,6 +14,7 @@ type KeymapExtensionParams = {
 	node: Node
 	getPos: () => number | undefined
 	codeMirror: Lazy<CodeMirror>
+	languageInput: Lazy<HTMLInputElement>
 }
 
 export class KeymapExtension {
@@ -21,12 +22,20 @@ export class KeymapExtension {
 	private readonly node: Node
 	private readonly getPos: () => number | undefined
 	private readonly codeMirror: Lazy<CodeMirror>
+	private readonly languageInput: Lazy<HTMLInputElement>
 
-	constructor({ view, node, codeMirror, getPos }: KeymapExtensionParams) {
+	constructor({
+		view,
+		node,
+		getPos,
+		codeMirror,
+		languageInput,
+	}: KeymapExtensionParams) {
 		this.view = view
 		this.node = node
 		this.getPos = getPos
 		this.codeMirror = codeMirror
+		this.languageInput = languageInput
 	}
 
 	get extension() {
@@ -42,10 +51,8 @@ export class KeymapExtension {
 			{
 				key: 'ArrowUp',
 				run: () => {
-					const languageSelector = document.getElementById('language-selector')
-
-					if (languageSelector) {
-						languageSelector.focus()
+					if (this.languageInput.hasValue) {
+						this.languageInput.value.focus()
 						return true
 					}
 

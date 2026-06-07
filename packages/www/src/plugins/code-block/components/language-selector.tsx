@@ -1,8 +1,22 @@
 import { Autocomplete } from '@base-ui/react/autocomplete'
+import { useEffect, useRef } from 'react'
+import { useCodeEditor } from '../context/code-editor-context'
 import { useLanguage } from '../hooks/use-language'
 
 export const LanguageSelector = () => {
 	const { language, setLanguage, items } = useLanguage()
+	const inputRef = useRef<HTMLInputElement | null>(null)
+	const { languageInput } = useCodeEditor()
+
+	useEffect(() => {
+		const input = inputRef.current
+
+		if (!input) {
+			return
+		}
+
+		languageInput.set(input)
+	}, [languageInput])
 
 	return (
 		<Autocomplete.Root
@@ -11,7 +25,7 @@ export const LanguageSelector = () => {
 			onValueChange={setLanguage}
 		>
 			<Autocomplete.Input
-				id='language-selector'
+				ref={inputRef}
 				placeholder='none'
 				className='rounded-md px-2 py-1.5'
 			/>

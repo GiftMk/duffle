@@ -10,14 +10,14 @@ export const CodeEditor = () => {
 	useEffect(() => {
 		const current = ref.current
 
-		if (!current || !codeMirror) {
+		if (!current || !codeMirror.hasValue) {
 			return
 		}
 
-		current.appendChild(codeMirror.dom)
+		current.appendChild(codeMirror.value.dom)
 
 		return () => {
-			current.removeChild(codeMirror.dom)
+			current.removeChild(codeMirror.value.dom)
 		}
 	}, [codeMirror])
 

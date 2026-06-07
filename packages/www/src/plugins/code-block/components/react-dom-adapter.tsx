@@ -8,6 +8,7 @@ import { CodeEditor } from './code-editor'
 
 type ReactDomAdapterParams = {
 	codeMirror: Lazy<CodeMirror>
+	languageInput: Lazy<HTMLInputElement>
 	languageRepository: LanguageRepository
 	bridge: CodeMirrorBridge
 }
@@ -16,10 +17,10 @@ export class ReactDomAdapter {
 	readonly root: HTMLElement = document.createElement('div')
 	readonly render: () => void
 
-	constructor({ codeMirror, ...props }: ReactDomAdapterParams) {
+	constructor({ ...props }: ReactDomAdapterParams) {
 		this.render = () => {
 			createRoot(this.root).render(
-				<CodeEditorProvider codeMirror={codeMirror.value} {...props}>
+				<CodeEditorProvider {...props}>
 					<CodeEditor />
 				</CodeEditorProvider>,
 			)

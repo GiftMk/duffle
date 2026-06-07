@@ -2,9 +2,11 @@ import type { EditorView as CodeMirror } from 'codemirror'
 import { createContext, type PropsWithChildren, useContext } from 'react'
 import type { CodeMirrorBridge } from '../lib/code-mirror-bridge'
 import type { LanguageRepository } from '../lib/language-repository'
+import type { Lazy } from '../lib/lazy'
 
 type CodeEditorState = {
-	codeMirror: CodeMirror
+	codeMirror: Lazy<CodeMirror>
+	languageInput: Lazy<HTMLInputElement>
 	languageRepository: LanguageRepository
 	bridge: CodeMirrorBridge
 }
