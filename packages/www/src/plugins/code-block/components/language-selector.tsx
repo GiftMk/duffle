@@ -30,7 +30,7 @@ export const LanguageSelector = () => {
 			<Autocomplete.Input
 				ref={inputRef}
 				placeholder='none'
-				className='rounded-md px-2 py-1.5'
+				className='rounded-md px-2 py-1.5 text-sm text-typography-light'
 			/>
 			<Autocomplete.Portal>
 				<Autocomplete.Positioner align='start'>
@@ -46,7 +46,7 @@ export const LanguageSelector = () => {
 							{(item: LanguageRecord) => (
 								<Autocomplete.Item
 									className={
-										'px-4 py-1.5 text-sm hover:bg-zinc-300 data-highlighted:bg-zinc-300'
+										'px-4 py-1.5 text-sm hover:bg-stone-200 data-highlighted:bg-stone-200'
 									}
 									key={item.id}
 									value={item}

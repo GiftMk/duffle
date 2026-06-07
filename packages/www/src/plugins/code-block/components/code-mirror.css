@@ -12,7 +12,6 @@
 	.cm-editor {
 		background-color: var(--color-code-block);
 		padding: calc(var(--spacing) * 3);
-		padding-top: 0;
 
 		.cm-content {
 			font-family: "iA Writer Mono", monospace;

@@ -22,7 +22,7 @@ export const CodeEditor = () => {
 	}, [codeMirror])
 
 	return (
-		<div className='overflow-hidden rounded-md bg-code-block'>
+		<div className='overflow-hidden rounded-md'>
 			<LanguageSelector />
 			<div ref={ref} />
 		</div>
