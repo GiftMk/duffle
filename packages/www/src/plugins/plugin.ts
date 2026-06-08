@@ -1,5 +1,5 @@
 import type { NodeViewConstructor } from '@milkdown/prose/view'
-import { type $Node, $view } from '@milkdown/utils'
+import { type $Mark, type $Node, $view } from '@milkdown/utils'
 import type { ReactNodeViewUserOptions } from '@prosemirror-adapter/react'
 import type { FC } from 'react'
 
@@ -9,10 +9,10 @@ export type NodeViewFactory = (
 
 export const milkdownReactPlugin = (
 	nodeViewFactory: NodeViewFactory,
-	node: $Node,
+	type: $Node | $Mark,
 	component: FC,
 ) => {
-	return $view(node, () =>
+	return $view(type, () =>
 		nodeViewFactory({
 			component,
 		}),

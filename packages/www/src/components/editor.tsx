@@ -18,6 +18,7 @@ import { codeBlock } from '../plugins/code-block'
 import { headingLevelIndicator } from '../plugins/heading-level-indicator'
 import './editor.css'
 import { blockquote } from '@/plugins/blockquote'
+import { inlineCode } from '@/plugins/inline-code'
 
 const EditorContent = ({ document }: { document: Document }) => {
 	const nodeViewFactory = useNodeViewFactory()
@@ -34,6 +35,7 @@ const EditorContent = ({ document }: { document: Document }) => {
 			})
 			.use(codeBlock)
 			.use(blockquote(nodeViewFactory))
+			.use(inlineCode(nodeViewFactory))
 			.use(listener)
 			.use(commonmark)
 			.use(clipboard)

@@ -1,0 +1,25 @@
+import { inlineCodeSchema } from '@milkdown/kit/preset/commonmark'
+import { $view } from '@milkdown/utils'
+import { useNodeViewContext } from '@prosemirror-adapter/react'
+import type { NodeViewFactory } from './plugin'
+
+const InlineCode = () => {
+	const { contentRef } = useNodeViewContext()
+
+	return (
+		<span
+			className='rounded-md bg-surface-300 p-1.5 font-mono text-typography-600'
+			ref={contentRef}
+		/>
+	)
+}
+
+export const inlineCode = (nodeViewFactory: NodeViewFactory) => {
+	return $view(inlineCodeSchema.mark, () =>
+		nodeViewFactory({
+			component: InlineCode,
+			as: 'span',
+			contentAs: 'code',
+		}),
+	)
+}
