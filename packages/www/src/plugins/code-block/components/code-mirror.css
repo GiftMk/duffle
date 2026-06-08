@@ -8,7 +8,7 @@
 		padding: calc(var(--spacing) * 3);
 
 		.cm-content {
-			font-family: "iA Writer Mono", monospace;
+			font-family: var(--font-mono), monospace;
 		}
 
 		.cm-activeLine {
