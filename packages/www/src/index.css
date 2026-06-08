@@ -8,19 +8,49 @@
 }
 
 @theme {
-	--color-background: oklch(96.08% 0.0054 95.1);
-	--color-typography: oklch(11.63% 0.039 21.78);
-	--color-typography-light: oklch(57.63% 0.039 21.78);
-	--color-typography-white: oklch(99.63% 0.039 21.78);
 	--color-border: oklch(0.8234 0 0);
-	--color-primary: oklch(0.61 0.14 39);
-	--color-primary-hover: oklch(0.57 0.14 39);
+
+	--color-primary-50: oklch(97.08% 0.14 39);
+	--color-primary-100: oklch(96.08% 0.14 39);
+	--color-primary-200: oklch(94.8% 0.14 39);
+	--color-primary-300: oklch(86.9% 0.14 39);
+	--color-primary-400: oklch(70.9% 0.14 39);
+	--color-primary-500: oklch(61% 0.14 39);
+	--color-primary-600: oklch(57% 0.14 39);
+	--color-primary-700: oklch(37.4% 0.14 39);
+	--color-primary-800: oklch(26.8% 0.14 39);
+	--color-primary-900: oklch(21.6% 0.14 39);
+	--color-primary-950: oklch(14.7% 0.14 39);
+
+	--color-surface-50: oklch(97.08% 0.0054 95.1);
+	--color-surface-100: oklch(96.08% 0.0054 95.1);
+	--color-surface-200: oklch(94.8% 0.0054 95.1);
+	--color-surface-300: oklch(86.9% 0.0054 95.1);
+	--color-surface-400: oklch(70.9% 0.0054 95.1);
+	--color-surface-500: oklch(55.3% 0.0054 95.1);
+	--color-surface-600: oklch(44.4% 0.0054 95.1);
+	--color-surface-700: oklch(37.4% 0.0054 95.1);
+	--color-surface-800: oklch(26.8% 0.0054 95.1);
+	--color-surface-900: oklch(21.6% 0.0054 95.1);
+	--color-surface-900: oklch(14.7% 0.0054 95.1);
+
+	--color-typography-50: oklch(99.63% 0.039 21.78);
+	--color-typography-100: oklch(96.08% 0.039 21.78);
+	--color-typography-200: oklch(94.8% 0.039 21.78);
+	--color-typography-300: oklch(86.9% 0.039 21.78);
+	--color-typography-400: oklch(70.9% 0.039 21.78);
+	--color-typography-500: oklch(57.63% 0.039 21.78);
+	--color-typography-600: oklch(44.4% 0.039 21.78);
+	--color-typography-700: oklch(37.4% 0.039 21.78);
+	--color-typography-800: oklch(26.8% 0.039 21.78);
+	--color-typography-900: oklch(21.6% 0.039 21.78);
+	--color-typography-950: oklch(11.63% 0.039 21.78);
 }
 
 html {
 	height: 100%;
-	background: var(--color-background);
-	color: var(--color-typography);
+	background: var(--color-surface-100);
+	color: var(--color-typography-950);
 }
 
 body {

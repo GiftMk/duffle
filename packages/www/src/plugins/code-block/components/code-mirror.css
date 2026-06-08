@@ -1,16 +1,10 @@
-@import "tailwindcss";
-
-@theme {
-	--color-code-block: oklch(94.8% 0.0054 95.1);
-}
-
 .milkdown {
 	.cm-gutters {
 		background-color: transparent;
 	}
 
 	.cm-editor {
-		background-color: var(--color-code-block);
+		background-color: var(--color-surface-200);
 		padding: calc(var(--spacing) * 3);
 
 		.cm-content {
@@ -18,11 +12,11 @@
 		}
 
 		.cm-activeLine {
-			background-color: oklch(97.08% 0.0054 95.1);
+			background-color: var(--color-surface-50);
 		}
 
 		.cm-activeLineGutter {
-			background-color: oklch(97.08% 0.0054 95.1);
+			background-color: var(--color-surface-50);
 		}
 
 		.cm-panels {
@@ -70,7 +64,7 @@
 	}
 
 	.cm-tooltip-autocomplete {
-		background-color: oklch(97.08% 0.0054 95.1);
+		background-color: var(--color-surface-50);
 		border-radius: var(--radius-md);
 		border: 1px solid var(--color-border);
 	}

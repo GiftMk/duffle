@@ -51,11 +51,11 @@ const ActionButton = () => {
 			<button
 				type='button'
 				onClick={handleClick}
-				className='rounded-sm border border-primary px-5 py-2 text-primary transition-all duration-200 hover:scale-110 hover:bg-primary/10'
+				className='rounded-sm border border-primary-500 px-5 py-2 text-primary-500 transition-all duration-200 hover:scale-110 hover:bg-primary-500/10'
 			>
 				<ArrowFatRightIcon
 					size={22}
-					className='fill-primary'
+					className='fill-primary-500'
 					weight='duotone'
 				/>
 			</button>
@@ -65,7 +65,7 @@ const ActionButton = () => {
 
 function RouteComponent() {
 	return (
-		<main className='flex h-5/6 w-full flex-col items-center justify-center gap-12 text-center text-typography'>
+		<main className='flex h-5/6 w-full flex-col items-center justify-center gap-12 text-center text-typography-950'>
 			<Heading />
 			<SubHeading />
 			<ActionButton />

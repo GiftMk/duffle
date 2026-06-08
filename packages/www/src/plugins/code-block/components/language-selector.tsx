@@ -30,13 +30,13 @@ export const LanguageSelector = () => {
 			<Autocomplete.Input
 				ref={inputRef}
 				placeholder='none'
-				className='rounded-md px-2 py-1.5 text-sm text-typography-light'
+				className='rounded-md px-2 py-1.5 text-sm text-typography-500'
 			/>
 			<Autocomplete.Portal>
 				<Autocomplete.Positioner align='start'>
 					<Autocomplete.Popup
 						className={
-							'overflow-hidden rounded-sm border border-border bg-background'
+							'overflow-hidden rounded-sm border border-border bg-surface-100'
 						}
 					>
 						<Autocomplete.Empty>
