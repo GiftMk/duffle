@@ -9,13 +9,19 @@ import { clipboard } from '@milkdown/kit/plugin/clipboard'
 import { listener } from '@milkdown/kit/plugin/listener'
 import { commonmark } from '@milkdown/kit/preset/commonmark'
 import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react'
-import { ProsemirrorAdapterProvider } from '@prosemirror-adapter/react'
+import {
+	ProsemirrorAdapterProvider,
+	useNodeViewFactory,
+} from '@prosemirror-adapter/react'
 import { useAutoSave } from '../hooks/use-auto-save'
 import { codeBlock } from '../plugins/code-block'
 import { headingLevelIndicator } from '../plugins/heading-level-indicator'
 import './editor.css'
+import { blockquote } from '@/plugins/blockquote'
 
 const EditorContent = ({ document }: { document: Document }) => {
+	const nodeViewFactory = useNodeViewFactory()
+
 	useEditor((root) => {
 		return Editor.make()
 			.config((ctx) => {
@@ -27,6 +33,7 @@ const EditorContent = ({ document }: { document: Document }) => {
 				}))
 			})
 			.use(codeBlock)
+			.use(blockquote(nodeViewFactory))
 			.use(listener)
 			.use(commonmark)
 			.use(clipboard)
