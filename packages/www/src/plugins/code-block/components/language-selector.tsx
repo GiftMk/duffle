@@ -30,7 +30,7 @@ export const LanguageSelector = () => {
 			<Autocomplete.Input
 				ref={inputRef}
 				placeholder='none'
-				className='rounded-md px-2 py-1.5 text-sm text-typography-500'
+				className='w-full rounded-t-md bg-surface-200 px-2 pt-1 pb-0.5 text-sm text-typography-500'
 			/>
 			<Autocomplete.Portal>
 				<Autocomplete.Positioner align='start'>

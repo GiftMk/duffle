@@ -1,6 +1,6 @@
 .milkdown {
 	.cm-gutters {
-		background-color: transparent;
+		display: none;
 	}
 
 	.cm-editor {
