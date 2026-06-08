@@ -1,6 +1,7 @@
 import { blockquoteSchema } from '@milkdown/kit/preset/commonmark'
+import { $view } from '@milkdown/utils'
 import { useNodeViewContext } from '@prosemirror-adapter/react'
-import { milkdownReactPlugin, type NodeViewFactory } from './plugin'
+import type { NodeViewFactory } from './types'
 
 const Blockquote = () => {
 	const { contentRef } = useNodeViewContext()
@@ -16,5 +17,9 @@ const Blockquote = () => {
 }
 
 export const blockquote = (nodeViewFactory: NodeViewFactory) => {
-	return milkdownReactPlugin(nodeViewFactory, blockquoteSchema.node, Blockquote)
+	return $view(blockquoteSchema.node, () =>
+		nodeViewFactory({
+			component: Blockquote,
+		}),
+	)
 }

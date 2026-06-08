@@ -1,7 +1,7 @@
 import { inlineCodeSchema } from '@milkdown/kit/preset/commonmark'
 import { $view } from '@milkdown/utils'
 import { useNodeViewContext } from '@prosemirror-adapter/react'
-import type { NodeViewFactory } from './plugin'
+import type { NodeViewFactory } from './types'
 
 const InlineCode = () => {
 	const { contentRef } = useNodeViewContext()
