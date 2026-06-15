@@ -15,7 +15,7 @@ export const LoadingPage = () => {
 					(„• ֊ •„)੭
 				</Kanmoji>
 				<div className='flex items-baseline gap-2'>
-					<TypeAnimation sequence={[500, 'Loading .ᐟ']} speed={65} />
+					<TypeAnimation sequence={[500, 'Loading', 500, '...']} speed={65} />
 				</div>
 			</motion.div>
 		</div>
