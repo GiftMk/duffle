@@ -4,7 +4,7 @@ import z from 'zod'
 export const env = createEnv({
 	clientPrefix: 'VITE_',
 	client: {
-		VITE_API_URL: z.url(),
+		VITE_DB_URL: z.string().default('duffle-pglite'),
 	},
 	runtimeEnv: import.meta.env,
 })

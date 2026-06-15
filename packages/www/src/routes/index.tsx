@@ -32,7 +32,6 @@ const ActionButton = () => {
 
 	const handleClick = async () => {
 		const id = uuidv7()
-
 		documentCollection.insert({
 			id,
 			markdown: '# ',

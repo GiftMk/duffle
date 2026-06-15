@@ -11,5 +11,5 @@
 		"noUncheckedIndexedAccess": true,
 		"skipLibCheck": true
 	},
-	"include": ["src", "environment.ts"]
+	"include": ["src", "compile-migrations.ts"]
 }

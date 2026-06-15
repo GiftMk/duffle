@@ -1,4 +1,4 @@
-import type { Document } from '@duffle/api'
+import type { Document } from '@duffle/rpc'
 import {
 	defaultValueCtx,
 	Editor,
@@ -6,26 +6,27 @@ import {
 	rootCtx,
 } from '@milkdown/kit/core'
 import { clipboard } from '@milkdown/kit/plugin/clipboard'
-import { listener } from '@milkdown/kit/plugin/listener'
+import { listener, listenerCtx } from '@milkdown/kit/plugin/listener'
 import { commonmark } from '@milkdown/kit/preset/commonmark'
 import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react'
 import {
 	ProsemirrorAdapterProvider,
 	useNodeViewFactory,
 } from '@prosemirror-adapter/react'
-import { useAutoSave } from '../hooks/use-auto-save'
 import { codeBlock } from '../plugins/code-block'
 import { headingLevelIndicator } from '../plugins/heading-level-indicator'
 import './editor.css'
 import '@milkdown/kit/prose/view/style/prosemirror.css'
+import { gfm } from '@milkdown/kit/preset/gfm'
 import { blockquote } from '@/plugins/blockquote'
 import { inlineCode } from '@/plugins/inline-code'
-import { gfm } from '@milkdown/kit/preset/gfm'
+import { useHotkey } from '@tanstack/react-hotkeys'
+import { documentCollection } from '@/lib/collections'
 
 const EditorContent = ({ document }: { document: Document }) => {
 	const nodeViewFactory = useNodeViewFactory()
 
-	useEditor((root) => {
+	const { get } = useEditor((root) => {
 		return Editor.make()
 			.config((ctx) => {
 				ctx.set(rootCtx, root)
@@ -44,14 +45,30 @@ const EditorContent = ({ document }: { document: Document }) => {
 			.use(clipboard)
 			.use(headingLevelIndicator)
 	})
-	useAutoSave(document.id)
+
+	useHotkey('Mod+S', () => {
+		const editor = get()
+
+		if (!editor) {
+			return
+		}
+
+		const listenerManager = editor.ctx.get(listenerCtx)
+		listenerManager.markdownUpdated((_, markdown) =>
+			documentCollection.update(document.id, (draft) => {
+				draft.markdown = markdown
+			}),
+		)
+
+		alert('Updated document!')
+	})
 
 	return <Milkdown />
 }
 
 export const MarkdownEditor = ({ document }: { document: Document }) => {
 	return (
-		<div className='h-full w-full overflow-y-auto max-w-[70ch] py-12'>
+		<div className='h-full w-full max-w-[70ch] overflow-y-auto py-12'>
 			<MilkdownProvider>
 				<ProsemirrorAdapterProvider>
 					<EditorContent document={document} />

@@ -1,6 +1,6 @@
 import { type SQL, sql } from 'drizzle-orm'
 import { index, pgTable } from 'drizzle-orm/pg-core'
-import { tsvector } from './types'
+import { tsvector } from './custom-types'
 
 export const documents = pgTable(
 	'documents',

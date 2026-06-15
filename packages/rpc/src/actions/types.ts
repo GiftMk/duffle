@@ -11,16 +11,7 @@ export const documentProjection = {
 
 export const txIdProjection = sql<number>`pg_current_xact_id()::xid::text::int`
 
-type DocumentEntity = typeof documents.$inferSelect
-
-export const toDto = (
-	document: Omit<DocumentEntity, 'text' | 'searchVector'>,
-): Document => ({
-	id: document.id,
-	markdown: document.markdown,
-	createdAt: document.createdAt,
-	updatedAt: document.updatedAt,
-})
+export type DocumentEntity = typeof documents.$inferSelect
 
 const datetimeSchema = z
 	.string()
