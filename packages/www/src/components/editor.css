@@ -35,6 +35,10 @@
 		}
 	}
 
+	li[data-input-type="task"] {
+		list-style-type: none;
+	}
+
 	.ProseMirror {
 		font-family: var(--font-sans);
 		font-size: var(--text-base);

@@ -4,22 +4,22 @@ import { useNodeViewContext } from '@prosemirror-adapter/react'
 import type { NodeViewFactory } from './types'
 
 const InlineCode = () => {
-	const { contentRef } = useNodeViewContext()
+  const { contentRef } = useNodeViewContext()
 
-	return (
-		<span
-			className='rounded-md bg-surface-300 p-1.5 font-mono text-typography-600'
-			ref={contentRef}
-		/>
-	)
+  return (
+    <span
+      className='rounded-md bg-surface-300 px-1.5 py-1.25 font-mono text-primary-600'
+      ref={contentRef}
+    />
+  )
 }
 
 export const inlineCode = (nodeViewFactory: NodeViewFactory) => {
-	return $view(inlineCodeSchema.mark, () =>
-		nodeViewFactory({
-			component: InlineCode,
-			as: 'span',
-			contentAs: 'code',
-		}),
-	)
+  return $view(inlineCodeSchema.mark, () =>
+    nodeViewFactory({
+      component: InlineCode,
+      as: 'span',
+      contentAs: 'code',
+    }),
+  )
 }
