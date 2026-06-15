@@ -1,4 +1,4 @@
-import { createDb, type Database, runMigrations } from '@duffle/rpc'
+import { createDb, type Database, runMigrations } from '@duffle/api'
 import { createAtom } from '@xstate/store'
 import { env } from '../../environment'
 

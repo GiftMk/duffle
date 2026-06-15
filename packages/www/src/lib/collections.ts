@@ -4,7 +4,7 @@ import {
 	documentSchema,
 	getDocuments,
 	updateDocument,
-} from '@duffle/rpc'
+} from '@duffle/api'
 import { QueryClient } from '@tanstack/query-core'
 import { queryCollectionOptions } from '@tanstack/query-db-collection'
 import { createCollection } from '@tanstack/react-db'

@@ -1,4 +1,4 @@
-import type { Document } from '@duffle/rpc'
+import type { Document } from '@duffle/api'
 import {
 	defaultValueCtx,
 	Editor,
