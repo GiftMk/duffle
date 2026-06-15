@@ -111,10 +111,19 @@ export class KeymapExtension {
 
 					const state = this.view.state
 					const position = this.getPos() ?? 0
+					const node = state.schema.nodes.paragraph?.createChecked(
+						{},
+						this.node.content,
+					)
+
+					if (!node) {
+						return false
+					}
+
 					const transaction = state.tr.replaceWith(
 						position,
 						position + this.node.nodeSize,
-						state.schema.nodes.paragraph.createChecked({}, this.node.content),
+						node,
 					)
 
 					transaction.setSelection(
