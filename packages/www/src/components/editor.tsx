@@ -18,10 +18,10 @@ import { headingLevelIndicator } from '../plugins/heading-level-indicator'
 import './editor.css'
 import '@milkdown/kit/prose/view/style/prosemirror.css'
 import { gfm } from '@milkdown/kit/preset/gfm'
-import { blockquote } from '@/plugins/blockquote'
-import { inlineCode } from '@/plugins/inline-code'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { documentCollection } from '@/lib/collections'
+import { blockquote } from '@/plugins/blockquote'
+import { inlineCode } from '@/plugins/inline-code'
 
 const EditorContent = ({ document }: { document: Document }) => {
 	const nodeViewFactory = useNodeViewFactory()

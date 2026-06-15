@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
-import { Kanmoji } from './kanmoji'
 import { TypeAnimation } from 'react-type-animation'
+import { Kanmoji } from './kanmoji'
 
 export const LoadingPage = () => {
 	return (
