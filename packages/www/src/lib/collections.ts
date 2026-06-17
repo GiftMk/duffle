@@ -1,15 +1,9 @@
-import {
-	createDocument,
-	deleteDocument,
-	documentSchema,
-	getDocuments,
-	updateDocument,
-} from '@duffle/api'
-import { QueryClient } from '@tanstack/query-core'
-import { queryCollectionOptions } from '@tanstack/query-db-collection'
-import { createCollection } from '@tanstack/react-db'
+import { documentSchema } from '@duffle/api'
 // import { db } from './db'
-import { localStorageCollectionOptions } from '@tanstack/react-db'
+import {
+	createCollection,
+	localStorageCollectionOptions,
+} from '@tanstack/react-db'
 
 export const documentCollection = createCollection(
 	localStorageCollectionOptions({

@@ -1,9 +1,9 @@
-import { useNodeViewContext } from '@prosemirror-adapter/react'
-import type { NodeViewFactory } from './types'
 import { listItemSchema } from '@milkdown/kit/preset/commonmark'
 import { $view } from '@milkdown/utils'
+import { useNodeViewContext } from '@prosemirror-adapter/react'
 import { useId } from 'react'
 import { cn } from '@/lib/utils'
+import type { NodeViewFactory } from './types'
 
 const ListItem = () => {
 	const { contentRef, node, view, getPos } = useNodeViewContext()
@@ -37,13 +37,13 @@ const ListItem = () => {
 	}
 
 	return (
-		<li className='list-none mt-2 marker:text-typography-950 flex items-start gap-2.5'>
+		<li className='mt-2 flex list-none items-start gap-2.5 marker:text-typography-950'>
 			<input
 				defaultChecked={checked}
 				onClick={toggleCheckbox}
 				type='checkbox'
 				id={id}
-				className='accent-primary-500 h-4 w-4 mt-1.5'
+				className='mt-1.5 h-4 w-4 accent-primary-500'
 			/>
 			<span ref={contentRef} className='min-w-0 flex-1' />
 		</li>

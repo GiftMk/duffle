@@ -9,7 +9,7 @@ const Blockquote = () => {
 	return (
 		<div className='relative my-1.5'>
 			<blockquote
-				className='pl-4 before:absolute before:inset-0 before:w-1 before:rounded-sm before:bg-primary-500 before:content-[""] text-typography-600'
+				className='pl-4 text-typography-600 before:absolute before:inset-0 before:w-1 before:rounded-sm before:bg-primary-500 before:content-[""]'
 				ref={contentRef}
 			/>
 		</div>

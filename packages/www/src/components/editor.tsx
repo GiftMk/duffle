@@ -70,8 +70,8 @@ const EditorContent = ({ document }: { document: Document }) => {
 
 export const MarkdownEditor = ({ document }: { document: Document }) => {
 	return (
-		<div className='w-full h-full overflow-y-auto flex justify-center p-12'>
-			<div className='min-h-full h-fit w-full max-w-[70ch]'>
+		<div className='flex h-full w-full justify-center overflow-y-auto p-12'>
+			<div className='h-fit min-h-full w-full max-w-[70ch]'>
 				<MilkdownProvider>
 					<ProsemirrorAdapterProvider>
 						<EditorContent document={document} />
