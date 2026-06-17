@@ -22,6 +22,7 @@ import { useHotkey } from '@tanstack/react-hotkeys'
 import { documentCollection } from '@/lib/collections'
 import { blockquote } from '@/plugins/blockquote'
 import { inlineCode } from '@/plugins/inline-code'
+import { listItem } from '@/plugins/list-item'
 
 const EditorContent = ({ document }: { document: Document }) => {
 	const nodeViewFactory = useNodeViewFactory()
@@ -39,6 +40,7 @@ const EditorContent = ({ document }: { document: Document }) => {
 			.use(codeBlock)
 			.use(blockquote(nodeViewFactory))
 			.use(inlineCode(nodeViewFactory))
+			.use(listItem(nodeViewFactory))
 			.use(listener)
 			.use(commonmark)
 			.use(gfm)
