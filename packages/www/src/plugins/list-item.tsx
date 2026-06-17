@@ -45,7 +45,7 @@ const ListItem = () => {
 				id={id}
 				className='accent-primary-500 h-4 w-4 mt-1.5'
 			/>
-			<span ref={contentRef} />
+			<span ref={contentRef} className='min-w-0 flex-1' />
 		</li>
 	)
 }
