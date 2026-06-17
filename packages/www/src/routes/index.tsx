@@ -22,7 +22,7 @@ const Heading = () => (
 const SubHeading = () => (
 	<TypeAnimation
 		className='text-pretty text-2xl'
-		sequence={[1000, 'A happy place for all your writing (˶˃ ᵕ ˂˶) .ᐟ.ᐟ']}
+		sequence={[1000, 'A happy place for all your writing (˶˃ ᵕ ˂˶)']}
 		speed={65}
 	/>
 )
