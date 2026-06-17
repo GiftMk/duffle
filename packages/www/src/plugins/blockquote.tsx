@@ -7,9 +7,9 @@ const Blockquote = () => {
 	const { contentRef } = useNodeViewContext()
 
 	return (
-		<div className='relative mb-1.5'>
+		<div className='relative my-1.5'>
 			<blockquote
-				className='pl-4 before:absolute before:inset-0 before:w-1 before:rounded-sm before:bg-primary-500 before:content-[""]'
+				className='pl-4 before:absolute before:inset-0 before:w-1 before:rounded-sm before:bg-primary-500 before:content-[""] text-typography-600'
 				ref={contentRef}
 			/>
 		</div>
