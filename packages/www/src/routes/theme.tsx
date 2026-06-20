@@ -8,27 +8,27 @@ type PaletteProps = {
 	color: string
 }
 
-const COLOR_RANGES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
+const COLOR_GRADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
 
 const Palette = ({ color }: PaletteProps) => {
 	return (
 		<div className='flex w-full flex-col gap-2'>
 			<h1 className='font-bold text-xl capitalize'>{color}</h1>
 			<ul className='flex flex-wrap gap-4'>
-				{COLOR_RANGES.map((range) => (
+				{COLOR_GRADES.map((grade) => (
 					<li
 						className='flex h-28 w-40 items-end justify-end rounded-md p-2'
-						key={range}
+						key={grade}
 						style={{
-							background: `var(--color-${color}-${range})`,
+							background: `var(--color-${color}-${grade})`,
 							color:
-								range < 700
+								grade < 700
 									? `var(--color-${color}-950)`
 									: `var(--color-${color}-300)`,
 						}}
 					>
 						<p>
-							{color}-{range}
+							{color}-{grade}
 						</p>
 					</li>
 				))}
