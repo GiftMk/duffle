@@ -2,6 +2,7 @@ import type { Document } from '@duffle/api'
 import {
 	defaultValueCtx,
 	Editor,
+	editorViewCtx,
 	editorViewOptionsCtx,
 	rootCtx,
 } from '@milkdown/kit/core'
@@ -19,7 +20,8 @@ import './editor.css'
 import '@milkdown/kit/prose/view/style/prosemirror.css'
 import { gfm } from '@milkdown/kit/preset/gfm'
 import { useHotkey } from '@tanstack/react-hotkeys'
-import { documentCollection } from '@/lib/collections'
+import { useEffect } from 'react'
+import { noteCollection } from '@/lib/collections'
 import { blockquote } from '@/plugins/blockquote'
 import { inlineCode } from '@/plugins/inline-code'
 import { listItem } from '@/plugins/list-item'
@@ -57,7 +59,7 @@ const EditorContent = ({ document }: { document: Document }) => {
 
 		const listenerManager = editor.ctx.get(listenerCtx)
 		listenerManager.markdownUpdated((_, markdown) =>
-			documentCollection.update(document.id, (draft) => {
+			noteCollection.update(document.id, (draft) => {
 				draft.markdown = markdown
 			}),
 		)
@@ -65,10 +67,25 @@ const EditorContent = ({ document }: { document: Document }) => {
 		alert('Updated document!')
 	})
 
+	useEffect(() => {
+		const editor = get()
+
+		if (!editor) {
+			return
+		}
+
+		editor.action((ctx) => {
+			const view = ctx.get(editorViewCtx)
+			view.focus()
+		})
+	}, [get])
+
 	return <Milkdown />
 }
 
 export const MarkdownEditor = ({ document }: { document: Document }) => {
+	console.log('rendering note with ID: ', document.id)
+
 	return (
 		<div className='flex h-full w-full justify-center overflow-y-auto px-12 py-4'>
 			<div className='h-fit min-h-full w-full max-w-[70ch]'>

@@ -2,8 +2,7 @@ import { ArrowFatRightIcon } from '@phosphor-icons/react/dist/ssr'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
-import { uuidv7 } from 'uuidv7'
-import { documentCollection } from '../lib/collections'
+import { createNote } from '@/lib/actions'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,
@@ -15,7 +14,7 @@ const Heading = () => (
 		animate={{ opacity: 1 }}
 		transition={{ duration: 0.5 }}
 	>
-		<h1 className='font-semibold text-9xl tracking-tight'>Duffle.</h1>
+		<h1 className='font-bold text-9xl tracking-tight'>Duffle.</h1>
 	</motion.div>
 )
 
@@ -31,14 +30,8 @@ const ActionButton = () => {
 	const navigate = useNavigate()
 
 	const handleClick = async () => {
-		const id = uuidv7()
-		documentCollection.insert({
-			id,
-			markdown: '# ',
-			createdAt: new Date().toISOString(),
-		})
-
-		navigate({ to: '/docs/$documentId', params: { documentId: id } })
+		const id = createNote()
+		navigate({ to: '/notes/$noteId', params: { noteId: id } })
 	}
 
 	return (

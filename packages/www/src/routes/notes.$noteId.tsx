@@ -1,24 +1,25 @@
 import { eq, useLiveQuery } from '@tanstack/react-db'
 import { createFileRoute } from '@tanstack/react-router'
+import { EditorSpine } from '@/components/editor-spine'
 import { MarkdownEditor } from '../components/editor'
 import { ErrorPage } from '../components/error-page'
 import { LoadingPage } from '../components/loading-page'
-import { documentCollection } from '../lib/collections'
+import { noteCollection } from '../lib/collections'
 
-export const Route = createFileRoute('/docs/$documentId')({
+export const Route = createFileRoute('/notes/$noteId')({
 	component: RouteComponent,
 })
 
 function RouteComponent() {
-	const { documentId } = Route.useParams()
+	const { noteId } = Route.useParams()
 	const {
-		data: document,
+		data: note,
 		isLoading,
 		isError,
 	} = useLiveQuery((q) =>
 		q
-			.from({ document: documentCollection })
-			.where(({ document }) => eq(document.id, documentId))
+			.from({ note: noteCollection })
+			.where(({ note }) => eq(note.id, noteId))
 			.findOne(),
 	)
 
@@ -30,10 +31,11 @@ function RouteComponent() {
 		return <ErrorPage />
 	}
 
-	if (document)
+	if (note)
 		return (
-			<main className='flex h-editor w-full items-center justify-center'>
-				<MarkdownEditor document={document} />
+			<main className='flex h-full w-full items-center justify-center'>
+				<EditorSpine />
+				<MarkdownEditor document={note} />
 			</main>
 		)
 }

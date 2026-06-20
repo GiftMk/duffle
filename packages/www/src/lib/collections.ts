@@ -5,7 +5,7 @@ import {
 	localStorageCollectionOptions,
 } from '@tanstack/react-db'
 
-export const documentCollection = createCollection(
+export const noteCollection = createCollection(
 	localStorageCollectionOptions({
 		id: 'documents',
 		storageKey: 'duffle-documents',
