@@ -13,7 +13,7 @@ export const NotesDialog = () => {
 				render={
 					<button
 						type='button'
-						className='flex h-fit items-center justify-center rounded-full border border-surface-300 p-2 text-typography-600 hover:bg-surface-200 focus:outline-none'
+						className='flex h-fit items-center justify-center rounded-full border border-surface-400 p-2 text-typography-600 hover:bg-surface-200 focus:outline-none'
 					>
 						<TelescopeIcon />
 					</button>
