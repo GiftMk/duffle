@@ -15,7 +15,7 @@ export const NewNoteButton = () => {
 		<button
 			onClick={handleClick}
 			type='button'
-			className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 hover:bg-surface-300 focus:outline-none'
+			className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 hover:bg-surface-200 focus:outline-none'
 		>
 			<PenNibIcon size={20} />
 		</button>
