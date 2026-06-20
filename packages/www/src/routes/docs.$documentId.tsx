@@ -4,7 +4,6 @@ import { MarkdownEditor } from '../components/editor'
 import { ErrorPage } from '../components/error-page'
 import { LoadingPage } from '../components/loading-page'
 import { documentCollection } from '../lib/collections'
-import { NotesList } from '@/components/notes-list'
 
 export const Route = createFileRoute('/docs/$documentId')({
 	component: RouteComponent,
@@ -33,8 +32,7 @@ function RouteComponent() {
 
 	if (document)
 		return (
-			<main className='flex h-full w-full items-center justify-center'>
-				<NotesList />
+			<main className='flex h-editor w-full items-center justify-center'>
 				<MarkdownEditor document={document} />
 			</main>
 		)
