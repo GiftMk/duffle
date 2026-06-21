@@ -16,7 +16,6 @@ export const SearchDialog = () => {
 
 	const closeDialog = () => {
 		setOpen(false)
-		setQuery('')
 	}
 
 	useHotkey('Mod+K', () => setOpen(true))
@@ -30,6 +29,13 @@ export const SearchDialog = () => {
 		// biome-ignore lint/suspicious/noExplicitAny: minisearch returns items as any
 		setResults(results as any as SearchItem[])
 	}, [query])
+
+	useEffect(() => {
+		if (!open) {
+			setQuery('')
+			setResults([])
+		}
+	}, [open])
 
 	return (
 		<Dialog.Root open={open} onOpenChange={setOpen}>
