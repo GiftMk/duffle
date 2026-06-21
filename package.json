@@ -7,7 +7,7 @@
 	],
 	"scripts": {
 		"dev": "bun --elide-lines=0 --filter ./packages/www dev",
-		"tidy": "biome check --write --unsafe ."
+		"tidy": "bun run --workspaces --if-present tidy"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.4",
