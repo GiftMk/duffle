@@ -23,11 +23,14 @@ export const NotesDialog = () => {
 				}
 			/>
 			<Dialog.Portal>
-				<Dialog.Backdrop className='fixed inset-0 w-full bg-black/15 data-ending-style:opacity-0 data-starting-style:opacity-0' />
-				<Dialog.Popup className='fixed top-50 left-1/2 w-2xl -translate-x-1/2 -translate-y-1/2 rounded-md border border-surface-400 bg-surface-100 p-4 focus:outline-none'>
-					<span className='flex w-full items-center gap-2 rounded-md border border-surface-400 p-2'>
+				<Dialog.Backdrop className='fixed inset-0 w-full bg-black/0 data-ending-style:opacity-0 data-starting-style:opacity-0' />
+				<Dialog.Popup className='fixed top-50 left-1/2 w-2xl -translate-x-1/2 -translate-y-1/2 rounded-md border border-surface-400 bg-surface-100 p-4 shadow-2xl shadow-surface-400/50 focus:outline-none'>
+					<span className='flex w-full items-center gap-3 p-2'>
 						<InputSwitch />
-						<Input autoFocus className='h-full w-full focus:outline-none' />
+						<Input
+							autoFocus
+							className='h-full w-full border-surface-400 border-b py-2 focus:outline-none'
+						/>
 					</span>
 				</Dialog.Popup>
 			</Dialog.Portal>
