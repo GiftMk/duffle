@@ -1,4 +1,5 @@
 import { PenNibIcon } from '@phosphor-icons/react/dist/ssr'
+import { useHotkey } from '@tanstack/react-hotkeys'
 import { useNavigate } from '@tanstack/react-router'
 import { createNote } from '@/lib/actions'
 
@@ -9,6 +10,8 @@ export const NewNoteButton = () => {
 		const id = await createNote()
 		navigate({ to: '/notes/$noteId', params: { noteId: id } })
 	}
+
+	useHotkey('Mod+Enter', handleClick)
 
 	return (
 		<button

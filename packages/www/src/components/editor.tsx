@@ -18,7 +18,6 @@ import { headingLevelIndicator } from '../plugins/heading-level-indicator'
 import './editor.css'
 import '@milkdown/kit/prose/view/style/prosemirror.css'
 import { gfm } from '@milkdown/kit/preset/gfm'
-import { useHotkey } from '@tanstack/react-hotkeys'
 import { useEffect } from 'react'
 import { updateNote } from '@/lib/actions'
 import type { Note } from '@/lib/db'
@@ -50,21 +49,6 @@ const EditorContent = ({ note }: { note: Note }) => {
 			.use(headingLevelIndicator)
 	})
 
-	useHotkey('Mod+S', () => {
-		const editor = get()
-
-		if (!editor) {
-			return
-		}
-
-		const listenerManager = editor.ctx.get(listenerCtx)
-		listenerManager.markdownUpdated((_, markdown) =>
-			updateNote(note.id, markdown),
-		)
-
-		alert('Updated document!')
-	})
-
 	useEffect(() => {
 		const editor = get()
 
@@ -76,7 +60,12 @@ const EditorContent = ({ note }: { note: Note }) => {
 			const view = ctx.get(editorViewCtx)
 			view.focus()
 		})
-	}, [get])
+
+		const listenerManager = editor.ctx.get(listenerCtx)
+		listenerManager.markdownUpdated((_, markdown) =>
+			updateNote(note.id, markdown),
+		)
+	}, [get, note.id])
 
 	return <Milkdown />
 }
