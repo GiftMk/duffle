@@ -74,7 +74,7 @@ export const MarkdownEditor = ({ note }: { note: Note }) => {
 	return (
 		<div
 			key={note.id}
-			className='flex h-full w-full justify-center overflow-y-auto px-12 py-4'
+			className='flex h-full w-full justify-center overflow-y-auto px-12 py-9'
 		>
 			<div className='h-fit min-h-full w-full max-w-[70ch]'>
 				<MilkdownProvider>
