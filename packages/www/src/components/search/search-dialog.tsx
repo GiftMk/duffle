@@ -1,5 +1,6 @@
 import { Input } from '@base-ui/react'
 import { Dialog } from '@base-ui/react/dialog'
+import { XIcon } from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { Link } from '@tanstack/react-router'
 import { Fragment, useEffect, useState } from 'react'
@@ -13,6 +14,11 @@ export const SearchDialog = () => {
 	const [mode, setMode] = useState<InputSwitchMode>('search')
 	const [query, setQuery] = useState('')
 	const [results, setResults] = useState<SearchItem[]>([])
+
+	const closeDialog = () => {
+		setOpen(false)
+		setQuery('')
+	}
 
 	useHotkey('Mod+K', () => setOpen(true))
 
@@ -40,7 +46,13 @@ export const SearchDialog = () => {
 			/>
 			<Dialog.Portal>
 				<Dialog.Popup className='fixed top-44 left-1/2 w-2xl -translate-x-1/2 rounded-md border border-surface-400 bg-surface-100 py-4 shadow-2xl shadow-surface-400/50 focus:outline-none'>
-					<span className='flex w-full items-center gap-3 py-2 px-4'>
+					<Dialog.Close
+						onClick={closeDialog}
+						className='absolute top-2 right-2 rounded-full p-1.5 text-surface-800 hover:bg-surface-300'
+					>
+						<XIcon size={18} />
+					</Dialog.Close>
+					<span className='flex w-full items-center gap-3 px-4 py-2'>
 						<InputSwitch mode={mode} setMode={setMode} />
 						<Input
 							value={query}
@@ -50,23 +62,10 @@ export const SearchDialog = () => {
 							placeholder={'Search, ask...'}
 						/>
 					</span>
-					<ul className='flex flex-col overflow-y-auto max-h-[min(432px,35svh)] px-4'>
+					<ul className='flex max-h-[min(432px,35svh)] flex-col overflow-y-auto px-4'>
 						{results.map((note) => (
 							<Fragment key={note.id}>
-								<SearchResult item={note} onClick={() => setOpen(false)} />
-								<hr className='my-2 text-surface-400' />
-							</Fragment>
-						))}
-						{/* temp */}
-						{results.map((note) => (
-							<Fragment key={note.id}>
-								<SearchResult item={note} onClick={() => setOpen(false)} />
-								<hr className='my-2 text-surface-400' />
-							</Fragment>
-						))}
-						{results.map((note) => (
-							<Fragment key={note.id}>
-								<SearchResult item={note} onClick={() => setOpen(false)} />
+								<SearchResult item={note} onClick={closeDialog} />
 								<hr className='my-2 text-surface-400' />
 							</Fragment>
 						))}
