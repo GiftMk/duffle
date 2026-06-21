@@ -1,13 +1,18 @@
 import { uuidv7 } from 'uuidv7'
-import { noteCollection } from './collections'
+import { db } from './db'
 
-export const createNote = () => {
+export const createNote = async () => {
 	const id = uuidv7()
-	noteCollection.insert({
+
+	await db.notes.add({
 		id,
 		markdown: '# ',
 		createdAt: new Date().toISOString(),
 	})
 
 	return id
+}
+
+export const updateNote = async (id: string, markdown: string) => {
+	await db.notes.update(id, { markdown })
 }

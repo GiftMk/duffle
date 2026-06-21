@@ -5,9 +5,8 @@ import { createNote } from '@/lib/actions'
 export const NewNoteButton = () => {
 	const navigate = useNavigate()
 
-	const handleClick = () => {
-		const id = createNote()
-		console.log('created a new note', id)
+	const handleClick = async () => {
+		const id = await createNote()
 		navigate({ to: '/notes/$noteId', params: { noteId: id } })
 	}
 

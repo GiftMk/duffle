@@ -1,6 +1,9 @@
+import { Input } from '@base-ui/react'
 import { Dialog } from '@base-ui/react/dialog'
+import { ChatIcon, MagnifyingGlassIcon } from '@phosphor-icons/react/dist/ssr'
 import { useHotkey } from '@tanstack/react-hotkeys'
-import { useState } from 'react'
+import { type ComponentProps, useState } from 'react'
+import { cn } from '@/lib/utils'
 
 export const NotesDialog = () => {
 	const [open, setOpen] = useState(false)
@@ -22,14 +25,63 @@ export const NotesDialog = () => {
 			<Dialog.Portal>
 				<Dialog.Backdrop className='fixed inset-0 w-full bg-black/15 data-ending-style:opacity-0 data-starting-style:opacity-0' />
 				<Dialog.Popup className='fixed top-50 left-1/2 w-2xl -translate-x-1/2 -translate-y-1/2 rounded-md border border-surface-400 bg-surface-100 p-4 focus:outline-none'>
-					Here's the notes dialog
+					<span className='flex w-full items-center gap-2 rounded-md border border-surface-400 p-2'>
+						<InputSwitch />
+						<Input autoFocus className='h-full w-full focus:outline-none' />
+					</span>
 				</Dialog.Popup>
 			</Dialog.Portal>
 		</Dialog.Root>
 	)
 }
 
-const TelescopeIcon = () => {
+type InputSwitchModeProps = {
+	active?: boolean
+} & ComponentProps<'button'>
+
+const InputSwitchMode = ({
+	active = false,
+	className,
+	...props
+}: InputSwitchModeProps) => {
+	return (
+		<button
+			type='button'
+			className={cn(
+				'flex h-8 w-8 items-center justify-center rounded-full p-1 text-surface-600 hover:bg-surface-300 focus:outline-0',
+				{ 'bg-primary-500 text-typography-100 hover:bg-primary-500': active },
+				className,
+			)}
+			{...props}
+		/>
+	)
+}
+
+const InputSwitch = () => {
+	const [mode, setMode] = useState<'search' | 'ask'>('search')
+
+	return (
+		<div className='flex gap-0.5 rounded-full border border-surface-400 bg-surface-200 p-1'>
+			<InputSwitchMode
+				active={mode === 'search'}
+				onClick={() => setMode('search')}
+			>
+				<MagnifyingGlassIcon weight={mode === 'search' ? 'bold' : 'regular'} />
+			</InputSwitchMode>
+			<InputSwitchMode active={mode === 'ask'} onClick={() => setMode('ask')}>
+				<ChatIcon weight={mode === 'ask' ? 'bold' : 'regular'} />
+			</InputSwitchMode>
+		</div>
+	)
+}
+
+const TelescopeIcon = ({
+	className,
+	strokeWidth,
+}: {
+	className?: string
+	strokeWidth?: string
+}) => {
 	return (
 		<svg
 			xmlns='http://www.w3.org/2000/svg'
@@ -39,8 +91,8 @@ const TelescopeIcon = () => {
 			stroke='currentColor'
 			strokeLinecap='round'
 			strokeLinejoin='round'
-			strokeWidth='1.25'
-			className='lucide lucide-telescope-icon lucide-telescope'
+			strokeWidth={strokeWidth ?? '1.25'}
+			className={cn('lucide lucide-telescope-icon lucide-telescope', className)}
 			viewBox='0 0 24 24'
 		>
 			<title>Telescope</title>

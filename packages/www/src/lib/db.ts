@@ -1,13 +1,16 @@
-import { createDb, runMigrations } from '@duffle/api'
-import { env } from '../../environment'
+import { Dexie, type EntityTable } from 'dexie'
 
-export const db = createDb(`idb://${env.VITE_DB_URL}`)
-
-export const initDb = async () => {
-	console.debug('Created in-memory db')
-
-	await runMigrations(db)
-	console.debug('Ran migrations')
-
-	console.debug('Initialized in-memory db')
+export type Note = {
+	id: string
+	markdown: string
+	createdAt: string
+	updatedAt?: string
 }
+
+export const db = new Dexie('duffle-db') as Dexie & {
+	notes: EntityTable<Note, 'id'>
+}
+
+db.version(1).stores({
+	notes: '++id, markdown, createdAt, updatedAt',
+})

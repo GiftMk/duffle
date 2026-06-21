@@ -1,9 +1,15 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { ErrorPage } from './components/error-page'
+import { LoadingPage } from './components/loading-page'
 import { routeTree } from './routeTree.gen'
 
-const router = createRouter({ routeTree })
+const router = createRouter({
+	routeTree,
+	defaultPendingComponent: LoadingPage,
+	defaultErrorComponent: ErrorPage,
+})
 
 declare module '@tanstack/react-router' {
 	interface Register {

@@ -1,4 +1,3 @@
-import type { Document } from '@duffle/api'
 import {
 	defaultValueCtx,
 	Editor,
@@ -21,19 +20,20 @@ import '@milkdown/kit/prose/view/style/prosemirror.css'
 import { gfm } from '@milkdown/kit/preset/gfm'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { useEffect } from 'react'
-import { noteCollection } from '@/lib/collections'
+import { updateNote } from '@/lib/actions'
+import type { Note } from '@/lib/db'
 import { blockquote } from '@/plugins/blockquote'
 import { inlineCode } from '@/plugins/inline-code'
 import { listItem } from '@/plugins/list-item'
 
-const EditorContent = ({ document }: { document: Document }) => {
+const EditorContent = ({ note }: { note: Note }) => {
 	const nodeViewFactory = useNodeViewFactory()
 
 	const { get } = useEditor((root) => {
 		return Editor.make()
 			.config((ctx) => {
 				ctx.set(rootCtx, root)
-				ctx.set(defaultValueCtx, document.markdown)
+				ctx.set(defaultValueCtx, note.markdown)
 				ctx.update(editorViewOptionsCtx, (prev) => ({
 					...prev,
 					attributes: { autofocus: 'true' },
@@ -59,9 +59,7 @@ const EditorContent = ({ document }: { document: Document }) => {
 
 		const listenerManager = editor.ctx.get(listenerCtx)
 		listenerManager.markdownUpdated((_, markdown) =>
-			noteCollection.update(document.id, (draft) => {
-				draft.markdown = markdown
-			}),
+			updateNote(note.id, markdown),
 		)
 
 		alert('Updated document!')
@@ -83,15 +81,16 @@ const EditorContent = ({ document }: { document: Document }) => {
 	return <Milkdown />
 }
 
-export const MarkdownEditor = ({ document }: { document: Document }) => {
-	console.log('rendering note with ID: ', document.id)
-
+export const MarkdownEditor = ({ note }: { note: Note }) => {
 	return (
-		<div className='flex h-full w-full justify-center overflow-y-auto px-12 py-4'>
+		<div
+			key={note.id}
+			className='flex h-full w-full justify-center overflow-y-auto px-12 py-4'
+		>
 			<div className='h-fit min-h-full w-full max-w-[70ch]'>
 				<MilkdownProvider>
 					<ProsemirrorAdapterProvider>
-						<EditorContent document={document} />
+						<EditorContent note={note} />
 					</ProsemirrorAdapterProvider>
 				</MilkdownProvider>
 			</div>

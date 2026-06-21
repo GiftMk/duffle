@@ -10,7 +10,7 @@ export const EditorSpine = () => {
 	useRoughSvg(parentRef, svgRef, {
 		fill: 'var(--color-surface-300)',
 		fillStyle: 'cross-hatch',
-		hachureGap: 5,
+		hachureGap: 7,
 		stroke: 'var(--color-surface-300)',
 		strokeWidth: 0.5,
 	})

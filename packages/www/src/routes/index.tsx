@@ -30,7 +30,7 @@ const ActionButton = () => {
 	const navigate = useNavigate()
 
 	const handleClick = async () => {
-		const id = createNote()
+		const id = await createNote()
 		navigate({ to: '/notes/$noteId', params: { noteId: id } })
 	}
 
