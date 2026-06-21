@@ -1,8 +1,7 @@
-import { Input } from '@base-ui/react'
-import { Dialog } from '@base-ui/react/dialog'
+import { Autocomplete, Dialog } from '@base-ui/react'
 import { XIcon } from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
-import { Link } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { Fragment, useEffect, useState } from 'react'
 import { miniSearch, type SearchItem } from '@/lib/db'
 import { cn } from '@/lib/utils'
@@ -52,24 +51,29 @@ export const SearchDialog = () => {
 					>
 						<XIcon size={18} />
 					</Dialog.Close>
-					<span className='flex w-full items-center gap-3 px-4 py-2'>
-						<InputSwitch mode={mode} setMode={setMode} />
-						<Input
-							value={query}
-							onValueChange={setQuery}
-							autoFocus
-							className='h-full w-full border-surface-400 border-b py-2 focus:outline-none'
-							placeholder={'Search, ask...'}
-						/>
-					</span>
-					<ul className='flex max-h-[min(432px,35svh)] flex-col overflow-y-auto px-4'>
-						{results.map((note) => (
-							<Fragment key={note.id}>
-								<SearchResult item={note} onClick={closeDialog} />
-								<hr className='my-2 text-surface-400' />
-							</Fragment>
-						))}
-					</ul>
+					<Autocomplete.Root
+						value={query}
+						onValueChange={setQuery}
+						items={results}
+						autoHighlight={'always'}
+					>
+						<span className='flex w-full items-center gap-3 px-4 py-2'>
+							<InputSwitch mode={mode} setMode={setMode} />
+							<Autocomplete.Input
+								autoFocus
+								className='h-full w-full border-surface-400 border-b py-2 focus:outline-none'
+								placeholder={'Search, ask...'}
+							/>
+						</span>
+						<Autocomplete.List className='flex max-h-[min(432px,35svh)] flex-col overflow-y-auto px-4'>
+							{results.map((note) => (
+								<Fragment key={note.id}>
+									<SearchResult item={note} onClick={closeDialog} />
+									<hr className='my-2 text-surface-400' />
+								</Fragment>
+							))}
+						</Autocomplete.List>
+					</Autocomplete.Root>
 				</Dialog.Popup>
 			</Dialog.Portal>
 		</Dialog.Root>
@@ -82,23 +86,25 @@ type SearchResultProps = {
 }
 
 const SearchResult = ({ item, onClick }: SearchResultProps) => {
+	const navigate = useNavigate()
+	const handleClick = () => {
+		navigate({ to: '/notes/$noteId', params: { noteId: item.id } })
+		onClick?.()
+	}
+
 	return (
-		<li>
-			<Link
-				to='/notes/$noteId'
-				params={{ noteId: item.id }}
-				onClick={onClick}
-				className='flex w-full flex-col gap-4 rounded-md px-4 pt-6 pb-3 hover:bg-surface-300/70'
+		<Autocomplete.Item
+			onClick={handleClick}
+			className='flex w-full flex-col gap-4 rounded-md px-4 pt-6 pb-3 data-highlighted:bg-surface-300/70'
+		>
+			<p
+				className={cn('font-bold text-lg', {
+					'opacity-30': item.title.length === 0,
+				})}
 			>
-				<p
-					className={cn('font-bold text-lg', {
-						'opacity-30': item.title.length === 0,
-					})}
-				>
-					{item.title.length > 0 ? item.title : 'Untitled'}
-				</p>
-				<p className='line-clamp-2 text-typography-500 text-xs'>{item.body}</p>
-			</Link>
-		</li>
+				{item.title.length > 0 ? item.title : 'Untitled'}
+			</p>
+			<p className='line-clamp-2 text-typography-500 text-xs'>{item.body}</p>
+		</Autocomplete.Item>
 	)
 }
