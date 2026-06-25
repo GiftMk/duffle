@@ -24,6 +24,7 @@ export const miniSearch = new MiniSearch<SearchItem>({
 	fields: ['title', 'body'],
 	storeFields: ['title', 'body'],
 	searchOptions: {
+		fuzzy: true,
 		boost: { title: 2 },
 	},
 })
