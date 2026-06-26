@@ -1,4 +1,4 @@
-import { PenNibIcon } from '@phosphor-icons/react/dist/ssr'
+import { NotePencilIcon } from '@phosphor-icons/react/dist/ssr'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { useNavigate } from '@tanstack/react-router'
 import { createNote } from '@/lib/actions'
@@ -19,7 +19,7 @@ export const NewNoteButton = () => {
 			type='button'
 			className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 hover:bg-surface-300/50 focus:outline-none'
 		>
-			<PenNibIcon size={19} />
+			<NotePencilIcon size={19} />
 		</button>
 	)
 }

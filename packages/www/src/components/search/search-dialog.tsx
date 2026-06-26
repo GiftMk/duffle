@@ -1,12 +1,13 @@
 import { Autocomplete, Dialog } from '@base-ui/react'
-import { XIcon } from '@phosphor-icons/react'
+import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { useNavigate } from '@tanstack/react-router'
 import { Fragment, useEffect, useState } from 'react'
-import { miniSearch, type SearchItem } from '@/lib/db'
 import { cn } from '@/lib/utils'
 import { InputSwitch, type InputSwitchMode } from './input-switch'
-import { TelescopeIcon } from './telescope-icon'
+import { useWorker } from '@/hooks/use-worker'
+import { searchWorker } from '@/workers/search'
+import type { SearchItem } from '@/workers/search.worker'
 
 export const SearchDialog = () => {
 	const [open, setOpen] = useState(false)
@@ -20,14 +21,21 @@ export const SearchDialog = () => {
 
 	useHotkey('Mod+K', () => setOpen(true))
 
+	useWorker(searchWorker, (response) => {
+		if (response.type !== 'query') {
+			return
+		}
+
+		setResults(response.payload)
+	})
+
 	useEffect(() => {
 		if (!query.length) {
 			return
 		}
 
-		const results = miniSearch.search(query)
-		// biome-ignore lint/suspicious/noExplicitAny: minisearch returns items as any
-		setResults(results as any as SearchItem[])
+		setResults([])
+		searchWorker.send({ type: 'query', payload: query })
 	}, [query])
 
 	useEffect(() => {
@@ -45,7 +53,7 @@ export const SearchDialog = () => {
 						type='button'
 						className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 hover:bg-surface-300/50 focus:outline-none'
 					>
-						<TelescopeIcon />
+						<MagnifyingGlassIcon />
 					</button>
 				}
 			/>
