@@ -1,6 +1,7 @@
 import { uuidv7 } from 'uuidv7'
-import { db, miniSearch, type Note, type SearchItem } from './db'
+import { db, type Note } from './db'
 import { splitMarkdown } from './utils'
+import { searchWorker } from '@/workers/search'
 
 export const createNote = async () => {
 	const id = uuidv7()
@@ -13,7 +14,7 @@ export const createNote = async () => {
 	}
 
 	await db.notes.add(note)
-	miniSearch.add(note)
+	searchWorker.send({ type: 'add', payload: [note] })
 
 	return id
 }
@@ -22,5 +23,5 @@ export const updateNote = async (id: string, markdown: string) => {
 	const { title, body } = splitMarkdown(markdown)
 
 	await db.notes.update(id, { title, body, markdown })
-	miniSearch.replace({ id, title, body } as SearchItem)
+	searchWorker.send({ type: 'update', payload: [{ id, title, body }] })
 }

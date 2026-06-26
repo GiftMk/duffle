@@ -1,5 +1,4 @@
 import { Dexie, type EntityTable } from 'dexie'
-import MiniSearch from 'minisearch'
 
 export type Note = {
 	id: string
@@ -18,12 +17,7 @@ db.version(1).stores({
 	notes: '++id, markdown, createdAt, updatedAt',
 })
 
-export type SearchItem = Pick<Note, 'id' | 'title' | 'body'>
-
-export const miniSearch = new MiniSearch<SearchItem>({
-	fields: ['title', 'body'],
-	storeFields: ['title', 'body'],
-	searchOptions: {
-		boost: { title: 2 },
-	},
-})
+export const searchWorker = new Worker(
+	new URL('../workers/search.worker.ts', import.meta.url),
+	{ type: 'module' },
+)
