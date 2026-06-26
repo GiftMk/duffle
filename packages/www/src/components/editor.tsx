@@ -24,6 +24,7 @@ import type { Note } from '@/lib/db'
 import { blockquote } from '@/plugins/blockquote'
 import { inlineCode } from '@/plugins/inline-code'
 import { listItem } from '@/plugins/list-item'
+import { history } from '@milkdown/kit/plugin/history'
 
 const EditorContent = ({ note }: { note: Note }) => {
 	const nodeViewFactory = useNodeViewFactory()
@@ -47,6 +48,7 @@ const EditorContent = ({ note }: { note: Note }) => {
 			.use(gfm)
 			.use(clipboard)
 			.use(headingLevelIndicator)
+			.use(history)
 	})
 
 	useEffect(() => {
