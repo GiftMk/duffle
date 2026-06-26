@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
 import { createNote } from '@/lib/actions'
 import { useHotkey } from '@tanstack/react-hotkeys'
-import { useRef, type ComponentProps, type Ref } from 'react'
+import { useRef, type Ref } from 'react'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,

@@ -1,8 +1,6 @@
-import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { createRootRoute, HeadContent, Outlet } from '@tanstack/react-router'
 import '@/index.css'
 import { LoadingPage } from '@/components/loading-page'
-import { db } from '@/lib/db'
-import { searchWorker } from '@/workers/search'
 
 export const Route = createRootRoute({
 	pendingComponent: LoadingPage,
@@ -10,5 +8,10 @@ export const Route = createRootRoute({
 })
 
 function RootLayout() {
-	return <Outlet />
+	return (
+		<>
+			<HeadContent />
+			<Outlet />
+		</>
+	)
 }
