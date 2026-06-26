@@ -3,6 +3,8 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
 import { createNote } from '@/lib/actions'
+import { useHotkey } from '@tanstack/react-hotkeys'
+import { useRef, type ComponentProps, type Ref } from 'react'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,
@@ -26,7 +28,7 @@ const SubHeading = () => (
 	/>
 )
 
-const ActionButton = () => {
+const ActionButton = ({ ref }: { ref?: Ref<HTMLButtonElement> }) => {
 	const navigate = useNavigate()
 
 	const handleClick = async () => {
@@ -41,6 +43,7 @@ const ActionButton = () => {
 			transition={{ type: 'spring', duration: 0.6, bounce: 0.6, delay: 0.3 }}
 		>
 			<button
+				ref={ref}
 				type='button'
 				onClick={handleClick}
 				className='rounded-sm border border-primary-500 px-5 py-2 text-primary-500 transition-all duration-200 hover:scale-110 hover:bg-primary-500/10'
@@ -56,11 +59,19 @@ const ActionButton = () => {
 }
 
 function RouteComponent() {
+	const actionButtonRef = useRef<HTMLButtonElement>(null)
+
+	useHotkey('Enter', () => {
+		if (actionButtonRef.current) {
+			actionButtonRef.current.click()
+		}
+	})
+
 	return (
 		<main className='flex h-5/6 w-full flex-col items-center justify-center gap-12 text-center text-typography-950'>
 			<Heading />
 			<SubHeading />
-			<ActionButton />
+			<ActionButton ref={actionButtonRef} />
 		</main>
 	)
 }
