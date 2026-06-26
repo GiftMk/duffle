@@ -1,6 +1,16 @@
 @import "tailwindcss";
 
+div[data-milkdown-root="true"] {
+	height: 100%;
+}
+
 .milkdown {
+	height: 100%;
+
+	> div {
+		height: 100%;
+	}
+
 	* {
 		outline: none;
 	}
