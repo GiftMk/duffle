@@ -16,8 +16,3 @@ export const db = new Dexie('duffle-db') as Dexie & {
 db.version(1).stores({
 	notes: '++id, markdown, createdAt, updatedAt',
 })
-
-export const searchWorker = new Worker(
-	new URL('../workers/search.worker.ts', import.meta.url),
-	{ type: 'module' },
-)
