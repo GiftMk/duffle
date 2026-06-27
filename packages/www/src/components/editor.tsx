@@ -18,13 +18,14 @@ import { headingLevelIndicator } from '../plugins/heading-level-indicator'
 import './editor.css'
 import '@milkdown/kit/prose/view/style/prosemirror.css'
 import { gfm } from '@milkdown/kit/preset/gfm'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { updateNote } from '@/lib/actions'
 import type { Note } from '@/lib/db'
 import { blockquote } from '@/plugins/blockquote'
 import { inlineCode } from '@/plugins/inline-code'
 import { listItem } from '@/plugins/list-item'
 import { history } from '@milkdown/kit/plugin/history'
+import { Kanmoji } from './kanmoji'
 
 const EditorContent = ({ note }: { note: Note }) => {
 	const nodeViewFactory = useNodeViewFactory()
@@ -72,13 +73,36 @@ const EditorContent = ({ note }: { note: Note }) => {
 	return <Milkdown />
 }
 
+const faces = [
+	'<(o_o<)',
+	`(˶ᵔ ᵕ ᵔ˶)`,
+	`( ˶°ㅁ°) !!`,
+	'ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧',
+	'٩(ˊᗜˋ*)و ♡',
+]
+
 export const MarkdownEditor = ({ note }: { note: Note }) => {
+	const [faceIndex, setFaceIndex] = useState(0)
+	const face = faces[faceIndex]
+
+	useEffect(() => {
+		const intervalId = setInterval(
+			() => setFaceIndex((curr) => (curr + 1) % faces.length),
+			10_000,
+		)
+
+		return () => clearInterval(intervalId)
+	}, [])
+
 	return (
 		<div
 			key={note.id}
-			className='flex h-full w-full justify-center overflow-y-auto px-12 py-9'
+			className='flex h-full w-full justify-center overflow-y-auto px-12 py-9 relative'
 		>
-			<div className='h-full min-h-full w-full max-w-[70ch]'>
+			<Kanmoji className='absolute bottom-4 right-4 text-surface-500'>
+				{face}
+			</Kanmoji>
+			<div className='h-fit min-h-full w-full max-w-[70ch]'>
 				<MilkdownProvider>
 					<ProsemirrorAdapterProvider>
 						<EditorContent note={note} />
