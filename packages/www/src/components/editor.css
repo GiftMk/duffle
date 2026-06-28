@@ -1,14 +1,21 @@
 @import "tailwindcss";
 
 div[data-milkdown-root="true"] {
-	height: 100%;
+	height: calc(100% - calc(var(--spacing) * 9));
+}
+
+.milkdown::after {
+	content: "";
+	height: calc(var(--spacing) * 9);
+	display: block;
 }
 
 .milkdown {
 	height: 100%;
 
 	> div {
-		height: 100%;
+		height: fit-content;
+		min-height: 100%;
 	}
 
 	* {

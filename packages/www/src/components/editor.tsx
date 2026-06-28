@@ -97,12 +97,12 @@ export const MarkdownEditor = ({ note }: { note: Note }) => {
 	return (
 		<div
 			key={note.id}
-			className='flex h-full w-full justify-center overflow-y-auto px-12 py-9 relative'
+			className='flex h-full w-full justify-center overflow-y-auto px-12 pt-9 relative'
 		>
 			<Kanmoji className='absolute bottom-4 right-4 text-surface-500'>
 				{face}
 			</Kanmoji>
-			<div className='h-fit min-h-full w-full max-w-[70ch]'>
+			<div className='h-full w-full max-w-[70ch]'>
 				<MilkdownProvider>
 					<ProsemirrorAdapterProvider>
 						<EditorContent note={note} />
