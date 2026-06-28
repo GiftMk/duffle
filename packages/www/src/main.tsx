@@ -3,9 +3,10 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ErrorPage } from './components/error-page'
 import { LoadingPage } from './components/loading-page'
-import { routeTree } from './routeTree.gen'
 import { db } from './lib/db'
+import { routeTree } from './routeTree.gen'
 import { searchWorker } from './workers/search'
+import 'prismjs/themes/prism.css' // Light theme
 
 const router = createRouter({
 	routeTree,

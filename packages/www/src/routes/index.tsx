@@ -1,10 +1,10 @@
 import { ArrowFatRightIcon } from '@phosphor-icons/react/dist/ssr'
+import { useHotkey } from '@tanstack/react-hotkeys'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
+import { type Ref, useRef } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { createNote } from '@/lib/actions'
-import { useHotkey } from '@tanstack/react-hotkeys'
-import { useRef, type Ref } from 'react'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,

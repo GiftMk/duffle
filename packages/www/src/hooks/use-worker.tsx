@@ -1,5 +1,5 @@
-import type { TypedWorker } from '@/workers'
 import { useEffect } from 'react'
+import type { TypedWorker } from '@/workers'
 
 export const useWorker = <T, U>(
 	worker: TypedWorker<T, U>,

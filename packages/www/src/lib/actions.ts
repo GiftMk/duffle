@@ -1,7 +1,7 @@
 import { uuidv7 } from 'uuidv7'
+import { searchWorker } from '@/workers/search'
 import { db, type Note } from './db'
 import { splitMarkdown } from './utils'
-import { searchWorker } from '@/workers/search'
 
 export const createNote = async () => {
 	const id = uuidv7()

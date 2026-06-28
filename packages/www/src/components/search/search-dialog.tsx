@@ -3,11 +3,11 @@ import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { useNavigate } from '@tanstack/react-router'
 import { Fragment, useEffect, useState } from 'react'
-import { cn } from '@/lib/utils'
-import { InputSwitch, type InputSwitchMode } from './input-switch'
 import { useWorker } from '@/hooks/use-worker'
+import { cn } from '@/lib/utils'
 import { searchWorker } from '@/workers/search'
 import type { SearchItem } from '@/workers/search.worker'
+import { InputSwitch, type InputSwitchMode } from './input-switch'
 
 export const SearchDialog = () => {
 	const [open, setOpen] = useState(false)

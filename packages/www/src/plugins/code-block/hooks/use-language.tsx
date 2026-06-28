@@ -13,7 +13,7 @@ export const useLanguage = () => {
 
 	const setLanguage = (value: string) => {
 		setValue(value)
-		const record = languageRepository.getRecordById(value.toLowerCase())
+		const record = languageRepository.getRecordById(value.trim().toLowerCase())
 		if (record) {
 			bridge.writeLanguage(record)
 		}

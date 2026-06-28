@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from 'clsx'
+import type { Ref } from 'react'
 import { remark } from 'remark'
 import strip from 'strip-markdown'
 import { twMerge } from 'tailwind-merge'
@@ -20,4 +21,20 @@ export const splitMarkdown = (
 	const body = lines.slice(1).join('\n')
 
 	return { title, body }
+}
+
+export const mergeRefs = (...refs: Ref<unknown>[]) => {
+	return (node: unknown) => {
+		for (const ref of refs) {
+			if (!ref) {
+				continue
+			}
+
+			if (typeof ref === 'function') {
+				ref(node)
+			} else {
+				ref.current = node
+			}
+		}
+	}
 }

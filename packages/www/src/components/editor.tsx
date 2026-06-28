@@ -1,7 +1,6 @@
 import {
 	defaultValueCtx,
 	Editor,
-	editorViewCtx,
 	editorViewOptionsCtx,
 	rootCtx,
 } from '@milkdown/kit/core'
@@ -13,18 +12,18 @@ import {
 	ProsemirrorAdapterProvider,
 	useNodeViewFactory,
 } from '@prosemirror-adapter/react'
-import { codeBlock } from '../plugins/code-block'
 import { headingLevelIndicator } from '../plugins/heading-level-indicator'
 import './editor.css'
 import '@milkdown/kit/prose/view/style/prosemirror.css'
+import { history } from '@milkdown/kit/plugin/history'
 import { gfm } from '@milkdown/kit/preset/gfm'
 import { useEffect, useState } from 'react'
 import { updateNote } from '@/lib/actions'
 import type { Note } from '@/lib/db'
 import { blockquote } from '@/plugins/blockquote'
+import { codeBlock } from '@/plugins/code-block'
 import { inlineCode } from '@/plugins/inline-code'
 import { listItem } from '@/plugins/list-item'
-import { history } from '@milkdown/kit/plugin/history'
 import { Kanmoji } from './kanmoji'
 
 const EditorContent = ({ note }: { note: Note }) => {
@@ -40,13 +39,13 @@ const EditorContent = ({ note }: { note: Note }) => {
 					attributes: { autofocus: 'true' },
 				}))
 			})
+			.use(commonmark)
+			.use(gfm)
 			.use(codeBlock)
 			.use(blockquote(nodeViewFactory))
 			.use(inlineCode(nodeViewFactory))
 			.use(listItem(nodeViewFactory))
 			.use(listener)
-			.use(commonmark)
-			.use(gfm)
 			.use(clipboard)
 			.use(headingLevelIndicator)
 			.use(history)
@@ -58,11 +57,6 @@ const EditorContent = ({ note }: { note: Note }) => {
 		if (!editor) {
 			return
 		}
-
-		editor.action((ctx) => {
-			const view = ctx.get(editorViewCtx)
-			view.focus()
-		})
 
 		const listenerManager = editor.ctx.get(listenerCtx)
 		listenerManager.markdownUpdated((_, markdown) =>
@@ -97,9 +91,9 @@ export const MarkdownEditor = ({ note }: { note: Note }) => {
 	return (
 		<div
 			key={note.id}
-			className='flex h-full w-full justify-center overflow-y-auto px-12 pt-9 relative'
+			className='relative flex h-full w-full justify-center overflow-y-auto px-12 pt-9'
 		>
-			<Kanmoji className='absolute bottom-4 right-4 text-surface-500'>
+			<Kanmoji className='absolute right-4 bottom-4 text-surface-500'>
 				{face}
 			</Kanmoji>
 			<div className='h-full w-full max-w-[70ch]'>
