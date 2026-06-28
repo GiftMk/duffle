@@ -33,11 +33,11 @@ export const codeBlockView = $view(
 		const languageRepository = new LanguageRepository(
 			ctx.get(codeBlockCtx.key).languages,
 		)
-		const codeMirror = new Lazy<CodeMirror>()
-		const languageInput = new Lazy<HTMLInputElement>()
-		const dynamicExtensions = new Compartment()
 
 		return (node, view, getPos) => {
+			const codeMirror = new Lazy<CodeMirror>()
+			const languageInput = new Lazy<HTMLInputElement>()
+			const dynamicExtensions = new Compartment()
 			const bridge = new CodeMirrorBridge({
 				node,
 				view,
