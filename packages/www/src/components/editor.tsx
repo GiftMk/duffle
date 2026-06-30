@@ -25,6 +25,8 @@ import { codeBlock } from '@/plugins/code-block'
 import { inlineCode } from '@/plugins/inline-code'
 import { listItem } from '@/plugins/list-item'
 import { Kanmoji } from './kanmoji'
+import { trailing } from '@milkdown/kit/plugin/trailing'
+import { indent } from '@milkdown/kit/plugin/indent'
 
 const EditorContent = ({ note }: { note: Note }) => {
 	const nodeViewFactory = useNodeViewFactory()
@@ -49,6 +51,8 @@ const EditorContent = ({ note }: { note: Note }) => {
 			.use(clipboard)
 			.use(headingLevelIndicator)
 			.use(history)
+			.use(trailing)
+			.use(indent)
 	})
 
 	useEffect(() => {
