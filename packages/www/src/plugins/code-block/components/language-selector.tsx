@@ -12,7 +12,6 @@ export const LanguageSelector = () => {
 		if (e.key === 'ArrowDown' && codeMirror.hasValue) {
 			e.preventDefault()
 			codeMirror.value.focus()
-
 			codeMirror.value.dispatch({
 				selection: { anchor: 0, head: 0 },
 				scrollIntoView: true,

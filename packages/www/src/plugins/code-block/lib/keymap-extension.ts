@@ -100,7 +100,6 @@ export class KeymapExtension {
 					}
 
 					const selection = ranges[0]
-
 					if (selection && (!selection.empty || selection.anchor > 0)) {
 						return false
 					}
@@ -111,20 +110,13 @@ export class KeymapExtension {
 
 					const state = this.view.state
 					const position = this.getPos() ?? 0
-					const node = state.schema.nodes.paragraph?.createChecked(
-						{},
-						this.node.content,
-					)
+					const node = state.schema.nodes.paragraph?.createChecked()
 
 					if (!node) {
 						return false
 					}
 
-					const transaction = state.tr.replaceWith(
-						position,
-						position + this.node.nodeSize,
-						node,
-					)
+					const transaction = state.tr.replaceWith(position, position + 1, node)
 
 					transaction.setSelection(
 						TextSelection.near(transaction.doc.resolve(position)),
