@@ -1,6 +1,6 @@
 import { Input } from '@base-ui/react'
 import { useEffect, useRef } from 'react'
-import { useCodeEditor } from '../context/code-editor-context'
+import { useCodeEditor } from '../hooks/use-code-editor'
 import { useLanguage } from '../hooks/use-language'
 
 export const LanguageSelector = () => {

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useCodeEditor } from '../context/code-editor-context'
+import { useCodeEditor } from '../hooks/use-code-editor'
 import { LanguageSelector } from './language-selector'
 import './code-mirror.css'
 
