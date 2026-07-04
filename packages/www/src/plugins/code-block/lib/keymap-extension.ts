@@ -117,11 +117,9 @@ export class KeymapExtension {
 					}
 
 					const transaction = state.tr.replaceWith(position, position + 1, node)
-
 					transaction.setSelection(
 						TextSelection.near(transaction.doc.resolve(position)),
 					)
-
 					this.view.dispatch(transaction)
 					this.view.focus()
 					return true
