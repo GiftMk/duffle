@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 .milkdown {
 	.cm-gutters {
 		display: none;
@@ -77,5 +79,16 @@
 	.cm-editor .cm-selectionBackground {
 		/* biome-ignore lint/complexity/noImportantStyles: necessary for rule to take effect on editor focus */
 		background-color: var(--color-selection) !important;
+	}
+
+	.cm-tooltip-autocomplete {
+		border-color: var(--color-surface-400);
+		background-color: var(--color-surface-200);
+		overflow: hidden;
+		@apply border rounded-sm;
+
+		li[aria-selected="true"] {
+			background-color: var(--color-surface-100) !important;
+		}
 	}
 }
