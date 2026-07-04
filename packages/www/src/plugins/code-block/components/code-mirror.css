@@ -38,31 +38,6 @@
 				text-transform: capitalize;
 			}
 		}
-
-		.cm-panel.cm-search {
-			input {
-				background-image: none;
-				border: none;
-				border-radius: var(--radius-md);
-				padding: 6px 10px;
-				outline: none;
-			}
-
-			br {
-				display: none;
-			}
-
-			label {
-				display: flex;
-				flex-direction: row;
-				align-items: center;
-				text-transform: capitalize;
-			}
-
-			button[name="close"] {
-				font-size: var(--text-xl);
-			}
-		}
 	}
 
 	.cm-tooltip-autocomplete {

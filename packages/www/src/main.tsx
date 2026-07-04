@@ -6,7 +6,6 @@ import { LoadingPage } from './components/loading-page'
 import { db } from './lib/db'
 import { routeTree } from './routeTree.gen'
 import { searchWorker } from './workers/search'
-import 'prismjs/themes/prism.css' // Light theme
 
 const router = createRouter({
 	routeTree,
