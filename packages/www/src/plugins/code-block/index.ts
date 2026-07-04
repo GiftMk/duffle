@@ -72,7 +72,6 @@ export const basicSetup: Extension = (() => [
 	highlightSelectionMatches(),
 	keymap.of([
 		...closeBracketsKeymap,
-		...defaultKeymap,
 		...historyKeymap,
 		...foldKeymap,
 		...completionKeymap,

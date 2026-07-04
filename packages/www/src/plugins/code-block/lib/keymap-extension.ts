@@ -129,14 +129,11 @@ export class KeymapExtension {
 	}
 
 	maybeEscape(unit: 'line' | 'char', direction: 1 | -1): boolean {
-		const state = this.codeMirror.hasValue
-			? this.codeMirror.value.state
-			: undefined
-
-		if (!state) {
+		if (!this.codeMirror.hasValue) {
 			return false
 		}
 
+		const { state } = this.codeMirror.value
 		let main: SelectionRange | Line = state.selection.main
 
 		if (!main.empty) {
@@ -147,27 +144,21 @@ export class KeymapExtension {
 			main = state.doc.lineAt(main.head)
 		}
 
-		const outOfBounds =
-			(direction < 0 && main.from > 0) ||
-			(direction >= 0 && main.to < state.doc.length)
-
-		if (outOfBounds) {
+		if (direction < 0 ? main.from > 0 : main.to < state.doc.length) {
 			return false
 		}
 
-		const targetPosition =
-			this.getPos() ?? 0 + (direction < 0 ? 0 : this.node.nodeSize)
+		const nodeSize = direction < 0 ? 0 : this.node.nodeSize
+		const targetPosition = (this.getPos() ?? 0) + nodeSize
 		const selection = TextSelection.near(
 			this.view.state.doc.resolve(targetPosition),
 			direction,
 		)
-
 		const transaction = this.view.state.tr
 			.setSelection(selection)
 			.scrollIntoView()
 		this.view.dispatch(transaction)
 		this.view.focus()
-
 		return true
 	}
 }
