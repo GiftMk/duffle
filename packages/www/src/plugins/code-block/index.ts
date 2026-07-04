@@ -93,32 +93,31 @@ export const codeBlockView = $view(
 			const codeMirror = new Reference<CodeMirror | null>(null)
 			const languageInput = new Reference<HTMLInputElement | null>(null)
 			const node = new Reference<Node>(_node)
-			const bridge = new CodeMirrorBridge({
+			const state = {
 				node,
 				view,
 				getPos,
+			}
+
+			const bridge = new CodeMirrorBridge({
+				...state,
 				languageRepository,
 				codeMirror,
 			})
 			const keymapExtension = new KeymapExtension({
-				view,
-				node,
-				getPos,
+				...state,
 				codeMirror,
 				languageInput,
 			})
 			const domAdapter = new ReactDomAdapter({
-				view,
-				node,
-				getPos,
+				...state,
 				codeMirror,
 				languageRepository,
 				bridge,
 				languageInput,
 			})
 			const codeBlockView = new CodeBlockView({
-				node,
-				view,
+				...state,
 				bridge,
 				dom: domAdapter.root,
 				extensions: [...baseExtensions, keymapExtension],
