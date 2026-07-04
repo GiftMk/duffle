@@ -12,7 +12,7 @@
 		}
 
 		.cm-activeLine {
-			background-color: var(--color-surface-50);
+			background-color: rgb(from var(--color-surface-50) r g b / 0.5);
 		}
 
 		.cm-activeLineGutter {
@@ -71,5 +71,10 @@
 
 	.cm-focused {
 		outline: none;
+	}
+
+	.cm-focused .cm-selectionBackground,
+	.cm-editor .cm-selectionBackground {
+		background-color: var(--color-selection) !important;
 	}
 }

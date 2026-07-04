@@ -43,6 +43,8 @@
 	--color-typography-800: oklch(26.8% 0.039 21.78);
 	--color-typography-900: oklch(21.6% 0.039 21.78);
 	--color-typography-950: oklch(11.63% 0.039 21.78);
+
+	--color-selection: rgb(from var(--color-primary-400) r g b / 0.3);
 }
 
 @theme {
@@ -100,4 +102,8 @@ body {
 
 #root {
 	height: 100%;
+}
+
+::selection {
+	background-color: var(--color-selection);
 }
