@@ -20,7 +20,7 @@ export const LanguageSelector = () => {
 
 	return (
 		<Input
-			value={language}
+			value={language ?? ''}
 			onValueChange={setLanguage}
 			onKeyDown={onKeyDown}
 			ref={inputRef}
