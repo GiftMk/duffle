@@ -9,8 +9,8 @@ export const LanguageSelector = () => {
 	const inputRef = useRef<HTMLInputElement | null>(null)
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		e.preventDefault()
 		if (e.key === 'ArrowDown' && codeMirror.hasValue) {
+			e.preventDefault()
 			codeMirror.value.focus()
 
 			codeMirror.value.dispatch({
