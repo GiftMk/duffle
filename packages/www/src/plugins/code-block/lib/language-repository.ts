@@ -11,9 +11,7 @@ export class LanguageRepository {
 	constructor(languages: LanguageDescription[]) {
 		for (const language of languages) {
 			for (const alias of language.alias) {
-				if (alias === language.name.toLowerCase()) {
-					this.map.set(alias, language)
-				}
+				this.map.set(alias, language)
 			}
 		}
 	}
