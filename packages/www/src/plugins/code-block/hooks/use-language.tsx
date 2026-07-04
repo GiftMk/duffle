@@ -10,7 +10,7 @@ export const useLanguage = () => {
 		() => bridge.language,
 	)
 	const [value, setValue] = useState(
-		() => languageRepository.getRecordById(language)?.name,
+		() => languageRepository.getRecordById(language)?.name ?? '',
 	)
 
 	const setLanguage = (value: string) => {
