@@ -75,6 +75,7 @@
 
 	.cm-focused .cm-selectionBackground,
 	.cm-editor .cm-selectionBackground {
+		/* biome-ignore lint/complexity/noImportantStyles: necessary for rule to take effect on editor focus */
 		background-color: var(--color-selection) !important;
 	}
 }
