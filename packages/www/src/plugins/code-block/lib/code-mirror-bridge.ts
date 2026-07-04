@@ -5,13 +5,13 @@ import { TextSelection } from '@milkdown/prose/state'
 import type { EditorView } from '@milkdown/prose/view'
 import { EditorView as CodeMirror } from 'codemirror'
 import type { LanguageRecord, LanguageRepository } from './language-repository'
-import type { Lazy } from './lazy'
+import type { Reference } from './reference'
 
 type CodeMirrorBridgeParams = {
-	node: Node
+	node: Reference<Node>
 	view: EditorView
 	getPos: () => number | undefined
-	codeMirror: Lazy<CodeMirror>
+	codeMirror: Reference<CodeMirror | null>
 	languageRepository: LanguageRepository
 }
 
@@ -22,10 +22,10 @@ type Subscriber = {
 }
 
 export class CodeMirrorBridge {
-	private node: Node
+	private node: Reference<Node>
 	private readonly view: EditorView
 	private readonly getPos: () => number | undefined
-	private readonly codeMirror: Lazy<CodeMirror>
+	private readonly codeMirror: Reference<CodeMirror | null>
 	private readonly languageRepository: LanguageRepository
 	private readonly compartment = new Compartment()
 	private isUpdating = false
@@ -55,7 +55,7 @@ export class CodeMirrorBridge {
 	}
 
 	get language(): string {
-		return this.node.attrs.language as string
+		return this.node.value.attrs.language as string
 	}
 
 	subscribe(subscription: Subscription, subscriber: Subscriber) {
@@ -76,7 +76,7 @@ export class CodeMirrorBridge {
 
 		if (
 			this.isUpdating ||
-			!this.codeMirror.hasValue ||
+			!this.codeMirror.value ||
 			!this.codeMirror.value.hasFocus
 		) {
 			return
@@ -123,12 +123,12 @@ export class CodeMirrorBridge {
 	}
 
 	readContent(node: Node): boolean {
-		if (!this.codeMirror.hasValue || node.type !== this.node.type) {
+		if (!this.codeMirror.value || node.type !== this.node.value.type) {
 			return false
 		}
 
 		const codeMirror = this.codeMirror.value
-		this.node = node
+		this.node.set(node)
 
 		if (this.isUpdating) {
 			return true
@@ -178,11 +178,11 @@ export class CodeMirrorBridge {
 	}
 
 	readLanguage() {
-		const languageId = this.node.attrs.language as string
+		const languageId = this.node.value.attrs.language as string
 		const languageDescription =
 			this.languageRepository.getDescriptionById(languageId)
 
-		if (!this.codeMirror.hasValue || !languageDescription) {
+		if (!this.codeMirror.value || !languageDescription) {
 			return
 		}
 
@@ -216,7 +216,7 @@ export class CodeMirrorBridge {
 	}
 
 	readSelection(anchor: number, head: number) {
-		if (!this.codeMirror.hasValue) {
+		if (!this.codeMirror.value) {
 			return
 		}
 

@@ -1,15 +1,24 @@
 import { catppuccinLatte } from '@catppuccin/codemirror'
 import {
+	autocompletion,
+	closeBrackets,
+	closeBracketsKeymap,
+	completionKeymap,
+} from '@codemirror/autocomplete'
+import { history, historyKeymap } from '@codemirror/commands'
+import {
 	bracketMatching,
 	defaultHighlightStyle,
 	foldGutter,
 	foldKeymap,
 	indentOnInput,
-	syntaxHighlighting,
 	type LanguageDescription,
+	syntaxHighlighting,
 } from '@codemirror/language'
 import { languages } from '@codemirror/language-data'
-import { Compartment, EditorState, type Extension } from '@codemirror/state'
+import { lintKeymap } from '@codemirror/lint'
+import { highlightSelectionMatches } from '@codemirror/search'
+import { EditorState, type Extension } from '@codemirror/state'
 import {
 	crosshairCursor,
 	drawSelection,
@@ -22,24 +31,16 @@ import {
 	rectangularSelection,
 } from '@codemirror/view'
 import { codeBlockSchema } from '@milkdown/kit/preset/commonmark'
+import type { Node } from '@milkdown/prose/model'
 import type { NodeViewConstructor } from '@milkdown/prose/view'
 import { $ctx, $view } from '@milkdown/utils'
-import { type EditorView as CodeMirror } from 'codemirror'
+import type { EditorView as CodeMirror } from 'codemirror'
 import { ReactDomAdapter } from './components/react-dom-adapter'
 import { CodeBlockView } from './lib/code-block-view'
 import { CodeMirrorBridge } from './lib/code-mirror-bridge'
 import { KeymapExtension } from './lib/keymap-extension'
 import { LanguageRepository } from './lib/language-repository'
-import { Lazy } from './lib/lazy'
-import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
-import { highlightSelectionMatches } from '@codemirror/search'
-import {
-	autocompletion,
-	completionKeymap,
-	closeBrackets,
-	closeBracketsKeymap,
-} from '@codemirror/autocomplete'
-import { lintKeymap } from '@codemirror/lint'
+import { Reference } from './lib/reference'
 
 type CodeBlockContext = {
 	languages: LanguageDescription[]
@@ -88,10 +89,10 @@ export const codeBlockView = $view(
 			ctx.get(codeBlockCtx.key).languages,
 		)
 
-		return (node, view, getPos) => {
-			const codeMirror = new Lazy<CodeMirror>()
-			const languageInput = new Lazy<HTMLInputElement>()
-			const dynamicExtensions = new Compartment()
+		return (_node, view, getPos) => {
+			const codeMirror = new Reference<CodeMirror | null>(null)
+			const languageInput = new Reference<HTMLInputElement | null>(null)
+			const node = new Reference<Node>(_node)
 			const bridge = new CodeMirrorBridge({
 				node,
 				view,
@@ -107,6 +108,9 @@ export const codeBlockView = $view(
 				languageInput,
 			})
 			const domAdapter = new ReactDomAdapter({
+				view,
+				node,
+				getPos,
 				codeMirror,
 				languageRepository,
 				bridge,
@@ -117,16 +121,10 @@ export const codeBlockView = $view(
 				view,
 				bridge,
 				dom: domAdapter.root,
-				extensions: dynamicExtensions.of([]),
+				extensions: [...baseExtensions, keymapExtension],
 			})
 
 			codeMirror.set(codeBlockView.codeMirror)
-			codeBlockView.codeMirror.dispatch({
-				effects: dynamicExtensions.reconfigure([
-					...baseExtensions,
-					keymapExtension,
-				]),
-			})
 			domAdapter.render()
 			bridge.readLanguage()
 

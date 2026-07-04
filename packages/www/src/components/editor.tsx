@@ -16,6 +16,8 @@ import { headingLevelIndicator } from '../plugins/heading-level-indicator'
 import './editor.css'
 import '@milkdown/kit/prose/view/style/prosemirror.css'
 import { history } from '@milkdown/kit/plugin/history'
+import { indent } from '@milkdown/kit/plugin/indent'
+import { trailing } from '@milkdown/kit/plugin/trailing'
 import { gfm } from '@milkdown/kit/preset/gfm'
 import { useEffect, useState } from 'react'
 import { updateNote } from '@/lib/actions'
@@ -25,8 +27,6 @@ import { codeBlock } from '@/plugins/code-block'
 import { inlineCode } from '@/plugins/inline-code'
 import { listItem } from '@/plugins/list-item'
 import { Kanmoji } from './kanmoji'
-import { trailing } from '@milkdown/kit/plugin/trailing'
-import { indent } from '@milkdown/kit/plugin/indent'
 
 const EditorContent = ({ note }: { note: Note }) => {
 	const nodeViewFactory = useNodeViewFactory()

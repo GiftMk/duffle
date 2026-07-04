@@ -4,20 +4,9 @@ import { useCodeEditor } from '../context/code-editor-context'
 import { useLanguage } from '../hooks/use-language'
 
 export const LanguageSelector = () => {
-	const { language, setLanguage } = useLanguage()
-	const { languageInput, codeMirror } = useCodeEditor()
+	const { language, setLanguage, onKeyDown } = useLanguage()
+	const { languageInput } = useCodeEditor()
 	const inputRef = useRef<HTMLInputElement | null>(null)
-
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'ArrowDown' && codeMirror.hasValue) {
-			e.preventDefault()
-			codeMirror.value.focus()
-			codeMirror.value.dispatch({
-				selection: { anchor: 0, head: 0 },
-				scrollIntoView: true,
-			})
-		}
-	}
 
 	useEffect(() => {
 		const input = inputRef.current
@@ -33,7 +22,7 @@ export const LanguageSelector = () => {
 		<Input
 			value={language}
 			onValueChange={setLanguage}
-			onKeyDown={handleKeyDown}
+			onKeyDown={onKeyDown}
 			ref={inputRef}
 			placeholder='none'
 			className='w-full rounded-t-md bg-surface-200 px-2 pt-1 pb-0.5 font-bold text-sm text-typography-500'

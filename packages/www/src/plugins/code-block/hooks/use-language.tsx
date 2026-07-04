@@ -1,8 +1,10 @@
 import { useState, useSyncExternalStore } from 'react'
 import { useCodeEditor } from '../context/code-editor-context'
+import { escapeCodeMirror } from '../lib/utils'
 
 export const useLanguage = () => {
-	const { languageRepository, bridge } = useCodeEditor()
+	const { languageRepository, bridge, getPos, node, view, codeMirror } =
+		useCodeEditor()
 	const language = useSyncExternalStore(
 		(notify) => bridge.subscribe('language', { notify }),
 		() => bridge.language,
@@ -19,5 +21,38 @@ export const useLanguage = () => {
 		}
 	}
 
-	return { language: value, setLanguage, languages: languageRepository.records }
+	const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (!codeMirror.value) {
+			return
+		}
+
+		switch (e.key) {
+			case 'ArrowDown': {
+				e.preventDefault()
+				codeMirror.value.focus()
+				codeMirror.value.dispatch({
+					selection: { anchor: 0, head: 0 },
+					scrollIntoView: true,
+				})
+				break
+			}
+			case 'ArrowUp': {
+				e.preventDefault()
+				escapeCodeMirror('line', -1, {
+					codeMirror: codeMirror.value,
+					view,
+					node: node.value,
+					getPos,
+				})
+				break
+			}
+		}
+	}
+
+	return {
+		language: value,
+		setLanguage,
+		languages: languageRepository.records,
+		onKeyDown,
+	}
 }

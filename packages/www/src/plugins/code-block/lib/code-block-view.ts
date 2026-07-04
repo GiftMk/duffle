@@ -3,9 +3,10 @@ import { EditorView as CodeMirror } from '@codemirror/view'
 import type { Node } from '@milkdown/prose/model'
 import type { EditorView, NodeView } from '@milkdown/prose/view'
 import type { CodeMirrorBridge } from './code-mirror-bridge'
+import type { Reference } from './reference'
 
 export type CodeBlockViewParams = {
-	node: Node
+	node: Reference<Node>
 	view: EditorView
 	bridge: CodeMirrorBridge
 	dom: HTMLElement
@@ -26,7 +27,7 @@ export class CodeBlockView implements NodeView {
 	}: CodeBlockViewParams) {
 		this.bridge = bridge
 		this.codeMirror = new CodeMirror({
-			doc: node.textContent,
+			doc: node.value.textContent,
 			root: view.root,
 			extensions: [extensions, this.bridge.extensions],
 		})
