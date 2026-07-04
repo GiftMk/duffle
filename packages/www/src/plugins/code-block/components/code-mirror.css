@@ -88,6 +88,7 @@
 		@apply border rounded-sm;
 
 		li[aria-selected="true"] {
+			/* biome-ignore lint/complexity/noImportantStyles: necessary */
 			background-color: var(--color-surface-100) !important;
 		}
 	}
