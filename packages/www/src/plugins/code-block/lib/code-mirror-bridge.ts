@@ -21,6 +21,14 @@ type Subscriber = {
 	notify: () => void
 }
 
+/**
+ * Syncs reads and writes between CodeMirror and ProseMirror.
+ * Both editors manage their own state so updates need to be co-ordinated between the two.
+ *
+ * Heavy inspiration from 🙏🏿:
+ * - [ProseMirror embedded code editor guide](https://prosemirror.net/examples/codemirror/)
+ * - [Milkdown editor code block component](https://github.com/Milkdown/milkdown/blob/main/packages/components/src/code-block/view/node-view.ts)
+ */
 export class CodeMirrorBridge {
 	private node: Reference<Node>
 	private readonly view: EditorView
@@ -69,6 +77,12 @@ export class CodeMirrorBridge {
 		}
 	}
 
+	/**
+	 * Forwards CodeMirror text updates to ProseMirror:
+	 * - Computes absolute the start and end ranges of CodeMirror's current text within the overall markdown doc.
+	 * - Then computes the absolute ranges after the code editor's update.
+	 * - Creates a ProseMirror transaction to update it's "code block state" to match CodeMirror's after the update.
+	 */
 	writeContent(update: ViewUpdate) {
 		if (!this) {
 			return
@@ -122,6 +136,11 @@ export class CodeMirrorBridge {
 		}
 	}
 
+	/**
+	 * Updates CodeMirror's text content and language to match ProseMirror's.
+	 * Used any time ProseMirror wants to write content to it's code block node i.e.
+	 * on first page load.
+	 */
 	readContent(node: Node): boolean {
 		if (!this.codeMirror.value || node.type !== this.node.value.type) {
 			return false
@@ -177,6 +196,11 @@ export class CodeMirrorBridge {
 		return true
 	}
 
+	/**
+	 * Markdown code blocks can optionally contain a language after the opening triple backticks.
+	 * This reads the language string and attempts to find a matching CodeMirror language model.
+	 * If found, CodeMirror loads the language which provides things like **syntax highlighting** and **autocomplete**.
+	 */
 	readLanguage() {
 		const languageId = this.node.value.attrs.language as string
 		const languageDescription =
@@ -203,6 +227,9 @@ export class CodeMirrorBridge {
 			.catch(console.error)
 	}
 
+	/**
+	 * Updates both CodeMirror and ProseMirror to switch languages.
+	 */
 	writeLanguage(language: LanguageRecord) {
 		this.view.dispatch(
 			this.view.state.tr.setNodeAttribute(
@@ -215,6 +242,9 @@ export class CodeMirrorBridge {
 		this.notifySubscribers('language')
 	}
 
+	/**
+	 * Allows ProseMirror to select content inside CodeMirror.
+	 */
 	readSelection(anchor: number, head: number) {
 		if (!this.codeMirror.value) {
 			return

@@ -22,10 +22,7 @@ export const CodeEditor = () => {
 	}, [codeMirror])
 
 	return (
-		<div
-			contentEditable={false}
-			className='relative overflow-hidden rounded-md'
-		>
+		<div className='relative overflow-hidden rounded-md'>
 			<LanguageSelector />
 			<div ref={ref} />
 		</div>

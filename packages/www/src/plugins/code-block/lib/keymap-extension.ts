@@ -38,6 +38,13 @@ export class KeymapExtension {
 		this.languageInput = languageInput
 	}
 
+	/**
+	 * Adds CodeMirror's default keymap, indent with tab support and a custom keymap that adds the following behaviour:
+	 * - `ArrowUp`: if on the first line, jump to the language selector if present. Otherwise escape the code editor if at the boundary
+	 * - `ArrowDown`, `ArrowLeft`, `ArrowRight`: Try and escape the editor if at the boundary
+	 * - `Mod+z` / `Shift+Mod+z` / `Mod+y`: Undo & Redo
+	 * - `Backspace`: Attempts to delete the codeblock node if cursor is at the start of the first line. Preserves text present on the first line
+	 */
 	get extension() {
 		return codeMirrorKeymap.of([
 			...this.customKeymap(),
@@ -46,7 +53,7 @@ export class KeymapExtension {
 		])
 	}
 
-	customKeymap() {
+	private customKeymap() {
 		return [
 			{
 				key: 'ArrowUp',
