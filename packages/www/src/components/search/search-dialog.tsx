@@ -4,7 +4,7 @@ import { useHotkey } from '@tanstack/react-hotkeys'
 import { useNavigate } from '@tanstack/react-router'
 import { Fragment, useEffect, useState } from 'react'
 import { useWorker } from '@/hooks/use-worker'
-import { cn } from '@/lib/utils'
+import { cn, ICON_SIZE_PX } from '@/lib/utils'
 import { searchWorker } from '@/workers/search'
 import type { SearchItem } from '@/workers/search.worker'
 import { InputSwitch, type InputSwitchMode } from './input-switch'
@@ -53,7 +53,7 @@ export const SearchDialog = () => {
 						type='button'
 						className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 hover:bg-surface-300/50 focus:outline-none'
 					>
-						<MagnifyingGlassIcon weight='bold' />
+						<MagnifyingGlassIcon size={ICON_SIZE_PX} weight='bold' />
 					</button>
 				}
 			/>
@@ -63,7 +63,7 @@ export const SearchDialog = () => {
 						onClick={closeDialog}
 						className='absolute top-2 right-2 rounded-full p-1.5 text-surface-800 hover:bg-surface-300'
 					>
-						<XIcon size={18} />
+						<XIcon size={ICON_SIZE_PX} />
 					</Dialog.Close>
 					<Autocomplete.Root
 						value={query}
@@ -71,7 +71,7 @@ export const SearchDialog = () => {
 						items={results}
 						autoHighlight={'always'}
 					>
-						<span className='flex w-full items-center gap-3 px-4 py-2'>
+						<span className='flex w-full items-center gap-3 px-4 py-4'>
 							<InputSwitch mode={mode} setMode={setMode} />
 							<Autocomplete.Input
 								autoFocus

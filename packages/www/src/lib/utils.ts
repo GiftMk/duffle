@@ -38,3 +38,5 @@ export const mergeRefs = (...refs: Ref<unknown>[]) => {
 		}
 	}
 }
+
+export const ICON_SIZE_PX = 19
