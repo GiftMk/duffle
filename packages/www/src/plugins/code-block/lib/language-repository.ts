@@ -16,6 +16,9 @@ export class LanguageRepository {
 		}
 	}
 
+	/**
+	 * Returns an asynchronous CodeMirror language extension for the given language.
+	 */
 	getExtensions(id: string): Promise<LanguageSupport | undefined> {
 		const language = this.getDescriptionById(id)
 
@@ -30,6 +33,10 @@ export class LanguageRepository {
 		return language.load()
 	}
 
+	/**
+	 * Returns the ID, name pairs for all languages supported by CodeMirror.
+	 * Where an ID is the language's name or alias (e.g. TypeScript | ts).
+	 */
 	get records(): LanguageRecord[] {
 		return [...this.map.entries()].map((entry) => ({
 			id: entry[0],
@@ -37,6 +44,9 @@ export class LanguageRepository {
 		}))
 	}
 
+	/**
+	 * Returns the ID, name pair for a given language ID.
+	 */
 	getRecordById(id: string): LanguageRecord | undefined {
 		const description = this.map.get(id)
 
@@ -50,6 +60,9 @@ export class LanguageRepository {
 		}
 	}
 
+	/**
+	 * Returns the CodeMirror language metadata for a given language ID.
+	 */
 	getDescriptionById(id: string): LanguageDescription | undefined {
 		return this.map.get(id)
 	}
