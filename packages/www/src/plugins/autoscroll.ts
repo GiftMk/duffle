@@ -30,7 +30,7 @@ export const autoscroll = $prose(
 						if (window.innerHeight - anchorBottom < EDITOR_SPACER_HEIGHT_PX) {
 							container.scrollBy({
 								top: EDITOR_SPACER_HEIGHT_PX,
-								behavior: 'instant',
+								behavior: 'smooth',
 							})
 						}
 					},
