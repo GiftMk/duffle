@@ -52,7 +52,7 @@ export const SearchDialog = () => {
 				render={
 					<button
 						type='button'
-						className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-100 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
+						className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
 					>
 						<MagnifyingGlassIcon size={ICON_SIZE_PX} />
 					</button>
