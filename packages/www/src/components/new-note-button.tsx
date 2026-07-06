@@ -2,7 +2,7 @@ import { NotePencilIcon } from '@phosphor-icons/react/dist/ssr'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { useNavigate } from '@tanstack/react-router'
 import { createNote } from '@/lib/actions'
-import { ICON_SIZE_PX } from '@/lib/utils'
+import { ICON_SIZE_PX } from '@/lib/constants'
 
 export const NewNoteButton = () => {
 	const navigate = useNavigate()
