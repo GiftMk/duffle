@@ -6,7 +6,8 @@ div[data-milkdown-root="true"] {
 
 .milkdown::after {
 	content: "";
-	height: calc(var(--spacing) * 9);
+	/* Equals 128px, keep in sync with EDITOR_SPACER_HEIGHT_PX in @/lib/constants */
+	height: calc(var(--spacing) * 32);
 	display: block;
 }
 

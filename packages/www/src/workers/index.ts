@@ -1,8 +1,8 @@
 export class TypedWorker<T, U> {
 	private readonly worker
 
-	constructor(path: string) {
-		this.worker = new Worker(new URL(path, import.meta.url), { type: 'module' })
+	constructor(instance: Worker) {
+		this.worker = instance
 	}
 
 	send(request: T) {

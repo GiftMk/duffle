@@ -4,7 +4,8 @@ import { useHotkey } from '@tanstack/react-hotkeys'
 import { useNavigate } from '@tanstack/react-router'
 import { Fragment, useEffect, useState } from 'react'
 import { useWorker } from '@/hooks/use-worker'
-import { cn, ICON_SIZE_PX } from '@/lib/utils'
+import { ICON_SIZE_PX } from '@/lib/constants'
+import { cn } from '@/lib/utils'
 import { searchWorker } from '@/workers/search'
 import type { SearchItem } from '@/workers/search.worker'
 import { InputSwitch, type InputSwitchMode } from './input-switch'
@@ -51,9 +52,9 @@ export const SearchDialog = () => {
 				render={
 					<button
 						type='button'
-						className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 hover:bg-surface-300/50 focus:outline-none'
+						className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
 					>
-						<MagnifyingGlassIcon size={ICON_SIZE_PX} weight='bold' />
+						<MagnifyingGlassIcon size={ICON_SIZE_PX} />
 					</button>
 				}
 			/>
