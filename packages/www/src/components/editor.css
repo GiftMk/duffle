@@ -14,7 +14,7 @@ div[data-milkdown-root="true"] {
 .milkdown {
 	height: 100%;
 
-	> div {
+	> .editor {
 		height: fit-content;
 		min-height: 100%;
 	}

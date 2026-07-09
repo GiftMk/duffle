@@ -19,6 +19,7 @@ import { history } from '@milkdown/kit/plugin/history'
 import { indent } from '@milkdown/kit/plugin/indent'
 import { trailing } from '@milkdown/kit/plugin/trailing'
 import { gfm } from '@milkdown/kit/preset/gfm'
+import { usePluginViewFactory } from '@prosemirror-adapter/react'
 import { useRef } from 'react'
 import { useSequence } from '@/hooks/use-sequence'
 import { updateNote } from '@/lib/actions'
@@ -28,9 +29,8 @@ import { blockquote } from '@/plugins/blockquote'
 import { codeBlock } from '@/plugins/code-block'
 import { inlineCode } from '@/plugins/inline-code'
 import { listItem } from '@/plugins/list-item'
+import { SlashCommands, slash } from '@/plugins/slash-commands'
 import { Kanmoji } from './kanmoji'
-import { usePluginViewFactory } from '@prosemirror-adapter/react'
-import { slash, SlashCommands } from '@/plugins/slash-commands'
 
 const EditorContent = ({ note }: { note: Note }) => {
 	const nodeViewFactory = useNodeViewFactory()
