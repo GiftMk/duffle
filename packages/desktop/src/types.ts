@@ -1,5 +1,4 @@
-export type File = {
-	id: string
+export type FileAsset = {
 	name: string
 	uploadedAt: string
 }
