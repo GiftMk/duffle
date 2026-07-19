@@ -3,6 +3,7 @@ import {
 	addBlockTypeCommand,
 	blockquoteSchema,
 	bulletListSchema,
+	clearTextInCurrentBlockCommand,
 	createCodeBlockCommand,
 	headingSchema,
 	hrSchema,
@@ -24,6 +25,7 @@ const HEADINGS: SlashCommand[] = [
 		value: 'h1',
 		label: 'Heading 1',
 		run: (ctx) => {
+			callCommand(clearTextInCurrentBlockCommand.key)(ctx)
 			callCommand(setBlockTypeCommand.key, {
 				nodeType: headingSchema.type(ctx),
 				attrs: {
@@ -36,6 +38,7 @@ const HEADINGS: SlashCommand[] = [
 		value: 'h2',
 		label: 'Heading 2',
 		run: (ctx) => {
+			callCommand(clearTextInCurrentBlockCommand.key)(ctx)
 			callCommand(setBlockTypeCommand.key, {
 				nodeType: headingSchema.type(ctx),
 				attrs: {
@@ -48,6 +51,7 @@ const HEADINGS: SlashCommand[] = [
 		value: 'h3',
 		label: 'Heading 3',
 		run: (ctx) => {
+			callCommand(clearTextInCurrentBlockCommand.key)(ctx)
 			callCommand(setBlockTypeCommand.key, {
 				nodeType: headingSchema.type(ctx),
 				attrs: {
@@ -60,6 +64,7 @@ const HEADINGS: SlashCommand[] = [
 		value: 'h4',
 		label: 'Heading 4',
 		run: (ctx) => {
+			callCommand(clearTextInCurrentBlockCommand.key)(ctx)
 			callCommand(setBlockTypeCommand.key, {
 				nodeType: headingSchema.type(ctx),
 				attrs: {
@@ -72,6 +77,7 @@ const HEADINGS: SlashCommand[] = [
 		value: 'h5',
 		label: 'Heading 5',
 		run: (ctx) => {
+			callCommand(clearTextInCurrentBlockCommand.key)(ctx)
 			callCommand(setBlockTypeCommand.key, {
 				nodeType: headingSchema.type(ctx),
 				attrs: {
@@ -84,6 +90,7 @@ const HEADINGS: SlashCommand[] = [
 		value: 'h6',
 		label: 'Heading 6',
 		run: (ctx) => {
+			callCommand(clearTextInCurrentBlockCommand.key)(ctx)
 			callCommand(setBlockTypeCommand.key, {
 				nodeType: headingSchema.type(ctx),
 				attrs: {
@@ -99,6 +106,7 @@ const LISTS: SlashCommand[] = [
 		value: 'bullet-list',
 		label: 'Bullet List',
 		run: (ctx) => {
+			callCommand(clearTextInCurrentBlockCommand.key)(ctx)
 			callCommand(wrapInBlockTypeCommand.key, {
 				nodeType: bulletListSchema.type(ctx),
 			})(ctx)
@@ -108,6 +116,7 @@ const LISTS: SlashCommand[] = [
 		value: 'ordered-list',
 		label: 'Ordered List',
 		run: (ctx) => {
+			callCommand(clearTextInCurrentBlockCommand.key)(ctx)
 			callCommand(wrapInBlockTypeCommand.key, {
 				nodeType: orderedListSchema.type(ctx),
 			})(ctx)
@@ -117,6 +126,7 @@ const LISTS: SlashCommand[] = [
 		value: 'task-list',
 		label: 'Task List',
 		run: (ctx) => {
+			callCommand(clearTextInCurrentBlockCommand.key)(ctx)
 			callCommand(wrapInBlockTypeCommand.key, {
 				nodeType: listItemSchema.type(ctx),
 				attrs: {
@@ -141,6 +151,7 @@ export const DEFAULT_COMMANDS: SlashCommand[] = [
 		value: 'quote',
 		label: 'Quote',
 		run: (ctx) => {
+			callCommand(clearTextInCurrentBlockCommand.key)(ctx)
 			callCommand(wrapInBlockTypeCommand.key, {
 				nodeType: blockquoteSchema.type(ctx),
 			})(ctx)

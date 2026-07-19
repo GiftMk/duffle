@@ -61,7 +61,13 @@ export const SlashCommands = () => {
 	}
 
 	return (
-		<Autocomplete.Root inline open={open} items={commands} value={value}>
+		<Autocomplete.Root
+			inline
+			open={open}
+			items={commands}
+			value={value}
+			autoHighlight='always'
+		>
 			<Autocomplete.Input className='sr-only' ref={inputRef} />
 			<Autocomplete.List
 				ref={listRef}
