@@ -1,8 +1,7 @@
 import { Avatar, Style } from '@dicebear/core'
+import artStyle from '@dicebear/styles/notionists.json' with { type: 'json' }
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import artStyle from '@dicebear/styles/notionists.json' with { type: 'json' }
-import type { FileAsset } from '#/types'
 
 export const prettyTimestamp = (timestamp: string) => {
 	const date = new Date(timestamp)
@@ -26,17 +25,4 @@ export const createAvatar = (seed?: string) => {
 		size: AVATAR_SIZE_PX,
 		backgroundColor: AVATAR_BG_COLOUR,
 	}).toDataUri()
-}
-
-export const fileComparator = (a: FileAsset, b: FileAsset) => {
-	const dateA = new Date(a.uploadedAt)
-	const dateB = new Date(b.uploadedAt)
-
-	const dateDiff = dateB.getTime() - dateA.getTime()
-
-	if (dateDiff === 0) {
-		return a.name.localeCompare(b.name)
-	}
-
-	return dateDiff
 }

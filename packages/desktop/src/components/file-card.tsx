@@ -1,9 +1,9 @@
 import type { ComponentProps } from 'react'
 import { cn, createAvatar, prettyTimestamp } from '#/lib/utils'
-import type { FileAsset } from '#/types'
+import type { PersistedFile } from '#/state/file-store'
 
 type FileCardProps = {
-	file: FileAsset
+	file: PersistedFile
 }
 
 export const FileCardContainer = ({

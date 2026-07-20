@@ -8,7 +8,7 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { createServerFn } from '@tanstack/react-start'
 import { env } from '#/env'
-import { fileComparator } from './utils'
+import type { PersistedFile } from '#/state/file-store'
 
 const s3Client = new S3Client()
 
@@ -35,7 +35,7 @@ export const getUploadUrl = createServerFn()
 	})
 
 export const getAllFiles = createServerFn().handler(async () => {
-	const files: { name: string; uploadedAt: string }[] = []
+	const files: PersistedFile[] = []
 	const pages = paginateListObjectsV2(
 		{ client: s3Client },
 		{ Bucket: env.S3_BUCKET },
@@ -47,18 +47,19 @@ export const getAllFiles = createServerFn().handler(async () => {
 		}
 
 		for (const content of page.Contents) {
-			if (!content.Key || !content.LastModified) {
+			if (!content.Key || !content.LastModified || !content.Size) {
 				continue
 			}
 
 			files.push({
 				name: content.Key,
 				uploadedAt: content.LastModified.toISOString(),
+				size: content.Size,
 			})
 		}
 	}
 
-	return files.sort((a, b) => fileComparator(a, b))
+	return files
 })
 
 export const fileExists = createServerFn()

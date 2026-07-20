@@ -1,24 +1,19 @@
-import { pendingFilesAtom } from '#/state/pending-files'
-import type { FileAsset } from '#/types'
+import { useSelector } from '@xstate/store-react'
 import { FileCard } from './file-card'
 import { LoadingCard } from './loading-card'
 import { UploadCard } from './upload-card'
-import { useAtom } from '@xstate/store-react'
+import { useFiles } from '#/hooks/use-file'
 
-type FileGridProps = {
-	files: FileAsset[]
-}
-
-export const FileGrid = ({ files }: FileGridProps) => {
-	const pendingFiles = useAtom(pendingFilesAtom)
+export const FileGrid = () => {
+	const files = useFiles()
 
 	return (
 		<div className='grid grid-cols-4 gap-4'>
 			<UploadCard />
-			{pendingFiles.map((file) => (
+			{files.pending.map((file) => (
 				<LoadingCard key={file.name} filename={file.name} />
 			))}
-			{files.map((file) => (
+			{files.persisted.map((file) => (
 				<FileCard key={file.name} file={file} />
 			))}
 		</div>

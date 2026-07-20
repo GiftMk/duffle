@@ -1,7 +1,6 @@
 import { UploadSimpleIcon } from '@phosphor-icons/react'
-import { useRouter } from '@tanstack/react-router'
 import { useDropzone } from 'react-dropzone'
-import { uploadFiles } from '#/lib/upload-files'
+import { useUpload } from '#/hooks/use-upload'
 import {
 	FileCardContainer,
 	FileCardContent,
@@ -9,27 +8,11 @@ import {
 	FileCardHeading,
 	FileCardText,
 } from './file-card'
-import { pendingFilesAtom } from '#/state/pending-files'
-import { fileComparator } from '#/lib/utils'
 
 export const UploadCard = () => {
-	const router = useRouter()
+	const { handleUpload } = useUpload()
 	const { getRootProps, getInputProps } = useDropzone({
-		onDrop: async (files) => {
-			const now = new Date().toISOString()
-			pendingFilesAtom.set(
-				files
-					.map((file) => ({ name: file.name, uploadedAt: now }))
-					.sort((a, b) => fileComparator(a, b)),
-			)
-
-			try {
-				await uploadFiles(...files)
-				router.invalidate()
-			} finally {
-				pendingFilesAtom.set([])
-			}
-		},
+		onDrop: handleUpload,
 	})
 
 	return (
