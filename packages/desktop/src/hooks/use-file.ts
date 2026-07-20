@@ -1,9 +1,9 @@
+import { useSelector } from '@xstate/store-react'
 import {
 	fileStore,
 	type PendingFile,
 	type PersistedFile,
 } from '#/state/file-store'
-import { useSelector } from '@xstate/store-react'
 
 export const useFile = (filename: string) => {
 	const file = useSelector(

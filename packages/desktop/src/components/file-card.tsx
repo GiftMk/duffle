@@ -9,9 +9,9 @@ type FileCardProps = {
 export const FileCardContainer = ({
 	className,
 	...props
-}: ComponentProps<'div'>) => {
+}: ComponentProps<'li'>) => {
 	return (
-		<div
+		<li
 			className={cn(
 				'group flex h-72 w-full flex-col gap-6 rounded-md border border-surface-400 p-4 transition-colors duration-50 hover:bg-surface-50',
 				className,

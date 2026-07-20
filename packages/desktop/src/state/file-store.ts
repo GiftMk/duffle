@@ -71,6 +71,13 @@ export const fileStore = createStore({
 				draft.pending = Object.fromEntries(
 					event.files.map((file) => [file.name, file]),
 				)
+
+				const pendingFilenames = new Set(event.files.map((file) => file.name))
+				draft.persisted = Object.fromEntries(
+					Object.entries(draft.persisted).filter(
+						([filename]) => !pendingFilenames.has(filename),
+					),
+				)
 			})
 		},
 	},

@@ -1,3 +1,4 @@
+import { useFile } from '#/hooks/use-file'
 import { createAvatar } from '#/lib/utils'
 import {
 	FileCardContainer,
@@ -5,7 +6,6 @@ import {
 	FileCardCover,
 	FileCardHeading,
 } from './file-card'
-import { useFile } from '#/hooks/use-file'
 
 type LoadingCardProps = {
 	filename: string
