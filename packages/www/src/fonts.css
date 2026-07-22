@@ -91,13 +91,3 @@ iA Writer Mono
 		url("/fonts/ia-writer-mono/ia-writer-mono-latin-700-italic.woff")
 		format("woff");
 }
-
-/**
-Excalifont
-*/
-@font-face {
-	font-family: "Excalifont";
-	font-weight: 400;
-	font-style: normal;
-	src: url("/fonts/excalifont/Excalifont-Regular.woff2") format("woff2");
-}
