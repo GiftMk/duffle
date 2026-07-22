@@ -19,7 +19,11 @@
 		"typescript": "^5"
 	},
 	"dependencies": {
+		"@dicebear/core": "^10.3.0",
+		"@dicebear/styles": "^10.2.0",
 		"@tailwindcss/vite": "^4.2.2",
+		"@xstate/store": "^4.2.1",
+		"@xstate/store-react": "^2.0.0",
 		"framer-motion": "^12.38.0",
 		"tailwindcss": "^4.2.2"
 	}

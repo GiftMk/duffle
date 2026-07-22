@@ -5,6 +5,7 @@
 	--font-sans:
 		"iA Writer Quattro", -apple-system, BlinkMcSystemFont, sans-serif;
 	--font-mono: "iA Writer Mono", monospace;
+	--font-drawn: "Excalifont", -apple-system, BlinkMcSystemFont, sans-serif;
 
 	--color-border: oklch(0.8234 0 0);
 
@@ -48,6 +49,8 @@
 }
 
 @theme {
+	--font-drawn: var(--font-drawn);
+
 	--color-border: var(--color-border);
 
 	--color-primary-50: var(--color-primary-50);
