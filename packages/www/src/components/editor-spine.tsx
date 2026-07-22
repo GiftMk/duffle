@@ -8,10 +8,10 @@ export const EditorSpine = () => {
 	const parentRef = useRef<HTMLElement | null>(null)
 
 	useRoughSvg(parentRef, svgRef, {
-		fill: 'var(--color-surface-300)',
+		fill: 'var(--color-surface-200)',
 		fillStyle: 'zigzag',
 		hachureGap: 12,
-		stroke: 'var(--color-surface-400)',
+		stroke: 'var(--color-surface-300)',
 		strokeWidth: 0.5,
 	})
 
