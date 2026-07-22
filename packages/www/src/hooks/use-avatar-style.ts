@@ -47,17 +47,40 @@ const getStyleJson = (style: AvatarStyle) => {
 	}
 }
 
+const seedsSchema = z.tuple([
+	z.string(),
+	z.string(),
+	z.string(),
+	z.string(),
+	z.string(),
+])
+
+const generateSeeds = (): z.infer<typeof seedsSchema> => {
+	return [
+		crypto.randomUUID(),
+		crypto.randomUUID(),
+		crypto.randomUUID(),
+		crypto.randomUUID(),
+		crypto.randomUUID(),
+	]
+}
+
 const avatarStyleStore = createStore({
 	schemas: {
 		context: z.object({
-			current: avatarStyleSchema,
+			style: avatarStyleSchema,
+			seeds: seedsSchema,
 		}),
 	},
 	context: {
-		current: 'big-smile',
+		style: 'big-smile',
+		seeds: generateSeeds(),
 	},
 	on: {
-		setStyle: (_, event: { style: AvatarStyle }) => ({ current: event.style }),
+		setStyle: (_, event: { style: AvatarStyle }) => ({
+			style: event.style,
+			seeds: generateSeeds(),
+		}),
 	},
 }).with(
 	persist({
@@ -66,12 +89,15 @@ const avatarStyleStore = createStore({
 )
 
 export const useAvatarStyle = () => {
-	const style = useSelector(avatarStyleStore, (store) => store.context.current)
+	const { style, seeds } = useSelector(
+		avatarStyleStore,
+		(store) => store.context,
+	)
 	const config = getStyleJson(style)
 
 	const setStyle = (style: AvatarStyle) => {
 		avatarStyleStore.trigger.setStyle({ style })
 	}
 
-	return { style, config, setStyle, styles: avatarStyles }
+	return { style, seeds, config, setStyle, styles: avatarStyles }
 }

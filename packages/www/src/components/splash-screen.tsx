@@ -23,28 +23,14 @@ const Character = ({ seed, ...props }: CharacterProps) => {
 }
 
 export const SplashScreen = () => {
+	const { seeds } = useAvatarStyle()
 	return (
 		<div className='absolute inset-0 flex h-full w-full flex-wrap items-end justify-between opacity-20'>
-			<Character
-				seed={crypto.randomUUID()}
-				className='absolute top-20 left-90'
-			/>
-			<Character
-				seed={crypto.randomUUID()}
-				className='absolute top-40 right-40'
-			/>
-			<Character
-				seed={crypto.randomUUID()}
-				className='absolute bottom-20 left-60'
-			/>
-			<Character
-				seed={crypto.randomUUID()}
-				className='absolute top-100 left-30'
-			/>
-			<Character
-				seed={crypto.randomUUID()}
-				className='absolute right-75 bottom-50'
-			/>
+			<Character seed={seeds[0]} className='absolute top-20 left-90' />
+			<Character seed={seeds[1]} className='absolute top-40 right-40' />
+			<Character seed={seeds[2]} className='absolute bottom-20 left-60' />
+			<Character seed={seeds[3]} className='absolute top-100 left-30' />
+			<Character seed={seeds[4]} className='absolute right-75 bottom-50' />
 		</div>
 	)
 }
