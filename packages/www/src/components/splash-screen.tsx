@@ -25,11 +25,26 @@ const Character = ({ seed, ...props }: CharacterProps) => {
 export const SplashScreen = () => {
 	return (
 		<div className='absolute inset-0 flex h-full w-full flex-wrap items-end justify-between opacity-20'>
-			<Character seed='Gift' className='absolute top-20 left-90' />
-			<Character seed='Grace' className='absolute top-40 right-40' />
-			<Character seed='Glad' className='absolute bottom-20 left-60' />
-			<Character seed='Mum' className='absolute top-100 left-30' />
-			<Character seed='Dad' className='absolute right-75 bottom-50' />
+			<Character
+				seed={crypto.randomUUID()}
+				className='absolute top-20 left-90'
+			/>
+			<Character
+				seed={crypto.randomUUID()}
+				className='absolute top-40 right-40'
+			/>
+			<Character
+				seed={crypto.randomUUID()}
+				className='absolute bottom-20 left-60'
+			/>
+			<Character
+				seed={crypto.randomUUID()}
+				className='absolute top-100 left-30'
+			/>
+			<Character
+				seed={crypto.randomUUID()}
+				className='absolute right-75 bottom-50'
+			/>
 		</div>
 	)
 }

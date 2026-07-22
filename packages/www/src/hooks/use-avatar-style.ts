@@ -1,9 +1,9 @@
+import adventurer from '@dicebear/styles/adventurer.json'
 import bigSmile from '@dicebear/styles/big-smile.json'
 import croodles from '@dicebear/styles/croodles.json'
 import croodlesNeutral from '@dicebear/styles/croodles-neutral.json'
 import lorelei from '@dicebear/styles/lorelei.json'
 import loreleiNeutral from '@dicebear/styles/lorelei-neutral.json'
-import notionist from '@dicebear/styles/notionists.json'
 import notionistNeutral from '@dicebear/styles/notionists-neutral.json'
 import thumbs from '@dicebear/styles/thumbs.json'
 import { createStore } from '@xstate/store'
@@ -16,7 +16,7 @@ export const avatarStyles = [
 	'lorelei-neutral',
 	'croodles',
 	'croodles-neutral',
-	'notionists',
+	'adventurer',
 	'notionists-neutral',
 	'big-smile',
 	'thumbs',
@@ -36,8 +36,8 @@ const getStyleJson = (style: AvatarStyle) => {
 			return croodles
 		case 'croodles-neutral':
 			return croodlesNeutral
-		case 'notionists':
-			return notionist
+		case 'adventurer':
+			return adventurer
 		case 'notionists-neutral':
 			return notionistNeutral
 		case 'big-smile':

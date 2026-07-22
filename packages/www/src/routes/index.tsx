@@ -3,7 +3,13 @@ import { ArrowFatRightIcon } from '@phosphor-icons/react/dist/ssr'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
-import { type PropsWithChildren, type Ref, useRef, useState } from 'react'
+import {
+	type ComponentProps,
+	type PropsWithChildren,
+	type Ref,
+	useRef,
+	useState,
+} from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { SplashScreen } from '@/components/splash-screen'
 import { useAvatarStyle } from '@/hooks/use-avatar-style'
@@ -16,6 +22,7 @@ export const Route = createFileRoute('/')({
 
 const Heading = () => (
 	<motion.div
+		className='relative'
 		initial={{ opacity: 0 }}
 		animate={{ opacity: 1 }}
 		transition={{ duration: 0.5 }}
@@ -26,14 +33,40 @@ const Heading = () => (
 
 const SubHeading = () => (
 	<TypeAnimation
-		className='text-pretty text-2xl'
+		className='relative text-pretty text-2xl'
 		sequence={[1000, 'A happy place for all your writing.']}
 		speed={65}
 	/>
 )
 
+const SHUFFLE_REACTIONS = [
+	'(ꐦ • ᴗ •)',
+	'( ｡ •̀ ᴖ •́ ｡)💢',
+	'(ง •̀_•́)ง',
+	`( ,,⩌'︿'⩌ꐦ,,)`,
+	'(ㆆࡇㆆ")',
+	'(｡ᵕ ◞ _◟)',
+	'.·°՞(っ-ᯅ-ς)՞°·.',
+	'(ᵕ,,—ᴗ—,,)',
+	'〜⁠(⁠꒪⁠꒳⁠꒪⁠)⁠〜',
+	'ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧',
+	'ヽ(｀Д´#)ﾉ !!',
+]
+
+const ActionButtonContainer = ({
+	className,
+	...props
+}: ComponentProps<'div'>) => {
+	return (
+		<div
+			className={cn('flex min-w-38 flex-col items-center gap-4', className)}
+			{...props}
+		/>
+	)
+}
+
 const ShuffleButton = () => {
-	const [_clickCount, setClickCount] = useState(0)
+	const [clickCount, setClickCount] = useState(0)
 	const { setStyle, styles, style } = useAvatarStyle()
 
 	const nextStyle = () => {
@@ -42,13 +75,17 @@ const ShuffleButton = () => {
 		setStyle(next ?? style)
 	}
 
+	const getReaction = () => {
+		return SHUFFLE_REACTIONS[Math.min(clickCount, SHUFFLE_REACTIONS.length - 1)]
+	}
+
 	const handleClick = () => {
 		setClickCount((curr) => curr + 1)
 		nextStyle()
 	}
 
 	return (
-		<div className='flex flex-col items-center gap-2 text-surface-500'>
+		<ActionButtonContainer className='text-surface-500'>
 			<button
 				onClick={handleClick}
 				className='w-fit rounded-sm border border-surface-500 px-5 py-2 transition-all duration-200 hover:scale-110 hover:bg-surface-500/10'
@@ -56,8 +93,10 @@ const ShuffleButton = () => {
 			>
 				<ShuffleIcon size={22} className='fill-surface-500' />
 			</button>
-			<p className={cn('font-drawn')}>Don't click this</p>
-		</div>
+			<p className={'font-drawn transition-all'}>
+				{clickCount > 0 ? getReaction() : `Don't click this`}
+			</p>
+		</ActionButtonContainer>
 	)
 }
 
@@ -70,7 +109,7 @@ const EnterButton = ({ ref }: { ref?: Ref<HTMLButtonElement> }) => {
 	}
 
 	return (
-		<div className='flex flex-col items-center gap-2 text-primary-500'>
+		<ActionButtonContainer className='text-primary-500'>
 			<button
 				ref={ref}
 				type='button'
@@ -83,15 +122,15 @@ const EnterButton = ({ ref }: { ref?: Ref<HTMLButtonElement> }) => {
 					weight='duotone'
 				/>
 			</button>
-			<p className='font-drawn'>Click here to get started...</p>
-		</div>
+			<p className='font-drawn'>Click here instead</p>
+		</ActionButtonContainer>
 	)
 }
 
 const ActionButtons = ({ children }: PropsWithChildren) => {
 	return (
 		<motion.div
-			className='relative flex items-center gap-12'
+			className='relative flex items-center gap-2'
 			initial={{ opacity: 0, scale: 0.8, y: -300 }}
 			animate={{ opacity: 1, scale: 1, y: 0 }}
 			transition={{ type: 'spring', duration: 0.6, bounce: 0.6, delay: 0.3 }}
