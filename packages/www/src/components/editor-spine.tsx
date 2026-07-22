@@ -9,9 +9,9 @@ export const EditorSpine = () => {
 
 	useRoughSvg(parentRef, svgRef, {
 		fill: 'var(--color-surface-300)',
-		fillStyle: 'cross-hatch',
-		hachureGap: 7,
-		stroke: 'var(--color-surface-300)',
+		fillStyle: 'zigzag',
+		hachureGap: 12,
+		stroke: 'var(--color-surface-400)',
 		strokeWidth: 0.5,
 	})
 
@@ -20,7 +20,10 @@ export const EditorSpine = () => {
 			ref={parentRef}
 			className='relative flex h-full w-fit flex-col justify-between border-surface-400 border-r bg-surface-100 px-2 py-4'
 		>
-			<svg ref={svgRef} className='absolute inset-0 h-full w-full opacity-30' />
+			<svg
+				ref={svgRef}
+				className='absolute inset-0 h-full w-full opacity-100'
+			/>
 			<section className='relative flex flex-col items-center gap-4'>
 				<NewNoteButton />
 				<SearchDialog />
