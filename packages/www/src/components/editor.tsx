@@ -30,6 +30,7 @@ import { codeBlock } from '@/plugins/code-block'
 import { inlineCode } from '@/plugins/inline-code'
 import { listItem } from '@/plugins/list-item'
 import { SlashCommands, slash } from '@/plugins/slash-commands'
+import { todoShiftEnter } from '@/plugins/todo-shift-enter'
 import { Kanmoji } from './kanmoji'
 
 const EditorContent = ({ note }: { note: Note }) => {
@@ -61,6 +62,7 @@ const EditorContent = ({ note }: { note: Note }) => {
 			.use(blockquote(nodeViewFactory))
 			.use(inlineCode(nodeViewFactory))
 			.use(listItem(nodeViewFactory))
+			.use(todoShiftEnter)
 			.use(slash)
 			.use(listener)
 			.use(clipboard)
