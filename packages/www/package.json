@@ -52,7 +52,6 @@
 		"@vitejs/plugin-react": "^6.0.1",
 		"elysia": "^1.4.28",
 		"typescript": "~6.0.2",
-		"vite": "^8.0.4",
-		"@duffle/css": "workspace:*"
+		"vite": "^8.0.4"
 	}
 }
