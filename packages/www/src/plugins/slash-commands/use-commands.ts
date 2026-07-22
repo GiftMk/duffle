@@ -21,11 +21,6 @@ export const useCommands = (commands: SlashCommand[] = DEFAULT_COMMANDS) => {
 		e.preventDefault()
 		action((ctx) => {
 			const view = ctx.get(editorViewCtx)
-
-			const { dispatch, state } = view
-			const { tr, selection } = state
-			const { from } = selection
-			dispatch(tr.deleteRange(from - 1, from))
 			view.focus()
 
 			const command = commandMap.get(value)
