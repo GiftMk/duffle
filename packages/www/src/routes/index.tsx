@@ -67,13 +67,7 @@ const ActionButtonContainer = ({
 
 const ShuffleButton = () => {
 	const [clickCount, setClickCount] = useState(0)
-	const { setStyle, styles, style } = useAvatarStyle()
-
-	const nextStyle = () => {
-		const index = styles.indexOf(style)
-		const next = styles[(index + 1) % styles.length]
-		setStyle(next ?? style)
-	}
+	const { randomise } = useAvatarStyle()
 
 	const getReaction = () => {
 		return SHUFFLE_REACTIONS[Math.min(clickCount, SHUFFLE_REACTIONS.length - 1)]
@@ -81,7 +75,7 @@ const ShuffleButton = () => {
 
 	const handleClick = () => {
 		setClickCount((curr) => curr + 1)
-		nextStyle()
+		randomise()
 	}
 
 	return (

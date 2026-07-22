@@ -1,4 +1,5 @@
 import { Avatar, Style } from '@dicebear/core'
+import lorelei from '@dicebear/styles/lorelei.json'
 import type { ComponentProps } from 'react'
 import { useAvatarStyle } from '@/hooks/use-avatar-style'
 
@@ -7,9 +8,7 @@ const createAvatar = (
 	size = 120,
 	backgroundColor = '#FFFFFF00',
 ) => {
-	const { config } = useAvatarStyle()
-
-	return new Avatar(new Style(config), {
+	return new Avatar(new Style(lorelei), {
 		seed,
 		size: size,
 		backgroundColor,
