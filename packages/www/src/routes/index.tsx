@@ -4,7 +4,8 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { type Ref, useRef } from 'react'
 import { TypeAnimation } from 'react-type-animation'
-import { createNote } from '@/lib/actions'
+import { createNote, getNoteCount } from '@/lib/actions'
+import { BLANK_PAGE_MD, STARTER_PAGE_MD } from '@/lib/constants'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,
@@ -23,7 +24,7 @@ const Heading = () => (
 const SubHeading = () => (
 	<TypeAnimation
 		className='text-pretty text-2xl'
-		sequence={[1000, 'A happy place for all your writing (˶˃ ᵕ ˂˶)']}
+		sequence={[1000, 'A happy place for your writing (˶˃ ᵕ ˂˶)']}
 		speed={65}
 	/>
 )
@@ -32,7 +33,10 @@ const EnterButton = ({ ref }: { ref?: Ref<HTMLButtonElement> }) => {
 	const navigate = useNavigate()
 
 	const handleClick = async () => {
-		const id = await createNote()
+		const noteCount = await getNoteCount()
+		const isFirstNote = noteCount === 0
+
+		const id = await createNote(isFirstNote ? STARTER_PAGE_MD : BLANK_PAGE_MD)
 		navigate({ to: '/notes/$noteId', params: { noteId: id } })
 	}
 

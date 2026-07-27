@@ -2,14 +2,15 @@ import { uuidv7 } from 'uuidv7'
 import { searchWorker } from '@/workers/search'
 import { db, type Note } from './db'
 import { splitMarkdown } from './utils'
+import { BLANK_PAGE_MD } from './constants'
 
-export const createNote = async () => {
+export const createNote = async (markdown: string = BLANK_PAGE_MD) => {
 	const id = uuidv7()
 	const note: Note = {
 		id,
 		title: '',
 		body: '',
-		markdown: '# ',
+		markdown,
 		createdAt: new Date().toISOString(),
 	}
 
@@ -24,4 +25,8 @@ export const updateNote = async (id: string, markdown: string) => {
 
 	await db.notes.update(id, { title, body, markdown })
 	await searchWorker.update([{ id, title, body }])
+}
+
+export const getNoteCount = async () => {
+	return await db.notes.count()
 }

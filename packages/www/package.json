@@ -30,6 +30,7 @@
 		"@t3-oss/env-core": "^0.13.11",
 		"@tanstack/react-hotkeys": "^0.10.0",
 		"@tanstack/react-router": "^1.168.24",
+		"@vercel/blob": "^2.6.1",
 		"clsx": "^2.1.1",
 		"codemirror": "^6.0.2",
 		"comlink": "^4.4.2",
@@ -42,6 +43,7 @@
 		"roughjs": "^4.6.6",
 		"strip-markdown": "^6.0.0",
 		"tailwind-merge": "^3.5.0",
+		"unique-names-generator": "^4.7.1",
 		"uuidv7": "^1.2.1",
 		"zod": "^4.4.3"
 	},
