@@ -39,8 +39,8 @@ const ListItem = () => {
 	return (
 		<li className='mt-2 flex list-none items-start gap-2.5 marker:text-typography-950'>
 			<input
-				defaultChecked={checked}
-				onClick={toggleCheckbox}
+				checked={checked}
+				onChange={toggleCheckbox}
 				type='checkbox'
 				id={id}
 				className='mt-1.5 h-4 w-4 accent-primary-500'

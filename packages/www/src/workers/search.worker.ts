@@ -1,3 +1,4 @@
+import { expose } from 'comlink'
 import MiniSearch from 'minisearch'
 import type { Note } from '@/lib/db'
 
@@ -12,61 +13,28 @@ const miniSearch = new MiniSearch<SearchItem>({
 	},
 })
 
-export type SearchRequest =
-	| {
-			type: 'add'
-			payload: SearchItem[]
-	  }
-	| {
-			type: 'update'
-			payload: SearchItem[]
-	  }
-	| {
-			type: 'query'
-			payload: string
-	  }
+const api = {
+	add(notes: SearchItem[]) {
+		miniSearch.addAll(notes)
+		return miniSearch.documentCount
+	},
 
-export type SearchResponse =
-	| {
-			type: 'add'
-			payload: number
-	  }
-	| {
-			type: 'update'
-			payload: number
-	  }
-	| {
-			type: 'query'
-			payload: SearchItem[]
-	  }
-
-self.onmessage = (e: MessageEvent<SearchRequest>) => {
-	switch (e.data.type) {
-		case 'add': {
-			const notes = e.data.payload
-			miniSearch.addAll(notes)
-			reply({ type: 'add', payload: miniSearch.documentCount })
-			break
+	update(notes: SearchItem[]) {
+		for (const note of notes) {
+			miniSearch.replace(note)
 		}
-		case 'update': {
-			const notes = e.data.payload
+		return miniSearch.documentCount
+	},
 
-			for (const note of notes) {
-				miniSearch.replace(note)
-			}
-
-			reply({ type: 'update', payload: miniSearch.documentCount })
-			break
-		}
-		case 'query': {
-			const query = e.data.payload
-			const results = miniSearch.search(query)
-			// biome-ignore lint/suspicious/noExplicitAny: minisearch returns items as any
-			reply({ type: 'query', payload: results as any as SearchItem[] })
-		}
-	}
+	query(query: string): SearchItem[] {
+		return miniSearch.search(query).map(result => ({
+			id: result.id,
+			title: result.title,
+			body: result.body,
+		}))
+	},
 }
 
-const reply = (response: SearchResponse) => {
-	self.postMessage(response)
-}
+export type SearchWorker = typeof api
+
+expose(api)

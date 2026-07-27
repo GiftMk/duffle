@@ -14,7 +14,7 @@ export const createNote = async () => {
 	}
 
 	await db.notes.add(note)
-	searchWorker.send({ type: 'add', payload: [note] })
+	await searchWorker.add([note])
 
 	return id
 }
@@ -23,5 +23,5 @@ export const updateNote = async (id: string, markdown: string) => {
 	const { title, body } = splitMarkdown(markdown)
 
 	await db.notes.update(id, { title, body, markdown })
-	searchWorker.send({ type: 'update', payload: [{ id, title, body }] })
+	await searchWorker.update([{ id, title, body }])
 }
