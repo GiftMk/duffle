@@ -4,7 +4,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // this, nothing in the program imports @tanstack/react-start and `server`
 // type-errors as an unknown property under `tsc -b`.
 import type {} from '@tanstack/react-start'
-import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
+import { type HandleUploadBody, handleUpload } from '@vercel/blob/client'
 
 export const Route = createFileRoute('/api/export')({
 	server: {

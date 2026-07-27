@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build && tsc --noEmit",
+		"build": "vite build && tsc -b --noEmit",
 		"start": "node .output/server/index.mjs",
 		"preview": "vite preview",
 		"tidy": "biome check --write --unsafe .",

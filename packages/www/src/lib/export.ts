@@ -1,10 +1,10 @@
+import { upload } from '@vercel/blob/client'
 import {
-	uniqueNamesGenerator,
 	adjectives,
 	animals,
+	uniqueNamesGenerator,
 } from 'unique-names-generator'
 import { db } from './db'
-import { upload } from '@vercel/blob/client'
 
 const generateRandomName = () => {
 	return uniqueNamesGenerator({

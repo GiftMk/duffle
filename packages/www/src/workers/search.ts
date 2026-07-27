@@ -1,4 +1,4 @@
-import { wrap, type Remote } from 'comlink'
+import { type Remote, wrap } from 'comlink'
 import type { SearchWorker } from './search.worker'
 
 const createSearchWorker = (): Remote<SearchWorker> => {

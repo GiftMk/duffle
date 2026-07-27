@@ -27,7 +27,7 @@ const api = {
 	},
 
 	query(query: string): SearchItem[] {
-		return miniSearch.search(query).map(result => ({
+		return miniSearch.search(query).map((result) => ({
 			id: result.id,
 			title: result.title,
 			body: result.body,

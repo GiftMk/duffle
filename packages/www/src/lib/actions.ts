@@ -1,8 +1,8 @@
 import { uuidv7 } from 'uuidv7'
 import { searchWorker } from '@/workers/search'
+import { BLANK_PAGE_MD } from './constants'
 import { db, type Note } from './db'
 import { splitMarkdown } from './utils'
-import { BLANK_PAGE_MD } from './constants'
 
 export const createNote = async (markdown: string = BLANK_PAGE_MD) => {
 	const id = uuidv7()
