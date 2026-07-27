@@ -2,6 +2,10 @@
 
 Duffle is a collaborative markdown editing app that works on the concept of brain dumps. Instead of organizing files and folders, users just write and write some more. When they want to access their knowledge they can search (fuzzy or semantic) or even ask to use an agent.
 
+# General Instructions
+
+- Always do new work, bug fixes, features etc. in a dedicated worktree unless told otherwise
+
 # Code Style
 
 ## General

@@ -23,6 +23,8 @@ type ThemeProviderState = {
 
 const STORAGE_KEY = 'duffle-ui-theme'
 
+const isBrowser = typeof window !== 'undefined'
+
 const getSystemTheme = (): 'dark' | 'light' => {
 	return window.matchMedia('(prefers-color-scheme: dark)').matches
 		? 'dark'
@@ -38,12 +40,18 @@ export const ThemeProvider = ({
 	defaultTheme = 'system',
 	storageKey = STORAGE_KEY,
 }: ThemeProviderProps) => {
-	const [theme, setThemeState] = useState<Theme>(
-		() => (localStorage.getItem(storageKey) as Theme | null) ?? defaultTheme,
-	)
-	const [resolvedTheme, setResolvedTheme] = useState<'dark' | 'light'>(() =>
-		theme === 'system' ? getSystemTheme() : theme,
-	)
+	const [theme, setThemeState] = useState<Theme>(() => {
+		if (!isBrowser) {
+			return defaultTheme
+		}
+		return (localStorage.getItem(storageKey) as Theme | null) ?? defaultTheme
+	})
+	const [resolvedTheme, setResolvedTheme] = useState<'dark' | 'light'>(() => {
+		if (!isBrowser) {
+			return 'light'
+		}
+		return theme === 'system' ? getSystemTheme() : theme
+	})
 
 	useLayoutEffect(() => {
 		const root = window.document.documentElement

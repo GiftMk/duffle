@@ -3,7 +3,6 @@ import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { useNavigate } from '@tanstack/react-router'
 import { Fragment, useEffect, useState } from 'react'
-import { useWorker } from '@/hooks/use-worker'
 import { ICON_SIZE_PX } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { searchWorker } from '@/workers/search'
@@ -22,21 +21,13 @@ export const SearchDialog = () => {
 
 	useHotkey('Mod+K', () => setOpen(true))
 
-	useWorker(searchWorker, (response) => {
-		if (response.type !== 'query') {
-			return
-		}
-
-		setResults(response.payload)
-	})
-
 	useEffect(() => {
 		if (!query.length) {
 			return
 		}
 
 		setResults([])
-		searchWorker.send({ type: 'query', payload: query })
+		searchWorker.query(query).then(setResults)
 	}, [query])
 
 	useEffect(() => {

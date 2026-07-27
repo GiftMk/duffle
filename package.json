@@ -6,14 +6,13 @@
 		"packages/*"
 	],
 	"scripts": {
-		"dev": "bun --elide-lines=0 --filter ./packages/www dev",
+		"dev": "bun --filter ./packages/www dev",
 		"tidy": "bun run --workspaces --if-present tidy",
 		"tsc": "bun run --workspaces --if-present tsc"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.4",
-		"@types/bun": "latest",
-		"concurrently": "^9.2.1"
+		"@types/bun": "latest"
 	},
 	"peerDependencies": {
 		"typescript": "^5"

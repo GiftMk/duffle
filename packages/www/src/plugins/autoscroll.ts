@@ -10,7 +10,7 @@ export const autoscroll = $prose(
 				return {
 					update: (view, prevState) => {
 						const selection = view.state.selection
-						if (selection.eq(prevState.selection)) {
+						if (selection.eq(prevState.selection) || !selection.empty) {
 							return
 						}
 
@@ -26,8 +26,9 @@ export const autoscroll = $prose(
 						}
 
 						const anchorBottom = anchorElement.getBoundingClientRect().bottom
+						const containerBottom = container.getBoundingClientRect().bottom
 
-						if (window.innerHeight - anchorBottom < EDITOR_SPACER_HEIGHT_PX) {
+						if (containerBottom - anchorBottom < EDITOR_SPACER_HEIGHT_PX) {
 							container.scrollBy({
 								top: EDITOR_SPACER_HEIGHT_PX,
 								behavior: 'smooth',

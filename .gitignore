@@ -1,6 +1,9 @@
 # dependencies (bun install)
 node_modules
 
+# Claude Code local state
+.claude
+
 # output
 out
 dist
