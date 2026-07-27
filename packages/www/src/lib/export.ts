@@ -25,4 +25,6 @@ export const exportNotes = async () => {
 		access: 'public',
 		handleUploadUrl: '/api/export',
 	})
+
+	return name
 }
