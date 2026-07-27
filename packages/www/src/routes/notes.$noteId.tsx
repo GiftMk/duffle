@@ -1,17 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { EditorSpine } from '@/components/editor-spine'
-import { db } from '@/lib/db'
+import { db, type Note } from '@/lib/db'
 import { MarkdownEditor } from '../components/editor'
+import { useEffect, useState } from 'react'
 
 export const Route = createFileRoute('/notes/$noteId')({
 	component: RouteComponent,
-	loader: async ({ params }) => {
-		return await db.notes.get(params.noteId)
-	},
 })
 
 function RouteComponent() {
-	const note = Route.useLoaderData()
+	const [note, setNote] = useState<Note | undefined>()
+	const params = Route.useParams()
+
+	useEffect(() => {
+		db.notes.get(params.noteId).then(setNote)
+	}, [params.noteId])
 
 	if (note)
 		return (
