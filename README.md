@@ -4,6 +4,8 @@ A super-simple WYSIWYG markdown editor for your brain dumps.
 It's like Typora & Bear but for the web.
 You don't organize files and folders, you simply write and search when needed.
 
+![Duffle screenshot](duffle-screenshot.png)
+
 There's absolutely no login required ( ˶°ㅁ°) !!
 
 We have a cool feature where you can generate an import code to load your notes onto another device.
