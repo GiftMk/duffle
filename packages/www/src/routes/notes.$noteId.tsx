@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { EditorSpine } from '@/components/editor-spine'
-import { CurrentNoteProvider } from '@/components/note-provider'
+import { CurrentNoteContext } from '@/components/note-provider'
 import { db, type Note } from '@/lib/db'
 import { MarkdownEditor } from '../components/editor'
 
@@ -28,11 +28,11 @@ function RouteComponent() {
 
 	if (note)
 		return (
-			<CurrentNoteProvider reload={reload}>
+			<CurrentNoteContext value={{ reload }}>
 				<main className='flex h-full w-full items-center justify-center'>
 					<EditorSpine />
 					<MarkdownEditor key={`${note.id}:${editorKey}`} note={note} />
 				</main>
-			</CurrentNoteProvider>
+			</CurrentNoteContext>
 		)
 }
