@@ -8,8 +8,14 @@ export const cn = (...inputs: ClassValue[]) => {
 	return twMerge(clsx(inputs))
 }
 
+// Strip embedded data: URIs before parsing - they can be multi-MB and
+// remark would otherwise re-parse the whole blob on every keystroke.
+const DATA_URI_PATTERN = /data:[\w+.-]+\/[\w+.-]+;base64,[A-Za-z0-9+/=]+/g
+
 export const stripMarkdown = (markdown: string): string => {
-	return remark().use(strip).processSync(markdown).toString()
+	const withoutDataUris = markdown.replace(DATA_URI_PATTERN, 'data:image')
+
+	return remark().use(strip).processSync(withoutDataUris).toString()
 }
 
 export const splitMarkdown = (
