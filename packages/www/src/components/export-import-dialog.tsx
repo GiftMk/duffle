@@ -2,6 +2,8 @@ import { Dialog } from '@base-ui/react'
 import {
 	ArrowsLeftRightIcon,
 	CheckIcon,
+	CloudArrowDownIcon,
+	CloudArrowUpIcon,
 	CopyIcon,
 	SpinnerGapIcon,
 	XIcon,
@@ -50,7 +52,7 @@ export const ExportImportDialog = () => {
 					>
 						<XIcon size={ICON_SIZE_PX} />
 					</Dialog.Close>
-					<div className='flex flex-col gap-4 px-4'>
+					<div className='flex flex-col gap-6 px-4'>
 						<div className='flex w-fit gap-1 rounded-full border border-surface-400 p-1'>
 							<button
 								type='button'
@@ -112,52 +114,46 @@ const ExportPanel = () => {
 		setTimeout(() => setCopied(false), 1500)
 	}
 
-	if (!code) {
-		return (
-			<div className='flex flex-col gap-3 pb-4'>
-				<p className='text-sm text-typography-600'>
-					Upload all of your notes and get a code you can use to continue them
-					on another device.
-				</p>
-				<button
-					type='button'
-					onClick={handleGenerate}
-					disabled={status === 'loading'}
-					className='flex items-center justify-center gap-2 rounded-md border border-surface-400 bg-surface-100 py-2 text-sm transition-colors hover:bg-surface-300/50 disabled:opacity-60'
-				>
-					{status === 'loading' && (
-						<SpinnerGapIcon size={ICON_SIZE_PX} className='animate-spin' />
-					)}
-					Generate export code
-				</button>
-				{status === 'error' && (
-					<p className='text-red-500 text-xs'>
-						Something went wrong uploading your notes. Try again.
-					</p>
-				)}
-			</div>
-		)
-	}
-
 	return (
-		<div className='flex flex-col gap-3 pb-4'>
+		<div className='flex flex-col gap-6 pb-4'>
 			<p className='text-sm text-typography-600'>
-				Enter this code on your other device to continue your notes there.
+				{code
+					? 'Enter this code on your other device to continue your notes there.'
+					: 'Upload all of your notes and get a code you can use to continue them on another device.'}
 			</p>
-			<div className='flex items-center justify-between gap-2 rounded-md border border-surface-400 bg-surface-200 px-4 py-3'>
-				<span className='font-bold font-mono text-lg'>{code}</span>
+			<div className='flex items-center gap-2'>
+				<input
+					value={code ?? ''}
+					disabled
+					placeholder='Code will appear here'
+					className='h-full w-full rounded-md border border-surface-400 bg-surface-100 px-3 py-2 font-mono text-sm disabled:opacity-60'
+				/>
 				<button
 					type='button'
-					onClick={handleCopy}
-					className='rounded-full p-1.5 text-typography-600 hover:bg-surface-300'
+					onClick={code ? handleCopy : handleGenerate}
+					disabled={status === 'loading'}
+					aria-label={code ? 'Copy code' : 'Generate export code'}
+					title={code ? 'Copy code' : 'Generate export code'}
+					className='flex items-center justify-center rounded-md border border-surface-400 bg-surface-100 px-3 py-2 text-typography-600 transition-colors hover:bg-surface-300/50 disabled:opacity-60'
 				>
-					{copied ? (
-						<CheckIcon size={ICON_SIZE_PX} />
+					{status === 'loading' ? (
+						<SpinnerGapIcon size={ICON_SIZE_PX} className='animate-spin' />
+					) : code ? (
+						copied ? (
+							<CheckIcon size={ICON_SIZE_PX} />
+						) : (
+							<CopyIcon size={ICON_SIZE_PX} />
+						)
 					) : (
-						<CopyIcon size={ICON_SIZE_PX} />
+						<CloudArrowUpIcon size={ICON_SIZE_PX} />
 					)}
 				</button>
 			</div>
+			{status === 'error' && (
+				<p className='text-red-500 text-xs'>
+					Something went wrong uploading your notes. Try again.
+				</p>
+			)}
 		</div>
 	)
 }
@@ -208,7 +204,7 @@ const ImportPanel = ({ onDone }: ImportPanelProps) => {
 	}
 
 	return (
-		<div className='flex flex-col gap-3 pb-4'>
+		<div className='flex flex-col gap-6 pb-4'>
 			<p className='text-sm text-typography-600'>
 				Enter the code you generated on your other device.
 			</p>
@@ -226,20 +222,26 @@ const ImportPanel = ({ onDone }: ImportPanelProps) => {
 					type='button'
 					onClick={handleLookup}
 					disabled={status === 'loading'}
-					className='rounded-md border border-surface-400 bg-surface-100 px-3 py-2 text-sm transition-colors hover:bg-surface-300/50 disabled:opacity-60'
+					aria-label='Look up code'
+					title='Look up code'
+					className='flex items-center justify-center rounded-md border border-surface-400 bg-surface-100 px-3 py-2 text-typography-600 transition-colors hover:bg-surface-300/50 disabled:opacity-60'
 				>
-					Look up
+					{status === 'loading' ? (
+						<SpinnerGapIcon size={ICON_SIZE_PX} className='animate-spin' />
+					) : (
+						<CloudArrowDownIcon size={ICON_SIZE_PX} />
+					)}
 				</button>
 			</div>
 			{status === 'error' && error && (
 				<p className='text-red-500 text-xs'>{error}</p>
 			)}
 			{notes && (
-				<div className='flex flex-col gap-2 rounded-md border border-surface-400 bg-surface-200 p-3'>
+				<div className='flex flex-col gap-6 rounded-md border border-surface-400 bg-surface-200 p-3'>
 					<p className='text-sm'>
 						Found {notes.length} note{notes.length === 1 ? '' : 's'}.
 					</p>
-					<div className='flex gap-2'>
+					<div className='flex gap-6'>
 						<button
 							type='button'
 							onClick={() => handleImport('merge')}
