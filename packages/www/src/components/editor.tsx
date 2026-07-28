@@ -25,6 +25,7 @@ import type { Note } from '@/lib/db'
 import { autoscroll } from '@/plugins/autoscroll'
 import { blockquote } from '@/plugins/blockquote'
 import { codeBlock } from '@/plugins/code-block'
+import { imageBlock } from '@/plugins/image-block'
 import { inlineCode } from '@/plugins/inline-code'
 import { listItem } from '@/plugins/list-item'
 
@@ -53,6 +54,7 @@ const EditorContent = ({ note }: { note: Note }) => {
 			.use(blockquote(nodeViewFactory))
 			.use(inlineCode(nodeViewFactory))
 			.use(listItem(nodeViewFactory))
+			.use(imageBlock(nodeViewFactory))
 			.use(listener)
 			.use(clipboard)
 			.use(headingLevelIndicator)
