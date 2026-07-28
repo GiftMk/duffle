@@ -29,7 +29,7 @@ Use \`cmd + N\` or the pen icon on the left to create new notes.
 
 We support GFM, well *most of it* (-‿-")
 Coming soon are:
-- [ ] Image Blocks
+- [X] Image Blocks
 - [ ] Tables
 - [ ] Embedded Excalidraw
 - [ ] Slash commands

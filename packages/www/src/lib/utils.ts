@@ -28,19 +28,3 @@ export const splitMarkdown = (
 
 	return { title, body }
 }
-
-export const mergeRefs = (...refs: Ref<unknown>[]) => {
-	return (node: unknown) => {
-		for (const ref of refs) {
-			if (!ref) {
-				continue
-			}
-
-			if (typeof ref === 'function') {
-				ref(node)
-			} else {
-				ref.current = node
-			}
-		}
-	}
-}
