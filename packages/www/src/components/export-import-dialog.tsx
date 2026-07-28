@@ -62,9 +62,10 @@ export const ExportImportDialog = () => {
 								onClick={() => setMode('export')}
 								className={cn(
 									'rounded-full px-3 py-1 text-sm transition-colors',
-									mode === 'export'
-										? 'bg-surface-300 text-typography-950'
-										: 'text-typography-600',
+									{
+										'bg-surface-300 text-typography-950': mode === 'export',
+										'text-typography-600': mode === 'import',
+									},
 								)}
 							>
 								Export
@@ -74,9 +75,10 @@ export const ExportImportDialog = () => {
 								onClick={() => setMode('import')}
 								className={cn(
 									'rounded-full px-3 py-1 text-sm transition-colors',
-									mode === 'import'
-										? 'bg-surface-300 text-typography-950'
-										: 'text-typography-600',
+									{
+										'bg-surface-300 text-typography-950': mode === 'import',
+										'text-typography-600': mode === 'export',
+									},
 								)}
 							>
 								Import
@@ -98,6 +100,9 @@ const ExportPanel = () => {
 	const [code, setCode] = useState<string | null>(null)
 	const [copied, setCopied] = useState(false)
 	const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
+	const showLoading = status === 'loading'
+	const showCopy = status === 'idle' && !!code
+	const showUpload = status === 'idle' && !code
 
 	const handleGenerate = async () => {
 		setStatus('loading')
@@ -143,19 +148,20 @@ const ExportPanel = () => {
 						aria-label={code ? 'Copy code' : 'Generate export code'}
 						className='flex items-center justify-center rounded-md border border-surface-400 bg-surface-100 px-3 py-2 text-typography-600 transition-colors hover:bg-surface-300/50 disabled:opacity-60'
 					>
-						{status === 'loading' ? (
+						{showLoading && (
 							<SpinnerGapIcon
 								size={ICON_SIZE_PX}
 								weight='bold'
 								className='animate-spin'
 							/>
-						) : code ? (
-							copied ? (
-								<CheckIcon size={ICON_SIZE_PX} weight='bold' />
-							) : (
-								<CopyIcon size={ICON_SIZE_PX} weight='bold' />
-							)
-						) : (
+						)}
+						{showCopy && !copied && (
+							<CopyIcon size={ICON_SIZE_PX} weight='bold' />
+						)}
+						{showCopy && copied && (
+							<CheckIcon size={ICON_SIZE_PX} weight='bold' />
+						)}
+						{showUpload && (
 							<CloudArrowUpIcon size={ICON_SIZE_PX} weight='bold' />
 						)}
 					</button>

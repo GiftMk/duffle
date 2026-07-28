@@ -1,5 +1,4 @@
 import { type ClassValue, clsx } from 'clsx'
-import type { Ref } from 'react'
 import { remark } from 'remark'
 import strip from 'strip-markdown'
 import { twMerge } from 'tailwind-merge'
