@@ -17,11 +17,7 @@ export const CurrentNoteProvider = ({
 	children,
 	reload,
 }: CurrentNoteProviderProps) => {
-	return (
-		<CurrentNoteContext.Provider value={{ reload }}>
-			{children}
-		</CurrentNoteContext.Provider>
-	)
+	return <CurrentNoteContext value={{ reload }}>{children}</CurrentNoteContext>
 }
 
 export const useCurrentNote = () => {
