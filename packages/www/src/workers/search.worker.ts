@@ -33,6 +33,11 @@ const api = {
 			body: result.body,
 		}))
 	},
+
+	clear() {
+		miniSearch.removeAll()
+		return miniSearch.documentCount
+	},
 }
 
 export type SearchWorker = typeof api

@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { useRoughSvg } from '@/hooks/use-rough-svg'
+import { ExportImportDialog } from './export-import-dialog'
 import { NewNoteButton } from './new-note-button'
 import { SearchDialog } from './search/search-dialog'
 import { ThemeToggle } from './theme-toggle'
@@ -28,6 +29,7 @@ export const EditorSpine = () => {
 			<section className='relative flex flex-col items-center gap-4'>
 				<NewNoteButton />
 				<SearchDialog />
+				<ExportImportDialog />
 				<ThemeToggle />
 			</section>
 			<section className='relative flex justify-center'>

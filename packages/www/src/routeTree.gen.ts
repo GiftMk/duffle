@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ThemeRouteImport } from './routes/theme'
 import { Route as ApiExportRouteImport } from './routes/api/export'
 import { Route as NotesNoteIdRouteImport } from './routes/notes.$noteId'
+import { Route as ApiImportCodeRouteImport } from './routes/api/import.$code'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +35,25 @@ const NotesNoteIdRoute = NotesNoteIdRouteImport.update({
   path: '/notes/$noteId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiImportCodeRoute = ApiImportCodeRouteImport.update({
+  id: '/api/import/$code',
+  path: '/api/import/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/theme': typeof ThemeRoute
   '/api/export': typeof ApiExportRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
+  '/api/import/$code': typeof ApiImportCodeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/theme': typeof ThemeRoute
   '/api/export': typeof ApiExportRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
+  '/api/import/$code': typeof ApiImportCodeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,21 @@ export interface FileRoutesById {
   '/theme': typeof ThemeRoute
   '/api/export': typeof ApiExportRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
+  '/api/import/$code': typeof ApiImportCodeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/theme' | '/api/export' | '/notes/$noteId'
+  fullPaths:
+    '/' | '/theme' | '/api/export' | '/notes/$noteId' | '/api/import/$code'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/theme' | '/api/export' | '/notes/$noteId'
-  id: '__root__' | '/' | '/theme' | '/api/export' | '/notes/$noteId'
+  to: '/' | '/theme' | '/api/export' | '/notes/$noteId' | '/api/import/$code'
+  id:
+    | '__root__'
+    | '/'
+    | '/theme'
+    | '/api/export'
+    | '/notes/$noteId'
+    | '/api/import/$code'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +83,7 @@ export interface RootRouteChildren {
   ThemeRoute: typeof ThemeRoute
   ApiExportRoute: typeof ApiExportRoute
   NotesNoteIdRoute: typeof NotesNoteIdRoute
+  ApiImportCodeRoute: typeof ApiImportCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +116,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotesNoteIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/import/$code': {
+      id: '/api/import/$code'
+      path: '/api/import/$code'
+      fullPath: '/api/import/$code'
+      preLoaderRoute: typeof ApiImportCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +131,7 @@ const rootRouteChildren: RootRouteChildren = {
   ThemeRoute: ThemeRoute,
   ApiExportRoute: ApiExportRoute,
   NotesNoteIdRoute: NotesNoteIdRoute,
+  ApiImportCodeRoute: ApiImportCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

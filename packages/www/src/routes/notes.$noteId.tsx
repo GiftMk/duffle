@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
 import { EditorSpine } from '@/components/editor-spine'
 import { db, type Note } from '@/lib/db'
 import { MarkdownEditor } from '../components/editor'
-import { useEffect, useState } from 'react'
 
 export const Route = createFileRoute('/notes/$noteId')({
 	component: RouteComponent,
