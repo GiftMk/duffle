@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import '@/index.css'
 import { LoadingPage } from '@/components/loading-page'
 import { ThemeProvider } from '@/components/theme-provider'
+import { TooltipProvider } from '@/components/tooltip'
 import { db } from '@/lib/db'
 import { searchWorker } from '@/workers/search'
 
@@ -13,12 +14,8 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	useEffect(() => {
-		const start = new Date()
 		db.notes.toArray().then(async (notes) => {
 			await searchWorker.add(notes)
-			const end = new Date()
-			const diff = Math.abs(start.getTime() - end.getTime())
-			console.log(`Took ${diff}ms to index search.`)
 		})
 	}, [])
 
@@ -31,7 +28,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<ThemeProvider>{children}</ThemeProvider>
+				<ThemeProvider>
+					<TooltipProvider delay={300}>{children}</TooltipProvider>
+				</ThemeProvider>
 				<Scripts />
 			</body>
 		</html>

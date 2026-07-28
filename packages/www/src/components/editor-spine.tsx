@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useRoughSvg } from '@/hooks/use-rough-svg'
 import { ExportImportDialog } from './export-import-dialog'
 import { NewNoteButton } from './new-note-button'
-import { SearchDialog } from './search/search-dialog'
+import { SearchDialog } from './search-dialog'
 import { ThemeToggle } from './theme-toggle'
 
 export const EditorSpine = () => {

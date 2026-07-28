@@ -20,9 +20,6 @@ export const Route = createFileRoute('/api/export')({
 							allowedContentTypes: ['application/json'],
 							addRandomSuffix: false,
 						}),
-						onUploadCompleted: async ({ blob }) => {
-							console.log('export uploaded', blob.url)
-						},
 					})
 
 					return Response.json(jsonResponse)

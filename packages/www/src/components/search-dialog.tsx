@@ -3,17 +3,23 @@ import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { useNavigate } from '@tanstack/react-router'
 import { Fragment, useEffect, useState } from 'react'
+import { Tooltip } from '@/components/tooltip'
+import { useNotes } from '@/hooks/use-notes'
 import { ICON_SIZE_PX } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { searchWorker } from '@/workers/search'
 import type { SearchItem } from '@/workers/search.worker'
-import { InputSwitch, type InputSwitchMode } from './input-switch'
 
 export const SearchDialog = () => {
 	const [open, setOpen] = useState(false)
-	const [mode, setMode] = useState<InputSwitchMode>('search')
 	const [query, setQuery] = useState('')
 	const [results, setResults] = useState<SearchItem[]>([])
+	const showRecentNotes = !query.length && !results.length
+	const recentNotes = useNotes({
+		skip: !showRecentNotes,
+		orderBy: 'createdAt',
+		limit: 3,
+	})
 
 	const closeDialog = () => {
 		setOpen(false)
@@ -39,23 +45,25 @@ export const SearchDialog = () => {
 
 	return (
 		<Dialog.Root open={open} onOpenChange={setOpen}>
-			<Dialog.Trigger
-				render={
-					<button
-						type='button'
-						className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
-					>
-						<MagnifyingGlassIcon size={ICON_SIZE_PX} />
-					</button>
-				}
-			/>
+			<Tooltip content='Search'>
+				<Dialog.Trigger
+					render={
+						<button
+							type='button'
+							className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
+						>
+							<MagnifyingGlassIcon size={ICON_SIZE_PX} weight='bold' />
+						</button>
+					}
+				/>
+			</Tooltip>
 			<Dialog.Portal>
 				<Dialog.Popup className='fixed top-44 left-1/2 w-2xl -translate-x-1/2 rounded-md border border-surface-400 bg-surface-100 py-4 shadow-2xl shadow-surface-400/50 focus:outline-none'>
 					<Dialog.Close
 						onClick={closeDialog}
 						className='absolute top-2 right-2 rounded-full p-1.5 text-surface-800 hover:bg-surface-300'
 					>
-						<XIcon size={ICON_SIZE_PX} />
+						<XIcon size={ICON_SIZE_PX} weight='bold' />
 					</Dialog.Close>
 					<Autocomplete.Root
 						value={query}
@@ -64,7 +72,6 @@ export const SearchDialog = () => {
 						autoHighlight={'always'}
 					>
 						<span className='flex w-full items-center gap-3 px-4 py-4'>
-							<InputSwitch mode={mode} setMode={setMode} />
 							<Autocomplete.Input
 								autoFocus
 								className='h-full w-full border-surface-400 border-b py-2 focus:outline-none'
@@ -72,6 +79,13 @@ export const SearchDialog = () => {
 							/>
 						</span>
 						<Autocomplete.List className='flex max-h-[min(432px,35svh)] flex-col overflow-y-auto px-4'>
+							{showRecentNotes &&
+								recentNotes.map((note) => (
+									<Fragment key={note.id}>
+										<SearchResult item={note} onClick={closeDialog} />
+										<hr className='my-2 text-surface-400' />
+									</Fragment>
+								))}
 							{results.map((note) => (
 								<Fragment key={note.id}>
 									<SearchResult item={note} onClick={closeDialog} />

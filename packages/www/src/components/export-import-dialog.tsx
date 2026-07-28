@@ -10,6 +10,7 @@ import {
 } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { Tooltip } from '@/components/tooltip'
 import { ICON_SIZE_PX } from '@/lib/constants'
 import type { Note } from '@/lib/db'
 import { exportNotes } from '@/lib/export'
@@ -34,23 +35,25 @@ export const ExportImportDialog = () => {
 				}
 			}}
 		>
-			<Dialog.Trigger
-				render={
-					<button
-						type='button'
-						className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
-					>
-						<ArrowsLeftRightIcon size={ICON_SIZE_PX} />
-					</button>
-				}
-			/>
+			<Tooltip content='Export / Import'>
+				<Dialog.Trigger
+					render={
+						<button
+							type='button'
+							className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
+						>
+							<ArrowsLeftRightIcon size={ICON_SIZE_PX} weight='bold' />
+						</button>
+					}
+				/>
+			</Tooltip>
 			<Dialog.Portal>
 				<Dialog.Popup className='fixed top-44 left-1/2 w-md -translate-x-1/2 rounded-md border border-surface-400 bg-surface-100 py-4 shadow-2xl shadow-surface-400/50 focus:outline-none'>
 					<Dialog.Close
 						onClick={closeDialog}
 						className='absolute top-2 right-2 rounded-full p-1.5 text-surface-800 hover:bg-surface-300'
 					>
-						<XIcon size={ICON_SIZE_PX} />
+						<XIcon size={ICON_SIZE_PX} weight='bold' />
 					</Dialog.Close>
 					<div className='flex flex-col gap-6 px-4'>
 						<div className='flex w-fit gap-1 rounded-full border border-surface-400 p-1'>
@@ -128,26 +131,35 @@ const ExportPanel = () => {
 					placeholder='Code will appear here'
 					className='h-full w-full rounded-md border border-surface-400 bg-surface-100 px-3 py-2 font-mono text-sm disabled:opacity-60'
 				/>
-				<button
-					type='button'
-					onClick={code ? handleCopy : handleGenerate}
-					disabled={status === 'loading'}
-					aria-label={code ? 'Copy code' : 'Generate export code'}
-					title={code ? 'Copy code' : 'Generate export code'}
-					className='flex items-center justify-center rounded-md border border-surface-400 bg-surface-100 px-3 py-2 text-typography-600 transition-colors hover:bg-surface-300/50 disabled:opacity-60'
+				<Tooltip
+					content={
+						code ? (copied ? 'Copied' : 'Copy code') : 'Generate export code'
+					}
 				>
-					{status === 'loading' ? (
-						<SpinnerGapIcon size={ICON_SIZE_PX} className='animate-spin' />
-					) : code ? (
-						copied ? (
-							<CheckIcon size={ICON_SIZE_PX} />
+					<button
+						type='button'
+						onClick={code ? handleCopy : handleGenerate}
+						disabled={status === 'loading'}
+						aria-label={code ? 'Copy code' : 'Generate export code'}
+						className='flex items-center justify-center rounded-md border border-surface-400 bg-surface-100 px-3 py-2 text-typography-600 transition-colors hover:bg-surface-300/50 disabled:opacity-60'
+					>
+						{status === 'loading' ? (
+							<SpinnerGapIcon
+								size={ICON_SIZE_PX}
+								weight='bold'
+								className='animate-spin'
+							/>
+						) : code ? (
+							copied ? (
+								<CheckIcon size={ICON_SIZE_PX} weight='bold' />
+							) : (
+								<CopyIcon size={ICON_SIZE_PX} weight='bold' />
+							)
 						) : (
-							<CopyIcon size={ICON_SIZE_PX} />
-						)
-					) : (
-						<CloudArrowUpIcon size={ICON_SIZE_PX} />
-					)}
-				</button>
+							<CloudArrowUpIcon size={ICON_SIZE_PX} weight='bold' />
+						)}
+					</button>
+				</Tooltip>
 			</div>
 			{status === 'error' && (
 				<p className='text-red-500 text-xs'>
@@ -218,20 +230,25 @@ const ImportPanel = ({ onDone }: ImportPanelProps) => {
 					placeholder='brave-otter-42'
 					className='h-full w-full rounded-md border border-surface-400 bg-surface-100 px-3 py-2 text-sm focus:outline-none'
 				/>
-				<button
-					type='button'
-					onClick={handleLookup}
-					disabled={status === 'loading'}
-					aria-label='Look up code'
-					title='Look up code'
-					className='flex items-center justify-center rounded-md border border-surface-400 bg-surface-100 px-3 py-2 text-typography-600 transition-colors hover:bg-surface-300/50 disabled:opacity-60'
-				>
-					{status === 'loading' ? (
-						<SpinnerGapIcon size={ICON_SIZE_PX} className='animate-spin' />
-					) : (
-						<CloudArrowDownIcon size={ICON_SIZE_PX} />
-					)}
-				</button>
+				<Tooltip content='Look up code'>
+					<button
+						type='button'
+						onClick={handleLookup}
+						disabled={status === 'loading'}
+						aria-label='Look up code'
+						className='flex items-center justify-center rounded-md border border-surface-400 bg-surface-100 px-3 py-2 text-typography-600 transition-colors hover:bg-surface-300/50 disabled:opacity-60'
+					>
+						{status === 'loading' ? (
+							<SpinnerGapIcon
+								size={ICON_SIZE_PX}
+								weight='bold'
+								className='animate-spin'
+							/>
+						) : (
+							<CloudArrowDownIcon size={ICON_SIZE_PX} weight='bold' />
+						)}
+					</button>
+				</Tooltip>
 			</div>
 			{status === 'error' && error && (
 				<p className='text-red-500 text-xs'>{error}</p>

@@ -3,6 +3,7 @@ import { useHotkey } from '@tanstack/react-hotkeys'
 import { useNavigate } from '@tanstack/react-router'
 import { createNote } from '@/lib/actions'
 import { ICON_SIZE_PX } from '@/lib/constants'
+import { Tooltip } from './tooltip'
 
 export const NewNoteButton = () => {
 	const navigate = useNavigate()
@@ -15,12 +16,14 @@ export const NewNoteButton = () => {
 	useHotkey('Mod+Enter', handleClick)
 
 	return (
-		<button
-			onClick={handleClick}
-			type='button'
-			className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
-		>
-			<NotePencilIcon size={ICON_SIZE_PX} />
-		</button>
+		<Tooltip content='Create note'>
+			<button
+				onClick={handleClick}
+				type='button'
+				className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
+			>
+				<NotePencilIcon size={ICON_SIZE_PX} weight='bold' />
+			</button>
+		</Tooltip>
 	)
 }

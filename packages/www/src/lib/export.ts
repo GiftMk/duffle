@@ -23,6 +23,7 @@ export const exportNotes = async () => {
 
 	await upload(name, json, {
 		access: 'public',
+		contentType: 'application/json',
 		handleUploadUrl: '/api/export',
 	})
 

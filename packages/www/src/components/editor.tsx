@@ -1,6 +1,7 @@
 import {
 	defaultValueCtx,
 	Editor,
+	editorViewCtx,
 	editorViewOptionsCtx,
 	rootCtx,
 } from '@milkdown/kit/core'
@@ -19,7 +20,7 @@ import { history } from '@milkdown/kit/plugin/history'
 import { indent } from '@milkdown/kit/plugin/indent'
 import { trailing } from '@milkdown/kit/plugin/trailing'
 import { gfm } from '@milkdown/kit/preset/gfm'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { updateNote } from '@/lib/actions'
 import type { Note } from '@/lib/db'
 import { autoscroll } from '@/plugins/autoscroll'
@@ -32,7 +33,7 @@ import { listItem } from '@/plugins/list-item'
 const EditorContent = ({ note }: { note: Note }) => {
 	const nodeViewFactory = useNodeViewFactory()
 
-	useEditor((root) => {
+	const { get, loading } = useEditor((root) => {
 		return Editor.make()
 			.config((ctx) => {
 				ctx.set(rootCtx, root)
@@ -63,6 +64,17 @@ const EditorContent = ({ note }: { note: Note }) => {
 			.use(trailing)
 			.use(indent)
 	})
+
+	const getRef = useRef(get)
+	getRef.current = get
+
+	useEffect(() => {
+		if (loading) return
+
+		getRef.current()?.action((ctx) => {
+			ctx.get(editorViewCtx).focus()
+		})
+	}, [loading])
 
 	return <Milkdown />
 }
