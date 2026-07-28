@@ -8,8 +8,8 @@ import {
 	SpinnerGapIcon,
 	XIcon,
 } from '@phosphor-icons/react'
-import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useCurrentNote } from '@/components/note-provider'
 import { Tooltip } from '@/components/tooltip'
 import { ICON_SIZE_PX } from '@/lib/constants'
 import type { Note } from '@/lib/db'
@@ -175,7 +175,7 @@ type ImportPanelProps = {
 }
 
 const ImportPanel = ({ onDone }: ImportPanelProps) => {
-	const navigate = useNavigate()
+	const currentNote = useCurrentNote()
 	const [code, setCode] = useState('')
 	const [notes, setNotes] = useState<Note[] | null>(null)
 	const [status, setStatus] = useState<
@@ -197,22 +197,13 @@ const ImportPanel = ({ onDone }: ImportPanelProps) => {
 		}
 	}
 
-	const handleImport = async (mode: 'replace' | 'merge') => {
+	const handleImport = async () => {
 		if (!notes) return
 
-		if (
-			mode === 'replace' &&
-			!window.confirm(
-				'This deletes all your local notes and replaces them with the imported ones. Continue?',
-			)
-		) {
-			return
-		}
-
 		setStatus('importing')
-		await importNotes(notes, mode)
+		await importNotes(notes)
+		currentNote.reload()
 		onDone()
-		navigate({ to: '/' })
 	}
 
 	return (
@@ -258,24 +249,14 @@ const ImportPanel = ({ onDone }: ImportPanelProps) => {
 					<p className='text-sm'>
 						Found {notes.length} note{notes.length === 1 ? '' : 's'}.
 					</p>
-					<div className='flex gap-6'>
-						<button
-							type='button'
-							onClick={() => handleImport('merge')}
-							disabled={status === 'importing'}
-							className='flex-1 rounded-md border border-surface-400 bg-surface-100 py-2 text-sm transition-colors hover:bg-surface-300/50 disabled:opacity-60'
-						>
-							Merge
-						</button>
-						<button
-							type='button'
-							onClick={() => handleImport('replace')}
-							disabled={status === 'importing'}
-							className='flex-1 rounded-md border border-surface-400 bg-surface-100 py-2 text-red-500 text-sm transition-colors hover:bg-surface-300/50 disabled:opacity-60'
-						>
-							Replace
-						</button>
-					</div>
+					<button
+						type='button'
+						onClick={() => handleImport()}
+						disabled={status === 'importing'}
+						className='w-full rounded-md border border-surface-400 bg-surface-100 py-2 text-sm transition-colors hover:bg-surface-300/50 disabled:opacity-60'
+					>
+						Import
+					</button>
 				</div>
 			)}
 		</div>

@@ -18,11 +18,7 @@ export const fetchImportPreview = async (code: string) => {
 	return notes
 }
 
-export const importNotes = async (notes: Note[], mode: 'replace' | 'merge') => {
-	if (mode === 'replace') {
-		await db.notes.clear()
-	}
-
+export const importNotes = async (notes: Note[]) => {
 	await db.notes.bulkPut(notes)
 	await searchWorker.clear()
 	await searchWorker.add(await db.notes.toArray())
