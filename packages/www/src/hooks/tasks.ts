@@ -1,7 +1,7 @@
 import { useSelector } from '@xstate/store-react'
 import { tasksStore } from '@/state/tasks-store'
 
-export const useTask = (id: string) => {
+export const useTaskOrThrow = (id: string) => {
 	const task = useSelector(tasksStore, (store) => store.context.tasks[id])
 
 	if (!task) {

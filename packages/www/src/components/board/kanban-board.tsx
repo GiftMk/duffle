@@ -3,19 +3,23 @@ import { useActiveBoard } from '@/hooks/boards'
 import { moveCard } from '@/lib/actions'
 import { Column } from '../columns/column'
 
+const handleDragEnd = (result: DropResult) => {
+	if (!result.destination) return
+
+	moveCard(
+		{ columnId: result.source.droppableId, taskIndex: result.source.index },
+		{
+			columnId: result.destination.droppableId,
+			taskIndex: result.destination.index,
+		},
+	)
+}
+
 export const KanbanBoard = () => {
 	const board = useActiveBoard()
 
-	const handleDragEnd = (result: DropResult) => {
-		if (!result.destination) return
-
-		moveCard(
-			{ columnId: result.source.droppableId, taskIndex: result.source.index },
-			{
-				columnId: result.destination.droppableId,
-				taskIndex: result.destination.index,
-			},
-		)
+	if (!board) {
+		return null
 	}
 
 	return (

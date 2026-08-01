@@ -1,7 +1,7 @@
 import { useSelector } from '@xstate/store-react'
 import { columnsStore } from '@/state/columns-store'
 
-export const useColumn = (id: string) => {
+export const useColumnOrThrow = (id: string) => {
 	const column = useSelector(columnsStore, (store) => store.context.columns[id])
 
 	if (!column) {

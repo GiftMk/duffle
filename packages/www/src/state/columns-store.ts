@@ -7,6 +7,8 @@ export const columnSchema = z.object({
 	id: z.uuidv7(),
 	title: z.string().min(1),
 	tasks: z.uuidv7().array(),
+	createdAt: z.iso.datetime(),
+	updatedAt: z.iso.datetime(),
 })
 
 export type ColumnEntity = z.infer<typeof columnSchema>
@@ -28,13 +30,21 @@ export const columnsStore = createStore({
 		set: (_, event: { context: ContextSchema }) => {
 			return event.context
 		},
-		add: (context, event: { column: ColumnEntity }) => {
+		add: (
+			context,
+			event: { column: Omit<ColumnEntity, 'createdAt' | 'updatedAt'> },
+		) => {
 			return produce(context, (draft) => {
 				if (draft.columns[event.column.id] !== undefined) {
 					throw new Error('Failed to add column, already exists.')
 				}
 
-				draft.columns[event.column.id] = event.column
+				const now = new Date().toISOString()
+				draft.columns[event.column.id] = {
+					...event.column,
+					createdAt: now,
+					updatedAt: now,
+				}
 			})
 		},
 		update: (context, event: { column: ColumnEntity }) => {
@@ -43,7 +53,10 @@ export const columnsStore = createStore({
 					throw new Error('Failed to update column, does not exist.')
 				}
 
-				draft.columns[event.column.id] = event.column
+				draft.columns[event.column.id] = {
+					...event.column,
+					updatedAt: new Date().toISOString(),
+				}
 			})
 		},
 		delete: (context, event: { id: string }) => {
@@ -58,6 +71,14 @@ export const columnsStore = createStore({
 	},
 })
 
-columnsStore.subscribe((snapshot) => {
-	idb.columns.bulkPut(Object.values(snapshot.context.columns))
+columnsStore.subscribe(async (snapshot) => {
+	const inMemoryIds = new Set(Object.keys(snapshot.context.columns))
+	const persistedIds = await idb.columns.toCollection().primaryKeys()
+	const staleIds = persistedIds.filter((id) => !inMemoryIds.has(id))
+
+	if (staleIds.length > 0) {
+		await idb.columns.bulkDelete(staleIds)
+	}
+
+	await idb.columns.bulkPut(Object.values(snapshot.context.columns))
 })

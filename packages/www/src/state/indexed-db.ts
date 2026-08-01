@@ -14,3 +14,9 @@ idb.version(1).stores({
 	columns: 'id, title, tasks',
 	tasks: 'id, title, description',
 })
+
+idb.version(2).stores({
+	boards: 'id, title, updatedAt',
+	columns: 'id, title',
+	tasks: 'id, title',
+})

@@ -64,7 +64,7 @@ export const addTask = (
 	title: string,
 	description?: string,
 ) => {
-	const task: TaskEntity = {
+	const task: Omit<TaskEntity, 'createdAt' | 'updatedAt'> = {
 		id: uuidv7(),
 		title,
 		description,
@@ -132,28 +132,30 @@ export const moveCard = (source: CardPosition, destination: CardPosition) => {
 }
 
 export const createDefaultBoard = () => {
-	const columns: ColumnEntity[] = defaultBoardConfig.columns.map((column) => {
-		const tasks: TaskEntity[] = column.tasks.map((title) => ({
-			id: uuidv7(),
-			title,
-		}))
+	const columns: Omit<ColumnEntity, 'createdAt' | 'updatedAt'>[] =
+		defaultBoardConfig.columns.map((column) => {
+			const tasks: Omit<TaskEntity, 'createdAt' | 'updatedAt'>[] =
+				column.tasks.map((title) => ({
+					id: uuidv7(),
+					title,
+				}))
 
-		for (const task of tasks) {
-			tasksStore.trigger.add({ task })
-		}
+			for (const task of tasks) {
+				tasksStore.trigger.add({ task })
+			}
 
-		return {
-			id: uuidv7(),
-			title: column.title,
-			tasks: tasks.map((task) => task.id),
-		}
-	})
+			return {
+				id: uuidv7(),
+				title: column.title,
+				tasks: tasks.map((task) => task.id),
+			}
+		})
 
 	for (const column of columns) {
 		columnsStore.trigger.add({ column })
 	}
 
-	const board: BoardEntity = {
+	const board: Omit<BoardEntity, 'createdAt' | 'updatedAt'> = {
 		id: uuidv7(),
 		title: defaultBoardConfig.title,
 		columns: columns.map((column) => column.id),

@@ -7,6 +7,8 @@ export const boardSchema = z.object({
 	id: z.uuidv7(),
 	title: z.string().min(1),
 	columns: z.uuidv7().array(),
+	createdAt: z.iso.datetime(),
+	updatedAt: z.iso.datetime(),
 })
 
 export type BoardEntity = z.infer<typeof boardSchema>
@@ -35,13 +37,21 @@ export const boardsStore = createStore({
 				draft.active = event.id
 			})
 		},
-		add: (context, event: { board: BoardEntity }) => {
+		add: (
+			context,
+			event: { board: Omit<BoardEntity, 'createdAt' | 'updatedAt'> },
+		) => {
 			return produce(context, (draft) => {
 				if (draft.boards[event.board.id] !== undefined) {
 					throw new Error('Failed to add board, already exists.')
 				}
 
-				draft.boards[event.board.id] = event.board
+				const now = new Date().toISOString()
+				draft.boards[event.board.id] = {
+					...event.board,
+					createdAt: now,
+					updatedAt: now,
+				}
 			})
 		},
 		update: (context, event: { board: BoardEntity }) => {
@@ -50,7 +60,10 @@ export const boardsStore = createStore({
 					throw new Error('Failed to update board, does not exist.')
 				}
 
-				draft.boards[event.board.id] = event.board
+				draft.boards[event.board.id] = {
+					...event.board,
+					updatedAt: new Date().toISOString(),
+				}
 			})
 		},
 		delete: (context, event: { id: string }) => {
@@ -65,6 +78,14 @@ export const boardsStore = createStore({
 	},
 })
 
-boardsStore.subscribe((snapshot) => {
-	idb.boards.bulkPut(Object.values(snapshot.context.boards))
+boardsStore.subscribe(async (snapshot) => {
+	const inMemoryIds = new Set(Object.keys(snapshot.context.boards))
+	const persistedIds = await idb.boards.toCollection().primaryKeys()
+	const staleIds = persistedIds.filter((id) => !inMemoryIds.has(id))
+
+	if (staleIds.length > 0) {
+		await idb.boards.bulkDelete(staleIds)
+	}
+
+	await idb.boards.bulkPut(Object.values(snapshot.context.boards))
 })

@@ -1,5 +1,5 @@
 import { Droppable } from '@hello-pangea/dnd'
-import { useColumn } from '@/hooks/columns'
+import { useColumnOrThrow } from '@/hooks/columns'
 import { cn } from '@/lib/utils'
 import { AddTaskCard } from '../tasks/add-task-card'
 import { TaskCard } from '../tasks/task-card'
@@ -10,10 +10,10 @@ type ColumnProps = {
 }
 
 export const Column = ({ id }: ColumnProps) => {
-	const column = useColumn(id)
+	const column = useColumnOrThrow(id)
 
 	return (
-		<div className='flex w-80 shrink-0 flex-col gap-3'>
+		<div className='flex w-80 shrink-0 flex-col'>
 			<ColumnTitle id={column.id} title={column.title} />
 			<Droppable droppableId={column.id}>
 				{(provided, snapshot) => (
@@ -21,7 +21,7 @@ export const Column = ({ id }: ColumnProps) => {
 						ref={provided.innerRef}
 						{...provided.droppableProps}
 						className={cn(
-							'flex min-h-20 flex-col rounded-md p-1 transition-colors',
+							'mt-3 flex min-h-20 flex-col rounded-md p-1 transition-colors',
 							{ 'bg-surface-200': snapshot.isDraggingOver },
 						)}
 					>

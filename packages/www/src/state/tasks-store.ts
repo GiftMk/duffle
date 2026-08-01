@@ -7,6 +7,8 @@ export const taskSchema = z.object({
 	id: z.uuidv7(),
 	title: z.string().min(1),
 	description: z.string().optional(),
+	createdAt: z.iso.datetime(),
+	updatedAt: z.iso.datetime(),
 })
 
 export type TaskEntity = z.infer<typeof taskSchema>
@@ -28,13 +30,21 @@ export const tasksStore = createStore({
 		set: (_, event: { context: ContextSchema }) => {
 			return event.context
 		},
-		add: (context, event: { task: TaskEntity }) => {
+		add: (
+			context,
+			event: { task: Omit<TaskEntity, 'createdAt' | 'updatedAt'> },
+		) => {
 			return produce(context, (draft) => {
 				if (draft.tasks[event.task.id] !== undefined) {
 					throw new Error('Failed to add task, already exists.')
 				}
 
-				draft.tasks[event.task.id] = event.task
+				const now = new Date().toISOString()
+				draft.tasks[event.task.id] = {
+					...event.task,
+					createdAt: now,
+					updatedAt: now,
+				}
 			})
 		},
 		update: (context, event: { task: TaskEntity }) => {
@@ -43,7 +53,10 @@ export const tasksStore = createStore({
 					throw new Error('Failed to update task, does not exist.')
 				}
 
-				draft.tasks[event.task.id] = event.task
+				draft.tasks[event.task.id] = {
+					...event.task,
+					updatedAt: new Date().toISOString(),
+				}
 			})
 		},
 		delete: (context, event: { id: string }) => {
@@ -58,6 +71,14 @@ export const tasksStore = createStore({
 	},
 })
 
-tasksStore.subscribe((snapshot) => {
-	idb.tasks.bulkPut(Object.values(snapshot.context.tasks))
+tasksStore.subscribe(async (snapshot) => {
+	const inMemoryIds = new Set(Object.keys(snapshot.context.tasks))
+	const persistedIds = await idb.tasks.toCollection().primaryKeys()
+	const staleIds = persistedIds.filter((id) => !inMemoryIds.has(id))
+
+	if (staleIds.length > 0) {
+		await idb.tasks.bulkDelete(staleIds)
+	}
+
+	await idb.tasks.bulkPut(Object.values(snapshot.context.tasks))
 })

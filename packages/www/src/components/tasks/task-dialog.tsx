@@ -39,7 +39,7 @@ export const TaskDialog = ({ trigger, title, onSubmit }: TaskDialogProps) => {
 					className='fixed top-1/2 left-1/2 flex h-[90vh] w-[min(92vw,960px)] -translate-x-1/2 -translate-y-1/2 flex-col rounded-md border border-surface-400 bg-surface-100 shadow-2xl shadow-surface-400/50 focus:outline-none'
 				>
 					<Dialog.Close
-						className='absolute top-2 right-2 rounded-full p-1.5 text-surface-800 hover:bg-surface-300'
+						className='absolute top-2 right-2 rounded-full p-1.5 text-typography-500 hover:bg-surface-300'
 						render={
 							<button type='button'>
 								<XIcon size={ICON_SIZE_PX} weight='bold' />
@@ -66,7 +66,7 @@ export const TaskDialog = ({ trigger, title, onSubmit }: TaskDialogProps) => {
 						<button
 							type='button'
 							onClick={handleSubmit}
-							className='rounded-md bg-typography-950 px-3 py-2 text-sm text-surface-50 hover:opacity-90'
+							className='rounded-md bg-primary-600 px-3 py-2 text-sm text-surface-50 hover:bg-primary-700'
 						>
 							Create
 						</button>

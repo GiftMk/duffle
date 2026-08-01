@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { type Ref, useRef } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { createDefaultBoard } from '@/lib/actions'
+import { boardsStore } from '@/state/boards-store'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,
@@ -32,8 +33,16 @@ const EnterButton = ({ ref }: { ref?: Ref<HTMLButtonElement> }) => {
 	const navigate = useNavigate()
 
 	const handleClick = () => {
-		createDefaultBoard()
-		navigate({ to: '/board' })
+		const boards = Object.values(boardsStore.get().context.boards)
+
+		const board =
+			boards.length === 0
+				? createDefaultBoard()
+				: boards.reduce((mostRecent, board) =>
+						board.updatedAt > mostRecent.updatedAt ? board : mostRecent,
+					)
+
+		navigate({ to: '/boards/$boardId', params: { boardId: board.id } })
 	}
 
 	return (

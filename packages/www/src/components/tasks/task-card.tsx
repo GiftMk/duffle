@@ -1,5 +1,5 @@
 import { Draggable } from '@hello-pangea/dnd'
-import { useTask } from '@/hooks/tasks'
+import { useTaskOrThrow } from '@/hooks/tasks'
 import { cn, stripMarkdown } from '@/lib/utils'
 
 type TaskCardProps = {
@@ -9,7 +9,7 @@ type TaskCardProps = {
 }
 
 export const TaskCard = ({ id, index, className }: TaskCardProps) => {
-	const task = useTask(id)
+	const task = useTaskOrThrow(id)
 	const preview = task.description ? stripMarkdown(task.description).trim() : ''
 	return (
 		<Draggable draggableId={task.id} index={index}>
