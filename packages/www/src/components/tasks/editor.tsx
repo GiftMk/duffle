@@ -22,6 +22,7 @@ import { indent } from '@milkdown/kit/plugin/indent'
 import { trailing } from '@milkdown/kit/plugin/trailing'
 import { gfm } from '@milkdown/kit/preset/gfm'
 import { useEffect, useRef } from 'react'
+import { cn } from '@/lib/utils'
 import { autoscroll } from '@/plugins/autoscroll'
 import { blockquote } from '@/plugins/blockquote'
 import { codeBlock } from '@/plugins/code-block'
@@ -69,21 +70,17 @@ const EditorContent = ({ defaultValue, onChange }: EditorContentProps) => {
 			.use(indent)
 	})
 
-	const getRef = useRef(get)
-	getRef.current = get
-
 	useEffect(() => {
-		if (loading) return
+		const editor = get()
+		if (loading || !editor) return
 
-		getRef.current()?.action((ctx) => {
+		editor.action((ctx) => {
 			const view = ctx.get(editorViewCtx)
-			// Land the cursor at the end of the seeded content (the H1 title
-			// line) so the user can continue typing the title immediately.
 			const selection = TextSelection.atEnd(view.state.doc)
 			view.dispatch(view.state.tr.setSelection(selection))
 			view.focus()
 		})
-	}, [loading])
+	}, [loading, get])
 
 	return <Milkdown />
 }
@@ -105,12 +102,12 @@ export const MarkdownEditor = ({
 		<div
 			ref={ref}
 			id='markdown-editor-container'
-			className={
-				className ??
-				'flex h-full w-full justify-center overflow-y-auto px-12 pt-9'
-			}
+			className={cn(
+				'scrollbar-gutter-stable flex h-full w-full justify-center overflow-y-auto px-12 pt-9',
+				className,
+			)}
 		>
-			<div className='h-full w-full max-w-[70ch]'>
+			<div className='h-full w-full max-w-[80ch]'>
 				<MilkdownProvider>
 					<ProsemirrorAdapterProvider>
 						<EditorContent defaultValue={defaultValue} onChange={onChange} />

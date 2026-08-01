@@ -1,4 +1,4 @@
-import { CornersOutIcon, PlusIcon } from '@phosphor-icons/react'
+import { ArrowsOutIcon, PlusIcon } from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from 'react'
 import { addTask } from '@/lib/actions'
 import { ICON_SIZE_PX } from '@/lib/constants'
@@ -74,13 +74,14 @@ export const AddTaskCard = ({ columnId }: AddTaskCardProps) => {
 						ref={dialogTriggerRef}
 						type='button'
 						aria-label='Expand to markdown editor'
-						className='mr-1 shrink-0 rounded p-1.25 text-typography-600 hover:bg-surface-300/50 hover:text-typography-950'
+						className='mr-1 shrink-0 rounded p-1.25 text-typography-600 hover:bg-surface-200'
 					>
-						<CornersOutIcon size={ICON_SIZE_PX} />
+						<ArrowsOutIcon size={ICON_SIZE_PX} />
 					</button>
 				}
 				title={title}
 				onSubmit={handleSubmit}
+				onCancel={resetInput}
 			/>
 		</div>
 	)

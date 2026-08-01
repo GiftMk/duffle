@@ -3,8 +3,8 @@ import { useEffect } from 'react'
 import { KanbanBoard } from '@/components/board/kanban-board'
 import { BoardNotFound } from '@/components/board-not-found'
 import { Sidebar } from '@/components/sidebar'
-import { boardsStore } from '@/state/boards-store'
 import { useBoard } from '@/hooks/boards'
+import { boardsStore } from '@/state/boards-store'
 
 export const Route = createFileRoute('/boards/$boardId')({
 	component: RouteComponent,
