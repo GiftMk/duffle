@@ -6,7 +6,7 @@ type AddTaskInputProps = {
 	onSubmit: (title: string, description?: string) => boolean
 	onChange: (value: string) => void
 	onCancel: () => void
-	onBlur: (e: React.FocusEvent<HTMLInputElement>) => void
+	onBlur: (e: React.FocusEvent<HTMLInputElement>) => 'cancel' | 'continue'
 }
 
 export const AddTaskInput = ({
@@ -24,7 +24,9 @@ export const AddTaskInput = ({
 	}
 
 	const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-		onBlur(e)
+		if (onBlur(e) === 'cancel') {
+			return
+		}
 
 		if (cancelledRef.current) {
 			cancelledRef.current = false

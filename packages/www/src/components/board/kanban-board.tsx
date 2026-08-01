@@ -1,6 +1,6 @@
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 import { useBoardContext } from './board-provider'
-import { Column } from './column'
+import { Column } from '../columns/column'
 
 export const KanbanBoard = () => {
 	const { columns, ready, moveCard } = useBoardContext()

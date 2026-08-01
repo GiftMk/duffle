@@ -1,7 +1,7 @@
 import { PencilSimpleIcon } from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from 'react'
 import { ICON_SIZE_PX } from '@/lib/constants'
-import { useBoardContext } from './board-provider'
+import { useBoardContext } from '../board/board-provider'
 
 type ColumnTitleProps = {
 	columnId: string
@@ -56,21 +56,27 @@ export const ColumnTitle = ({ columnId, title }: ColumnTitleProps) => {
 		)
 	}
 
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setValue(e.target.value)
+	}
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter') {
+			e.currentTarget.blur()
+		}
+		if (e.key === 'Escape') {
+			cancelledRef.current = true
+			e.currentTarget.blur()
+		}
+	}
+
 	return (
 		<input
 			ref={inputRef}
 			value={value}
-			onChange={(e) => setValue(e.target.value)}
+			onChange={handleChange}
 			onBlur={handleBlur}
-			onKeyDown={(e) => {
-				if (e.key === 'Enter') {
-					e.currentTarget.blur()
-				}
-				if (e.key === 'Escape') {
-					cancelledRef.current = true
-					e.currentTarget.blur()
-				}
-			}}
+			onKeyDown={handleKeyDown}
 			className='w-full rounded-md border border-surface-400 bg-surface-100 px-3 py-2 text-sm text-typography-950 focus:outline-none'
 		/>
 	)

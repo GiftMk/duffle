@@ -2,7 +2,7 @@ import { Droppable } from '@hello-pangea/dnd'
 import type { ColumnEntity } from '@/lib/db'
 import { cn } from '@/lib/utils'
 import { useBoardContext } from '../board/board-provider'
-import { TaskCard } from '../board/task-card'
+import { TaskCard } from '../tasks/task-card'
 import { AddTaskCard } from '../tasks/add-task-card'
 import { ColumnTitle } from './column-title'
 

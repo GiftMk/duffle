@@ -14,7 +14,7 @@ import {
 	ProsemirrorAdapterProvider,
 	useNodeViewFactory,
 } from '@prosemirror-adapter/react'
-import { headingLevelIndicator } from '../plugins/heading-level-indicator'
+import { headingLevelIndicator } from '../../plugins/heading-level-indicator'
 import './editor.css'
 import '@milkdown/kit/prose/view/style/prosemirror.css'
 import { history } from '@milkdown/kit/plugin/history'

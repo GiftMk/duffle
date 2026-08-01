@@ -1,12 +1,17 @@
 import { Dialog } from '@base-ui/react'
 import { XIcon } from '@phosphor-icons/react'
-import { type ReactNode, useState } from 'react'
-import { MarkdownEditor } from '@/components/editor'
-import { parseCardContent } from '@/lib/card-content'
-import { ICON_SIZE_PX } from '@/lib/constants'
+import {
+	type JSXElementConstructor,
+	type ReactElement,
+	type ReactNode,
+	useState,
+} from 'react'
+import { MarkdownEditor } from '@/components/markdown/editor'
+import { splitMarkdown } from '@/lib/utils'
+import { ELEMENT_IDS, ICON_SIZE_PX } from '@/lib/constants'
 
 type TaskDialogProps = {
-	trigger: ReactNode
+	trigger: ReactElement
 	title: string
 	onSubmit: (title: string, description?: string) => boolean
 }
@@ -16,7 +21,7 @@ export const TaskDialog = ({ trigger, title, onSubmit }: TaskDialogProps) => {
 	const [open, setOpen] = useState(false)
 
 	const handleSubmit = () => {
-		const { title, description } = parseCardContent(markdown)
+		const { title, description } = splitMarkdown(markdown)
 		if (!title) return
 
 		onSubmit(title, description)
@@ -31,7 +36,7 @@ export const TaskDialog = ({ trigger, title, onSubmit }: TaskDialogProps) => {
 
 	return (
 		<Dialog.Root open={open} onOpenChange={setOpen}>
-			<Dialog.Trigger>{trigger}</Dialog.Trigger>
+			<Dialog.Trigger render={trigger} />
 			<Dialog.Portal>
 				<Dialog.Backdrop className='fixed inset-0 bg-surface-950/20' />
 				<Dialog.Popup
