@@ -1,5 +1,5 @@
 import { $ctx } from '@milkdown/utils'
-import { uploadImageAsDataUri } from './lib/upload'
+import { uploadImageAsDataUri } from './upload'
 
 export interface ImageBlockConfig {
 	onUpload: (file: File) => Promise<string>

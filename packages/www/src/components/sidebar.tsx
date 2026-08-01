@@ -1,11 +1,12 @@
+import { SquaresFourIcon } from '@phosphor-icons/react'
 import { useRef } from 'react'
 import { useRoughSvg } from '@/hooks/use-rough-svg'
-import { ExportImportDialog } from './export-import-dialog'
-import { NewNoteButton } from './new-note-button'
+import { ICON_SIZE_PX } from '@/lib/constants'
 import { SearchDialog } from './search-dialog'
 import { ThemeToggle } from './theme-toggle'
+import { Tooltip } from './tooltip'
 
-export const EditorSpine = () => {
+export const Sidebar = () => {
 	const svgRef = useRef<SVGSVGElement | null>(null)
 	const parentRef = useRef<HTMLElement | null>(null)
 
@@ -17,6 +18,8 @@ export const EditorSpine = () => {
 		strokeWidth: 0.5,
 	})
 
+	const handleBoardsClick = () => {}
+
 	return (
 		<aside
 			ref={parentRef}
@@ -27,9 +30,16 @@ export const EditorSpine = () => {
 				className='absolute inset-0 h-full w-full opacity-100'
 			/>
 			<section className='relative flex flex-col items-center gap-4'>
-				<NewNoteButton />
 				<SearchDialog />
-				<ExportImportDialog />
+				<Tooltip content='Boards'>
+					<button
+						onClick={handleBoardsClick}
+						type='button'
+						className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
+					>
+						<SquaresFourIcon size={ICON_SIZE_PX} />
+					</button>
+				</Tooltip>
 				<ThemeToggle />
 			</section>
 			<section className='relative flex justify-center'>

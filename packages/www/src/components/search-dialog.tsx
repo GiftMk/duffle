@@ -1,12 +1,10 @@
 import { Autocomplete, Dialog } from '@base-ui/react'
 import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
-import { useNavigate } from '@tanstack/react-router'
 import { Fragment, useEffect, useState } from 'react'
 import { Tooltip } from '@/components/tooltip'
-import { useNotes } from '@/hooks/use-notes'
+import { useCards } from '@/hooks/use-cards'
 import { ICON_SIZE_PX } from '@/lib/constants'
-import { cn } from '@/lib/utils'
 import { searchWorker } from '@/workers/search'
 import type { SearchItem } from '@/workers/search.worker'
 
@@ -14,9 +12,9 @@ export const SearchDialog = () => {
 	const [open, setOpen] = useState(false)
 	const [query, setQuery] = useState('')
 	const [results, setResults] = useState<SearchItem[]>([])
-	const showRecentNotes = !query.length && !results.length
-	const recentNotes = useNotes({
-		skip: !showRecentNotes,
+	const showRecentCards = !query.length && !results.length
+	const recentCards = useCards({
+		skip: !open || !showRecentCards,
 		orderBy: 'createdAt',
 		limit: 3,
 	})
@@ -52,7 +50,7 @@ export const SearchDialog = () => {
 							type='button'
 							className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
 						>
-							<MagnifyingGlassIcon size={ICON_SIZE_PX} weight='bold' />
+							<MagnifyingGlassIcon size={ICON_SIZE_PX} />
 						</button>
 					}
 				/>
@@ -75,20 +73,20 @@ export const SearchDialog = () => {
 							<Autocomplete.Input
 								autoFocus
 								className='h-full w-full border-surface-400 border-b py-2 focus:outline-none'
-								placeholder={'Search, ask...'}
+								placeholder={'Search cards...'}
 							/>
 						</span>
 						<Autocomplete.List className='flex max-h-[min(432px,35svh)] flex-col overflow-y-auto px-4'>
-							{showRecentNotes &&
-								recentNotes.map((note) => (
-									<Fragment key={note.id}>
-										<SearchResult item={note} onClick={closeDialog} />
+							{showRecentCards &&
+								recentCards.map((card) => (
+									<Fragment key={card.id}>
+										<SearchResult item={card} onClick={closeDialog} />
 										<hr className='my-2 text-surface-400' />
 									</Fragment>
 								))}
-							{results.map((note) => (
-								<Fragment key={note.id}>
-									<SearchResult item={note} onClick={closeDialog} />
+							{results.map((card) => (
+								<Fragment key={card.id}>
+									<SearchResult item={card} onClick={closeDialog} />
 									<hr className='my-2 text-surface-400' />
 								</Fragment>
 							))}
@@ -106,25 +104,16 @@ type SearchResultProps = {
 }
 
 const SearchResult = ({ item, onClick }: SearchResultProps) => {
-	const navigate = useNavigate()
 	const handleClick = () => {
-		navigate({ to: '/notes/$noteId', params: { noteId: item.id } })
 		onClick?.()
 	}
 
 	return (
 		<Autocomplete.Item
 			onClick={handleClick}
-			className='flex w-full flex-col gap-4 rounded-md px-4 pt-6 pb-3 data-highlighted:bg-surface-300/70'
+			className='flex w-full flex-col rounded-md px-4 py-3 data-highlighted:bg-surface-300/70'
 		>
-			<p
-				className={cn('font-bold text-lg', {
-					'opacity-30': item.title.length === 0,
-				})}
-			>
-				{item.title.length > 0 ? item.title : 'Untitled'}
-			</p>
-			<p className='line-clamp-2 text-typography-500 text-xs'>{item.body}</p>
+			<p className='font-bold text-lg'>{item.title}</p>
 		</Autocomplete.Item>
 	)
 }

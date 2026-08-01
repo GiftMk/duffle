@@ -1,27 +1,26 @@
 import { expose } from 'comlink'
 import MiniSearch from 'minisearch'
-import type { Note } from '@/lib/db'
+import type { BoardCard } from '@/lib/db'
 
-export type SearchItem = Pick<Note, 'id' | 'title' | 'body'>
+export type SearchItem = Pick<BoardCard, 'id' | 'title'>
 
 const miniSearch = new MiniSearch<SearchItem>({
-	fields: ['title', 'body'],
-	storeFields: ['title', 'body'],
+	fields: ['title'],
+	storeFields: ['title'],
 	searchOptions: {
 		fuzzy: true,
-		boost: { title: 2 },
 	},
 })
 
 const api = {
-	add(notes: SearchItem[]) {
-		miniSearch.addAll(notes)
+	add(cards: SearchItem[]) {
+		miniSearch.addAll(cards)
 		return miniSearch.documentCount
 	},
 
-	update(notes: SearchItem[]) {
-		for (const note of notes) {
-			miniSearch.replace(note)
+	update(cards: SearchItem[]) {
+		for (const card of cards) {
+			miniSearch.replace(card)
 		}
 		return miniSearch.documentCount
 	},
@@ -30,7 +29,6 @@ const api = {
 		return miniSearch.search(query).map((result) => ({
 			id: result.id,
 			title: result.title,
-			body: result.body,
 		}))
 	},
 

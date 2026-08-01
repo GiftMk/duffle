@@ -10,14 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BoardRouteImport } from './routes/board'
 import { Route as ThemeRouteImport } from './routes/theme'
-import { Route as ApiExportRouteImport } from './routes/api/export'
-import { Route as NotesNoteIdRouteImport } from './routes/notes.$noteId'
-import { Route as ApiImportCodeRouteImport } from './routes/api/import.$code'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BoardRoute = BoardRouteImport.update({
+  id: '/board',
+  path: '/board',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ThemeRoute = ThemeRouteImport.update({
@@ -25,65 +28,35 @@ const ThemeRoute = ThemeRouteImport.update({
   path: '/theme',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiExportRoute = ApiExportRouteImport.update({
-  id: '/api/export',
-  path: '/api/export',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NotesNoteIdRoute = NotesNoteIdRouteImport.update({
-  id: '/notes/$noteId',
-  path: '/notes/$noteId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiImportCodeRoute = ApiImportCodeRouteImport.update({
-  id: '/api/import/$code',
-  path: '/api/import/$code',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/board': typeof BoardRoute
   '/theme': typeof ThemeRoute
-  '/api/export': typeof ApiExportRoute
-  '/notes/$noteId': typeof NotesNoteIdRoute
-  '/api/import/$code': typeof ApiImportCodeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/board': typeof BoardRoute
   '/theme': typeof ThemeRoute
-  '/api/export': typeof ApiExportRoute
-  '/notes/$noteId': typeof NotesNoteIdRoute
-  '/api/import/$code': typeof ApiImportCodeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/board': typeof BoardRoute
   '/theme': typeof ThemeRoute
-  '/api/export': typeof ApiExportRoute
-  '/notes/$noteId': typeof NotesNoteIdRoute
-  '/api/import/$code': typeof ApiImportCodeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    '/' | '/theme' | '/api/export' | '/notes/$noteId' | '/api/import/$code'
+  fullPaths: '/' | '/board' | '/theme'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/theme' | '/api/export' | '/notes/$noteId' | '/api/import/$code'
-  id:
-    | '__root__'
-    | '/'
-    | '/theme'
-    | '/api/export'
-    | '/notes/$noteId'
-    | '/api/import/$code'
+  to: '/' | '/board' | '/theme'
+  id: '__root__' | '/' | '/board' | '/theme'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BoardRoute: typeof BoardRoute
   ThemeRoute: typeof ThemeRoute
-  ApiExportRoute: typeof ApiExportRoute
-  NotesNoteIdRoute: typeof NotesNoteIdRoute
-  ApiImportCodeRoute: typeof ApiImportCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -95,6 +68,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/board': {
+      id: '/board'
+      path: '/board'
+      fullPath: '/board'
+      preLoaderRoute: typeof BoardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/theme': {
       id: '/theme'
       path: '/theme'
@@ -102,36 +82,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ThemeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/export': {
-      id: '/api/export'
-      path: '/api/export'
-      fullPath: '/api/export'
-      preLoaderRoute: typeof ApiExportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/notes/$noteId': {
-      id: '/notes/$noteId'
-      path: '/notes/$noteId'
-      fullPath: '/notes/$noteId'
-      preLoaderRoute: typeof NotesNoteIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/import/$code': {
-      id: '/api/import/$code'
-      path: '/api/import/$code'
-      fullPath: '/api/import/$code'
-      preLoaderRoute: typeof ApiImportCodeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BoardRoute: BoardRoute,
   ThemeRoute: ThemeRoute,
-  ApiExportRoute: ApiExportRoute,
-  NotesNoteIdRoute: NotesNoteIdRoute,
-  ApiImportCodeRoute: ApiImportCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

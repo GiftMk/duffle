@@ -8,6 +8,7 @@ import {
 import { clipboard } from '@milkdown/kit/plugin/clipboard'
 import { listener, listenerCtx } from '@milkdown/kit/plugin/listener'
 import { commonmark } from '@milkdown/kit/preset/commonmark'
+import { TextSelection } from '@milkdown/kit/prose/state'
 import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react'
 import {
 	ProsemirrorAdapterProvider,
@@ -21,8 +22,6 @@ import { indent } from '@milkdown/kit/plugin/indent'
 import { trailing } from '@milkdown/kit/plugin/trailing'
 import { gfm } from '@milkdown/kit/preset/gfm'
 import { useEffect, useRef } from 'react'
-import { updateNote } from '@/lib/actions'
-import type { Note } from '@/lib/db'
 import { autoscroll } from '@/plugins/autoscroll'
 import { blockquote } from '@/plugins/blockquote'
 import { codeBlock } from '@/plugins/code-block'
@@ -30,17 +29,22 @@ import { imageBlock } from '@/plugins/image-block'
 import { inlineCode } from '@/plugins/inline-code'
 import { listItem } from '@/plugins/list-item'
 
-const EditorContent = ({ note }: { note: Note }) => {
+type EditorContentProps = {
+	defaultValue: string
+	onChange: (markdown: string) => void
+}
+
+const EditorContent = ({ defaultValue, onChange }: EditorContentProps) => {
 	const nodeViewFactory = useNodeViewFactory()
 
 	const { get, loading } = useEditor((root) => {
 		return Editor.make()
 			.config((ctx) => {
 				ctx.set(rootCtx, root)
-				ctx.set(defaultValueCtx, note.markdown)
+				ctx.set(defaultValueCtx, defaultValue)
 				ctx.update(listenerCtx, (prev) => {
 					prev.markdownUpdated((_, markdown) => {
-						updateNote(note.id, markdown)
+						onChange(markdown)
 					})
 					return prev
 				})
@@ -72,27 +76,44 @@ const EditorContent = ({ note }: { note: Note }) => {
 		if (loading) return
 
 		getRef.current()?.action((ctx) => {
-			ctx.get(editorViewCtx).focus()
+			const view = ctx.get(editorViewCtx)
+			// Land the cursor at the end of the seeded content (the H1 title
+			// line) so the user can continue typing the title immediately.
+			const selection = TextSelection.atEnd(view.state.doc)
+			view.dispatch(view.state.tr.setSelection(selection))
+			view.focus()
 		})
 	}, [loading])
 
 	return <Milkdown />
 }
 
-export const MarkdownEditor = ({ note }: { note: Note }) => {
+type MarkdownEditorProps = {
+	defaultValue: string
+	onChange: (markdown: string) => void
+	className?: string
+}
+
+export const MarkdownEditor = ({
+	defaultValue,
+	onChange,
+	className,
+}: MarkdownEditorProps) => {
 	const ref = useRef<HTMLDivElement>(null)
 
 	return (
 		<div
 			ref={ref}
-			key={note.id}
 			id='markdown-editor-container'
-			className='flex h-full w-full justify-center overflow-y-auto px-12 pt-9'
+			className={
+				className ??
+				'flex h-full w-full justify-center overflow-y-auto px-12 pt-9'
+			}
 		>
 			<div className='h-full w-full max-w-[70ch]'>
 				<MilkdownProvider>
 					<ProsemirrorAdapterProvider>
-						<EditorContent note={note} />
+						<EditorContent defaultValue={defaultValue} onChange={onChange} />
 					</ProsemirrorAdapterProvider>
 				</MilkdownProvider>
 			</div>
