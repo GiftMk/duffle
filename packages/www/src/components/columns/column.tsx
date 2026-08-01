@@ -22,7 +22,7 @@ export const Column = ({ id }: ColumnProps) => {
 						{...provided.droppableProps}
 						className={cn(
 							'flex min-h-20 flex-col rounded-md p-1 transition-colors',
-							snapshot.isDraggingOver && 'bg-surface-200',
+							{ 'bg-surface-200': snapshot.isDraggingOver },
 						)}
 					>
 						{column.tasks.map((id, index) => (

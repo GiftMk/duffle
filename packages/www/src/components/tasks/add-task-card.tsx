@@ -50,7 +50,7 @@ export const AddTaskCard = ({ columnId }: AddTaskCardProps) => {
 			<button
 				type='button'
 				onClick={() => setIsEditing(true)}
-				className='flex items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-typography-600 transition-colors hover:bg-surface-300/50 hover:text-typography-950'
+				className='flex items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-typography-500 transition-colors hover:bg-surface-200 hover:text-typography-600'
 			>
 				<PlusIcon size={ICON_SIZE_PX} />
 				Add a card
