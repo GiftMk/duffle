@@ -2,7 +2,7 @@ import { Draggable } from '@hello-pangea/dnd'
 import type { TaskEntity } from '@/lib/db'
 import { cn, stripMarkdown } from '@/lib/utils'
 
-type TaskProps = {
+type TaskCardProps = {
 	task: TaskEntity
 	index: number
 	className?: string
@@ -12,7 +12,7 @@ const getTaskPreview = (task: TaskEntity) => {
 	return task.description ? stripMarkdown(task.description).trim() : ''
 }
 
-export const Task = ({ task, index, className }: TaskProps) => {
+export const TaskCard = ({ task, index, className }: TaskCardProps) => {
 	const preview = getTaskPreview(task)
 
 	return (

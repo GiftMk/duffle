@@ -20,6 +20,6 @@ export const db = new Dexie('duffle-db') as Dexie & {
 }
 
 db.version(4).stores({
-	boardColumns: 'id, order',
-	boardCards: 'id, createdAt',
+	columns: 'id, order',
+	tasks: 'id, createdAt',
 })

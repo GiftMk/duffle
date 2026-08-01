@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { type TaskEntity, db } from '@/lib/db'
+import { db, type TaskEntity } from '@/lib/db'
 
 export type UseTasksProps = {
 	skip?: boolean

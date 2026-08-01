@@ -1,13 +1,13 @@
 import { uuidv7 } from 'uuidv7'
-import { type TaskEntity, type ColumnEntity, db } from './db'
+import { type ColumnEntity, db, type TaskEntity } from './db'
 
-const SEED_COLUMNS: Array<{ title: string; cards: string[] }> = [
+const SEED_COLUMNS: Array<{ title: string; tasks: string[] }> = [
 	{
 		title: 'Todo',
-		cards: ['Sketch out the board layout', 'Pick a name for v2'],
+		tasks: ['Sketch out the board layout', 'Pick a name for v2'],
 	},
-	{ title: 'In Progress', cards: ['Port drag and drop from v0'] },
-	{ title: 'Done', cards: ['Ship the markdown editor'] },
+	{ title: 'In Progress', tasks: ['Port drag and drop from v0'] },
+	{ title: 'Done', tasks: ['Ship the markdown editor'] },
 ]
 
 export const seedBoardIfEmpty = async () => {
@@ -16,23 +16,23 @@ export const seedBoardIfEmpty = async () => {
 		if (existing > 0) return
 
 		for (const [order, column] of SEED_COLUMNS.entries()) {
-			const cardIds: string[] = []
+			const taskIds: string[] = []
 
-			for (const title of column.cards) {
+			for (const title of column.tasks) {
 				const task: TaskEntity = {
 					id: uuidv7(),
 					title,
 					createdAt: new Date().toISOString(),
 				}
 				await db.tasks.add(task)
-				cardIds.push(task.id)
+				taskIds.push(task.id)
 			}
 
 			const boardColumn: ColumnEntity = {
 				id: uuidv7(),
 				title: column.title,
 				order,
-				cardIds,
+				cardIds: taskIds,
 			}
 			await db.columns.add(boardColumn)
 		}

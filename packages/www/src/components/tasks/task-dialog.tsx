@@ -1,53 +1,41 @@
 import { Dialog } from '@base-ui/react'
 import { XIcon } from '@phosphor-icons/react'
-import { useEffect, useRef } from 'react'
+import { type ReactNode, useState } from 'react'
 import { MarkdownEditor } from '@/components/editor'
 import { parseCardContent } from '@/lib/card-content'
 import { ICON_SIZE_PX } from '@/lib/constants'
 
-type EditTaskDialogProps = {
-	open: boolean
-	onOpenChange: (open: boolean) => void
-	initialTitle: string
-	onCreate: (title: string, description?: string) => void
+type TaskDialogProps = {
+	trigger: ReactNode
+	title: string
+	onSubmit: (title: string, description?: string) => boolean
 }
 
-export const EditTaskDialog = ({
-	open,
-	onOpenChange,
-	initialTitle,
-	onCreate,
-}: EditTaskDialogProps) => {
-	// Tracks the editor's live markdown for submit. This component stays
-	// mounted across opens (only Dialog.Popup's contents toggle), so re-seed
-	// it fresh from initialTitle every time the dialog opens.
-	const markdownRef = useRef(`# ${initialTitle}`)
+export const TaskDialog = ({ trigger, title, onSubmit }: TaskDialogProps) => {
+	const [markdown, setMarkdown] = useState(`# ${title}`)
+	const [open, setOpen] = useState(false)
 
-	useEffect(() => {
-		if (open) {
-			markdownRef.current = `# ${initialTitle}`
-		}
-	}, [open, initialTitle])
-
-	const handleCreate = () => {
-		const { title, description } = parseCardContent(markdownRef.current)
+	const handleSubmit = () => {
+		const { title, description } = parseCardContent(markdown)
 		if (!title) return
 
-		onCreate(title, description || undefined)
-		onOpenChange(false)
+		onSubmit(title, description)
+	}
+
+	const handleKeyDown = (e: React.KeyboardEvent) => {
+		if (e.metaKey && e.key === 'Enter') {
+			e.preventDefault()
+			handleSubmit()
+		}
 	}
 
 	return (
-		<Dialog.Root open={open} onOpenChange={onOpenChange}>
+		<Dialog.Root open={open} onOpenChange={setOpen}>
+			<Dialog.Trigger>{trigger}</Dialog.Trigger>
 			<Dialog.Portal>
 				<Dialog.Backdrop className='fixed inset-0 bg-surface-950/20' />
 				<Dialog.Popup
-					onKeyDown={(e) => {
-						if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-							e.preventDefault()
-							handleCreate()
-						}
-					}}
+					onKeyDown={handleKeyDown}
 					className='fixed top-1/2 left-1/2 flex h-[90vh] w-[min(92vw,960px)] -translate-x-1/2 -translate-y-1/2 flex-col rounded-md border border-surface-400 bg-surface-100 shadow-2xl shadow-surface-400/50 focus:outline-none'
 				>
 					<Dialog.Close
@@ -61,10 +49,8 @@ export const EditTaskDialog = ({
 					<div className='min-h-0 flex-1'>
 						{open && (
 							<MarkdownEditor
-								defaultValue={`# ${initialTitle}`}
-								onChange={(markdown) => {
-									markdownRef.current = markdown
-								}}
+								defaultValue={markdown}
+								onChange={setMarkdown}
 								className='flex h-full w-full justify-center overflow-y-auto px-12 pt-9'
 							/>
 						)}
@@ -72,14 +58,14 @@ export const EditTaskDialog = ({
 					<div className='flex shrink-0 justify-end gap-2 border-surface-400 border-t px-6 py-4'>
 						<button
 							type='button'
-							onClick={() => onOpenChange(false)}
+							onClick={() => setOpen(false)}
 							className='rounded-md px-3 py-2 text-sm text-typography-600 hover:bg-surface-300/50'
 						>
 							Cancel
 						</button>
 						<button
 							type='button'
-							onClick={handleCreate}
+							onClick={handleSubmit}
 							className='rounded-md bg-typography-950 px-3 py-2 text-sm text-surface-50 hover:opacity-90'
 						>
 							Create

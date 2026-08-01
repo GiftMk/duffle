@@ -6,7 +6,7 @@ import {
 	renameColumn as renameColumnAction,
 	seedBoardIfEmpty,
 } from '@/lib/board-actions'
-import { type TaskEntity, type ColumnEntity, db } from '@/lib/db'
+import { type ColumnEntity, db, type TaskEntity } from '@/lib/db'
 import { searchWorker } from '@/workers/search'
 
 export type DragPosition = {

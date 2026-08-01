@@ -1,9 +1,9 @@
 import { Droppable } from '@hello-pangea/dnd'
 import type { ColumnEntity } from '@/lib/db'
 import { cn } from '@/lib/utils'
-import { AddTask } from './add-task'
-import { Task } from './board-card'
-import { useBoardContext } from './board-provider'
+import { useBoardContext } from '../board/board-provider'
+import { TaskCard } from '../board/task-card'
+import { AddTaskCard } from '../tasks/add-task-card'
 import { ColumnTitle } from './column-title'
 
 type ColumnProps = {
@@ -30,7 +30,7 @@ export const Column = ({ column }: ColumnProps) => {
 							const card = tasks[cardId]
 							if (!card) return null
 							return (
-								<Task
+								<TaskCard
 									key={card.id}
 									task={card}
 									index={index}
@@ -42,7 +42,7 @@ export const Column = ({ column }: ColumnProps) => {
 					</div>
 				)}
 			</Droppable>
-			<AddTask columnId={column.id} />
+			<AddTaskCard columnId={column.id} />
 		</div>
 	)
 }
