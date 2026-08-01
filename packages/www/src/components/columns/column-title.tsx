@@ -2,6 +2,7 @@ import { PencilSimpleIcon } from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from 'react'
 import { updateColumn } from '@/lib/actions'
 import { ICON_SIZE_PX } from '@/lib/constants'
+import { IconButton } from '../icon-button'
 
 type ColumnTitleProps = {
 	id: string
@@ -45,13 +46,12 @@ export const ColumnTitle = ({ id, title }: ColumnTitleProps) => {
 		return (
 			<div className='group flex items-center justify-between px-1'>
 				<h2 className='font-semibold text-sm text-typography-950'>{title}</h2>
-				<button
+				<IconButton
 					onClick={startEditing}
-					type='button'
-					className='text-typography-600 opacity-0 transition-opacity hover:text-typography-950 focus-visible:opacity-100 group-hover:opacity-100'
+					className='opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100'
 				>
 					<PencilSimpleIcon size={ICON_SIZE_PX} />
-				</button>
+				</IconButton>
 			</div>
 		)
 	}

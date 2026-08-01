@@ -4,6 +4,7 @@ import { addTask } from '@/lib/actions'
 import { ICON_SIZE_PX } from '@/lib/constants'
 import { AddTaskInput } from './add-task-input'
 import { TaskDialog } from './task-dialog'
+import { IconButton } from '../icon-button'
 
 type AddTaskCardProps = {
 	columnId: string
@@ -70,14 +71,9 @@ export const AddTaskCard = ({ columnId }: AddTaskCardProps) => {
 			/>
 			<TaskDialog
 				trigger={
-					<button
-						ref={dialogTriggerRef}
-						type='button'
-						aria-label='Expand to markdown editor'
-						className='mr-1 shrink-0 rounded p-1.25 text-typography-600 hover:bg-surface-200'
-					>
+					<IconButton ref={dialogTriggerRef} className='mr-1 shrink-0'>
 						<ArrowsOutIcon size={ICON_SIZE_PX} />
-					</button>
+					</IconButton>
 				}
 				title={title}
 				onSubmit={handleSubmit}

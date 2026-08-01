@@ -4,6 +4,7 @@ import { type ReactElement, useState } from 'react'
 import { MarkdownEditor } from '@/components/tasks/editor'
 import { ICON_SIZE_PX } from '@/lib/constants'
 import { splitMarkdown } from '@/lib/utils'
+import { IconButton } from '../icon-button'
 
 type TaskDialogProps = {
 	trigger: ReactElement
@@ -55,14 +56,13 @@ export const TaskDialog = ({
 				<Dialog.Backdrop className='fixed inset-0 bg-surface-950/20' />
 				<Dialog.Popup
 					onKeyDown={handleKeyDown}
-					className='fixed top-1/2 left-1/2 flex h-[90vh] w-[min(92vw,960px)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-md border border-surface-400 bg-surface-100 shadow-2xl shadow-surface-400/50 focus:outline-none'
+					className='fixed top-1/2 left-1/2 flex h-2/3 w-full max-w-4xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-md border border-surface-400 bg-surface-100 shadow-2xl shadow-surface-400/50 focus:outline-none'
 				>
 					<Dialog.Close
-						className='absolute top-4 right-6 rounded-full p-1.5 text-typography-500 hover:bg-surface-300'
 						render={
-							<button type='button'>
-								<XIcon size={ICON_SIZE_PX} weight='bold' />
-							</button>
+							<IconButton className='absolute top-4 right-4'>
+								<XIcon size={ICON_SIZE_PX} />
+							</IconButton>
 						}
 						onClick={handleCancel}
 					/>
@@ -71,7 +71,7 @@ export const TaskDialog = ({
 							<MarkdownEditor defaultValue={markdown} onChange={setMarkdown} />
 						)}
 					</div>
-					<div className='flex shrink-0 justify-end gap-2 border-surface-400 border-t px-6 py-4'>
+					<div className='flex shrink-0 justify-end gap-2 px-6 py-4'>
 						<button
 							type='button'
 							onClick={handleCancel}

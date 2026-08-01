@@ -21,7 +21,7 @@ export const Column = ({ id }: ColumnProps) => {
 						ref={provided.innerRef}
 						{...provided.droppableProps}
 						className={cn(
-							'mt-3 flex min-h-20 flex-col rounded-md p-1 transition-colors',
+							'mt-3 flex min-h-6 flex-col rounded-md p-1 transition-colors',
 							{ 'bg-surface-200': snapshot.isDraggingOver },
 						)}
 					>

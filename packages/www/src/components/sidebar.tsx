@@ -1,4 +1,5 @@
 import { SquaresFourIcon } from '@phosphor-icons/react'
+import { useNavigate } from '@tanstack/react-router'
 import { useRef } from 'react'
 import { useRoughSvg } from '@/hooks/use-rough-svg'
 import { ICON_SIZE_PX } from '@/lib/constants'
@@ -9,6 +10,7 @@ import { Tooltip } from './tooltip'
 export const Sidebar = () => {
 	const svgRef = useRef<SVGSVGElement | null>(null)
 	const parentRef = useRef<HTMLElement | null>(null)
+	const navigate = useNavigate()
 
 	useRoughSvg(parentRef, svgRef, {
 		fill: 'var(--color-surface-200)',
@@ -18,7 +20,9 @@ export const Sidebar = () => {
 		strokeWidth: 0.5,
 	})
 
-	const handleBoardsClick = () => {}
+	const handleBoardsClick = () => {
+		navigate({ to: '/boards' })
+	}
 
 	return (
 		<aside

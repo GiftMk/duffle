@@ -131,6 +131,30 @@ export const moveCard = (source: CardPosition, destination: CardPosition) => {
 	columnsStore.trigger.update({ column: updatedDestinationColumn })
 }
 
+export const createBoard = (title: string) => {
+	const columns: Omit<ColumnEntity, 'createdAt' | 'updatedAt'>[] =
+		defaultBoardConfig.columns.map((column) => ({
+			id: uuidv7(),
+			title: column.title,
+			tasks: [],
+		}))
+
+	for (const column of columns) {
+		columnsStore.trigger.add({ column })
+	}
+
+	const board: Omit<BoardEntity, 'createdAt' | 'updatedAt'> = {
+		id: uuidv7(),
+		title,
+		columns: columns.map((column) => column.id),
+	}
+
+	boardsStore.trigger.add({ board })
+	boardsStore.trigger.setActive({ id: board.id })
+
+	return board
+}
+
 export const createDefaultBoard = () => {
 	const columns: Omit<ColumnEntity, 'createdAt' | 'updatedAt'>[] =
 		defaultBoardConfig.columns.map((column) => {

@@ -4,12 +4,12 @@ div[data-milkdown-root="true"] {
 	height: calc(100% - calc(var(--spacing) * 9));
 }
 
-.milkdown::after {
+/* Equals 128px, keep in sync with EDITOR_SPACER_HEIGHT_PX in @/lib/constants */
+/*.milkdown::after {
 	content: "";
-	/* Equals 128px, keep in sync with EDITOR_SPACER_HEIGHT_PX in @/lib/constants */
 	height: calc(var(--spacing) * 32);
 	display: block;
-}
+}*/
 
 .milkdown {
 	height: 100%;
