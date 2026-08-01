@@ -1,8 +1,8 @@
 import { expose } from 'comlink'
 import MiniSearch from 'minisearch'
-import type { BoardCard } from '@/lib/db'
+import type { TaskEntity } from '@/lib/db'
 
-export type SearchItem = Pick<BoardCard, 'id' | 'title'>
+export type SearchItem = Pick<TaskEntity, 'id' | 'title'>
 
 const miniSearch = new MiniSearch<SearchItem>({
 	fields: ['title'],

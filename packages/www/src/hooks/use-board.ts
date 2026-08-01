@@ -6,7 +6,7 @@ import {
 	renameColumn as renameColumnAction,
 	seedBoardIfEmpty,
 } from '@/lib/board-actions'
-import { type BoardCard, type BoardColumn, db } from '@/lib/db'
+import { type TaskEntity, type ColumnEntity, db } from '@/lib/db'
 import { searchWorker } from '@/workers/search'
 
 export type DragPosition = {
@@ -15,8 +15,8 @@ export type DragPosition = {
 }
 
 export const useBoard = () => {
-	const [columns, setColumns] = useState<BoardColumn[]>([])
-	const [cards, setCards] = useState<Record<string, BoardCard>>({})
+	const [columns, setColumns] = useState<ColumnEntity[]>([])
+	const [tasks, setTasks] = useState<Record<string, TaskEntity>>({})
 	const [ready, setReady] = useState(false)
 
 	useEffect(() => {
@@ -24,20 +24,20 @@ export const useBoard = () => {
 
 		const load = async () => {
 			await seedBoardIfEmpty()
-			const [loadedColumns, loadedCards] = await Promise.all([
-				db.boardColumns.orderBy('order').toArray(),
-				db.boardCards.toArray(),
+			const [loadedColumns, loadedTasks] = await Promise.all([
+				db.columns.orderBy('order').toArray(),
+				db.tasks.toArray(),
 			])
 
 			if (cancelled) return
 
 			setColumns(loadedColumns)
-			setCards(Object.fromEntries(loadedCards.map((card) => [card.id, card])))
+			setTasks(Object.fromEntries(loadedTasks.map((card) => [card.id, card])))
 			setReady(true)
 
 			await searchWorker.clear()
 			await searchWorker.add(
-				loadedCards.map(({ id, title }) => ({ id, title })),
+				loadedTasks.map(({ id, title }) => ({ id, title })),
 			)
 		}
 
@@ -48,13 +48,13 @@ export const useBoard = () => {
 		}
 	}, [])
 
-	const addCard = (columnId: string, title: string, description?: string) => {
+	const addTask = (columnId: string, title: string, description?: string) => {
 		const trimmed = title.trim()
 		if (!trimmed) return
 
 		const card = buildCard(trimmed, description)
 
-		setCards((prev) => ({ ...prev, [card.id]: card }))
+		setTasks((prev) => ({ ...prev, [card.id]: card }))
 		setColumns((prev) =>
 			prev.map((column) =>
 				column.id === columnId
@@ -103,5 +103,12 @@ export const useBoard = () => {
 		renameColumnAction(columnId, title)
 	}
 
-	return { columns, cards, ready, addCard, moveCard, renameColumn }
+	return {
+		columns,
+		tasks,
+		ready,
+		addTask,
+		moveCard,
+		renameColumn,
+	}
 }

@@ -2,14 +2,14 @@ import { CornersOutIcon, PlusIcon } from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from 'react'
 import { ICON_SIZE_PX } from '@/lib/constants'
 import { useBoardContext } from './board-provider'
-import { CardEditorDialog } from './card-editor-dialog'
+import { EditTaskDialog } from './edit-task-dialog'
 
-type AddCardProps = {
+type AddTaskProps = {
 	columnId: string
 }
 
-export const AddCard = ({ columnId }: AddCardProps) => {
-	const { addCard } = useBoardContext()
+export const AddTask = ({ columnId }: AddTaskProps) => {
+	const { addTask } = useBoardContext()
 	const [isEditing, setIsEditing] = useState(false)
 	const [title, setTitle] = useState('')
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -42,7 +42,7 @@ export const AddCard = ({ columnId }: AddCardProps) => {
 
 		const trimmed = title.trim()
 		if (trimmed) {
-			addCard(columnId, trimmed)
+			addTask(columnId, trimmed)
 		}
 		closeAndReset()
 	}
@@ -94,12 +94,12 @@ export const AddCard = ({ columnId }: AddCardProps) => {
 					</button>
 				</div>
 			)}
-			<CardEditorDialog
+			<EditTaskDialog
 				open={isDialogOpen}
 				onOpenChange={setIsDialogOpen}
 				initialTitle={dialogInitialTitle}
 				onCreate={(cardTitle, description) => {
-					addCard(columnId, cardTitle, description)
+					addTask(columnId, cardTitle, description)
 				}}
 			/>
 		</>

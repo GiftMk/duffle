@@ -1,17 +1,17 @@
 import { Droppable } from '@hello-pangea/dnd'
-import type { BoardColumn as BoardColumnType } from '@/lib/db'
+import type { ColumnEntity } from '@/lib/db'
 import { cn } from '@/lib/utils'
-import { AddCard } from './add-card'
-import { BoardCardItem } from './board-card'
+import { AddTask } from './add-task'
+import { Task } from './board-card'
 import { useBoardContext } from './board-provider'
 import { ColumnTitle } from './column-title'
 
-type BoardColumnProps = {
-	column: BoardColumnType
+type ColumnProps = {
+	column: ColumnEntity
 }
 
-export const BoardColumn = ({ column }: BoardColumnProps) => {
-	const { cards } = useBoardContext()
+export const Column = ({ column }: ColumnProps) => {
+	const { tasks } = useBoardContext()
 
 	return (
 		<div className='flex w-80 shrink-0 flex-col gap-3'>
@@ -27,12 +27,12 @@ export const BoardColumn = ({ column }: BoardColumnProps) => {
 						)}
 					>
 						{column.cardIds.map((cardId, index) => {
-							const card = cards[cardId]
+							const card = tasks[cardId]
 							if (!card) return null
 							return (
-								<BoardCardItem
+								<Task
 									key={card.id}
-									card={card}
+									task={card}
 									index={index}
 									className='mb-3'
 								/>
@@ -42,7 +42,7 @@ export const BoardColumn = ({ column }: BoardColumnProps) => {
 					</div>
 				)}
 			</Droppable>
-			<AddCard columnId={column.id} />
+			<AddTask columnId={column.id} />
 		</div>
 	)
 }

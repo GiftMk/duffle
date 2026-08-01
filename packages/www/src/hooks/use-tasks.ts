@@ -1,25 +1,25 @@
 import { useEffect, useState } from 'react'
-import { type BoardCard, db } from '@/lib/db'
+import { type TaskEntity, db } from '@/lib/db'
 
-export type UseCards = {
+export type UseTasksProps = {
 	skip?: boolean
 	limit: number
-	orderBy?: keyof BoardCard
+	orderBy?: keyof TaskEntity
 }
 
-export const useCards = ({
+export const useTasks = ({
 	skip = false,
 	limit,
 	orderBy = 'createdAt',
-}: UseCards) => {
-	const [cards, setCards] = useState<BoardCard[]>([])
+}: UseTasksProps) => {
+	const [cards, setCards] = useState<TaskEntity[]>([])
 
 	useEffect(() => {
 		if (skip) {
 			return
 		}
 
-		let query = db.boardCards.orderBy(orderBy)
+		let query = db.tasks.orderBy(orderBy)
 
 		if (limit) {
 			query = query.limit(limit)

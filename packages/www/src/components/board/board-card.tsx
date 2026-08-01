@@ -1,22 +1,22 @@
 import { Draggable } from '@hello-pangea/dnd'
-import type { BoardCard } from '@/lib/db'
+import type { TaskEntity } from '@/lib/db'
 import { cn, stripMarkdown } from '@/lib/utils'
 
-type BoardCardItemProps = {
-	card: BoardCard
+type TaskProps = {
+	task: TaskEntity
 	index: number
 	className?: string
 }
 
-export const BoardCardItem = ({
-	card,
-	index,
-	className,
-}: BoardCardItemProps) => {
-	const preview = card.description ? stripMarkdown(card.description).trim() : ''
+const getTaskPreview = (task: TaskEntity) => {
+	return task.description ? stripMarkdown(task.description).trim() : ''
+}
+
+export const Task = ({ task, index, className }: TaskProps) => {
+	const preview = getTaskPreview(task)
 
 	return (
-		<Draggable draggableId={card.id} index={index}>
+		<Draggable draggableId={task.id} index={index}>
 			{(provided) => (
 				<div
 					ref={provided.innerRef}
@@ -27,7 +27,7 @@ export const BoardCardItem = ({
 						className,
 					)}
 				>
-					<p>{card.title}</p>
+					<p>{task.title}</p>
 					{preview && (
 						<p className='mt-1 line-clamp-2 text-typography-600 text-xs'>
 							{preview}

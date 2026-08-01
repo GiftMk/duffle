@@ -1,5 +1,5 @@
 import { uuidv7 } from 'uuidv7'
-import { type BoardCard, type BoardColumn, db } from './db'
+import { type TaskEntity, type ColumnEntity, db } from './db'
 
 const SEED_COLUMNS: Array<{ title: string; cards: string[] }> = [
 	{
@@ -11,63 +11,63 @@ const SEED_COLUMNS: Array<{ title: string; cards: string[] }> = [
 ]
 
 export const seedBoardIfEmpty = async () => {
-	await db.transaction('rw', db.boardColumns, db.boardCards, async () => {
-		const existing = await db.boardColumns.count()
+	await db.transaction('rw', db.columns, db.tasks, async () => {
+		const existing = await db.columns.count()
 		if (existing > 0) return
 
 		for (const [order, column] of SEED_COLUMNS.entries()) {
 			const cardIds: string[] = []
 
 			for (const title of column.cards) {
-				const card: BoardCard = {
+				const task: TaskEntity = {
 					id: uuidv7(),
 					title,
 					createdAt: new Date().toISOString(),
 				}
-				await db.boardCards.add(card)
-				cardIds.push(card.id)
+				await db.tasks.add(task)
+				cardIds.push(task.id)
 			}
 
-			const boardColumn: BoardColumn = {
+			const boardColumn: ColumnEntity = {
 				id: uuidv7(),
 				title: column.title,
 				order,
 				cardIds,
 			}
-			await db.boardColumns.add(boardColumn)
+			await db.columns.add(boardColumn)
 		}
 	})
 }
 
-export const buildCard = (title: string, description?: string): BoardCard => ({
+export const buildCard = (title: string, description?: string): TaskEntity => ({
 	id: uuidv7(),
 	title,
 	...(description ? { description } : {}),
 	createdAt: new Date().toISOString(),
 })
 
-export const persistCard = async (columnId: string, card: BoardCard) => {
-	await db.transaction('rw', db.boardColumns, db.boardCards, async () => {
-		await db.boardCards.add(card)
-		await db.boardColumns
+export const persistCard = async (columnId: string, task: TaskEntity) => {
+	await db.transaction('rw', db.columns, db.tasks, async () => {
+		await db.tasks.add(task)
+		await db.columns
 			.where('id')
 			.equals(columnId)
 			.modify((column) => {
-				column.cardIds.push(card.id)
+				column.cardIds.push(task.id)
 			})
 	})
 }
 
 export const persistColumnOrder = async (
-	columns: Pick<BoardColumn, 'id' | 'cardIds'>[],
+	columns: Pick<ColumnEntity, 'id' | 'cardIds'>[],
 ) => {
-	await db.transaction('rw', db.boardColumns, async () => {
+	await db.transaction('rw', db.columns, async () => {
 		for (const column of columns) {
-			await db.boardColumns.update(column.id, { cardIds: column.cardIds })
+			await db.columns.update(column.id, { cardIds: column.cardIds })
 		}
 	})
 }
 
 export const renameColumn = async (columnId: string, title: string) => {
-	await db.boardColumns.update(columnId, { title })
+	await db.columns.update(columnId, { title })
 }

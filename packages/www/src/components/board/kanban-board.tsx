@@ -1,5 +1,5 @@
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
-import { BoardColumn } from './board-column'
+import { Column } from './column'
 import { useBoardContext } from './board-provider'
 
 export const KanbanBoard = () => {
@@ -29,7 +29,7 @@ export const KanbanBoard = () => {
 		<DragDropContext onDragEnd={handleDragEnd}>
 			<div className='flex h-full w-full items-start gap-6 overflow-x-auto p-8'>
 				{columns.map((column) => (
-					<BoardColumn key={column.id} column={column} />
+					<Column key={column.id} column={column} />
 				))}
 			</div>
 		</DragDropContext>

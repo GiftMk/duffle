@@ -5,19 +5,19 @@ import { MarkdownEditor } from '@/components/editor'
 import { parseCardContent } from '@/lib/card-content'
 import { ICON_SIZE_PX } from '@/lib/constants'
 
-type CardEditorDialogProps = {
+type EditTaskDialogProps = {
 	open: boolean
 	onOpenChange: (open: boolean) => void
 	initialTitle: string
 	onCreate: (title: string, description?: string) => void
 }
 
-export const CardEditorDialog = ({
+export const EditTaskDialog = ({
 	open,
 	onOpenChange,
 	initialTitle,
 	onCreate,
-}: CardEditorDialogProps) => {
+}: EditTaskDialogProps) => {
 	// Tracks the editor's live markdown for submit. This component stays
 	// mounted across opens (only Dialog.Popup's contents toggle), so re-seed
 	// it fresh from initialTitle every time the dialog opens.
