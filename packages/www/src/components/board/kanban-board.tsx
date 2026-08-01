@@ -1,35 +1,28 @@
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
-import { useBoardContext } from './board-provider'
+import { useActiveBoard } from '@/hooks/boards'
+import { moveCard } from '@/lib/actions'
 import { Column } from '../columns/column'
 
 export const KanbanBoard = () => {
-	const { columns, ready, moveCard } = useBoardContext()
+	const board = useActiveBoard()
 
 	const handleDragEnd = (result: DropResult) => {
 		if (!result.destination) return
 
 		moveCard(
-			{ columnId: result.source.droppableId, index: result.source.index },
+			{ columnId: result.source.droppableId, taskIndex: result.source.index },
 			{
 				columnId: result.destination.droppableId,
-				index: result.destination.index,
+				taskIndex: result.destination.index,
 			},
-		)
-	}
-
-	if (!ready) {
-		return (
-			<div className='flex h-full w-full items-center justify-center text-typography-600'>
-				Loading board…
-			</div>
 		)
 	}
 
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>
 			<div className='flex h-full w-full items-start gap-6 overflow-x-auto p-8'>
-				{columns.map((column) => (
-					<Column key={column.id} column={column} />
+				{board.columns.map((id) => (
+					<Column key={id} id={id} />
 				))}
 			</div>
 		</DragDropContext>

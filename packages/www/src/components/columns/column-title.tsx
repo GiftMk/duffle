@@ -1,15 +1,14 @@
 import { PencilSimpleIcon } from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from 'react'
+import { updateColumn } from '@/lib/actions'
 import { ICON_SIZE_PX } from '@/lib/constants'
-import { useBoardContext } from '../board/board-provider'
 
 type ColumnTitleProps = {
-	columnId: string
+	id: string
 	title: string
 }
 
-export const ColumnTitle = ({ columnId, title }: ColumnTitleProps) => {
-	const { renameColumn } = useBoardContext()
+export const ColumnTitle = ({ id, title }: ColumnTitleProps) => {
 	const [isEditing, setIsEditing] = useState(false)
 	const [value, setValue] = useState(title)
 	const cancelledRef = useRef(false)
@@ -18,7 +17,6 @@ export const ColumnTitle = ({ columnId, title }: ColumnTitleProps) => {
 	useEffect(() => {
 		if (isEditing) {
 			inputRef.current?.focus()
-			inputRef.current?.select()
 		}
 	}, [isEditing])
 
@@ -35,10 +33,12 @@ export const ColumnTitle = ({ columnId, title }: ColumnTitleProps) => {
 			return
 		}
 
-		const trimmed = value.trim()
-		if (trimmed && trimmed !== title) {
-			renameColumn(columnId, trimmed)
-		}
+		updateColumn(id, (draft) => {
+			const trimmedTitle = value.trim()
+			if (trimmedTitle) {
+				draft.title = trimmedTitle
+			}
+		})
 	}
 
 	if (!isEditing) {

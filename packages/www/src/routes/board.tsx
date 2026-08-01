@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { BoardProvider } from '@/components/board/board-provider'
 import { KanbanBoard } from '@/components/board/kanban-board'
 import { Sidebar } from '@/components/sidebar'
 
@@ -11,9 +10,7 @@ function RouteComponent() {
 	return (
 		<main className='flex h-full w-full bg-surface-100'>
 			<Sidebar />
-			<BoardProvider>
-				<KanbanBoard />
-			</BoardProvider>
+			<KanbanBoard />
 		</main>
 	)
 }

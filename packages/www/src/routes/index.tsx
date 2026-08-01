@@ -4,6 +4,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { type Ref, useRef } from 'react'
 import { TypeAnimation } from 'react-type-animation'
+import { createDefaultBoard } from '@/lib/actions'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,
@@ -31,6 +32,7 @@ const EnterButton = ({ ref }: { ref?: Ref<HTMLButtonElement> }) => {
 	const navigate = useNavigate()
 
 	const handleClick = () => {
+		createDefaultBoard()
 		navigate({ to: '/board' })
 	}
 

@@ -1,14 +1,9 @@
 import { Dialog } from '@base-ui/react'
 import { XIcon } from '@phosphor-icons/react'
-import {
-	type JSXElementConstructor,
-	type ReactElement,
-	type ReactNode,
-	useState,
-} from 'react'
-import { MarkdownEditor } from '@/components/markdown/editor'
+import { type ReactElement, useState } from 'react'
+import { MarkdownEditor } from '@/components/tasks/editor'
+import { ICON_SIZE_PX } from '@/lib/constants'
 import { splitMarkdown } from '@/lib/utils'
-import { ELEMENT_IDS, ICON_SIZE_PX } from '@/lib/constants'
 
 type TaskDialogProps = {
 	trigger: ReactElement

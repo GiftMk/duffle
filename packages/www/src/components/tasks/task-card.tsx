@@ -1,20 +1,16 @@
 import { Draggable } from '@hello-pangea/dnd'
-import type { TaskEntity } from '@/lib/db'
+import { useTask } from '@/hooks/tasks'
 import { cn, stripMarkdown } from '@/lib/utils'
 
 type TaskCardProps = {
-	task: TaskEntity
+	id: string
 	index: number
 	className?: string
 }
 
-const getTaskPreview = (task: TaskEntity) => {
-	return task.description ? stripMarkdown(task.description).trim() : ''
-}
-
-export const TaskCard = ({ task, index, className }: TaskCardProps) => {
-	const preview = getTaskPreview(task)
-
+export const TaskCard = ({ id, index, className }: TaskCardProps) => {
+	const task = useTask(id)
+	const preview = task.description ? stripMarkdown(task.description).trim() : ''
 	return (
 		<Draggable draggableId={task.id} index={index}>
 			{(provided) => (
@@ -23,11 +19,11 @@ export const TaskCard = ({ task, index, className }: TaskCardProps) => {
 					{...provided.draggableProps}
 					{...provided.dragHandleProps}
 					className={cn(
-						'min-h-16 rounded-md border border-surface-400 bg-surface-50 px-3 py-3 text-sm text-typography-950 dark:bg-surface-300',
+						'min-h-16 space-y-1.5 rounded-md border border-surface-400 bg-surface-50 px-3 py-3 text-sm text-typography-950 dark:bg-surface-300',
 						className,
 					)}
 				>
-					<p>{task.title}</p>
+					<p className='line-clamp-1'>{task.title}</p>
 					{preview && (
 						<p className='mt-1 line-clamp-2 text-typography-600 text-xs'>
 							{preview}

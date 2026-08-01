@@ -1,8 +1,8 @@
 import { CornersOutIcon, PlusIcon } from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from 'react'
+import { addTask } from '@/lib/actions'
 import { ICON_SIZE_PX } from '@/lib/constants'
 import { AddTaskInput } from './add-task-input'
-import { useBoardContext } from '../board/board-provider'
 import { TaskDialog } from './task-dialog'
 
 type AddTaskCardProps = {
@@ -10,7 +10,6 @@ type AddTaskCardProps = {
 }
 
 export const AddTaskCard = ({ columnId }: AddTaskCardProps) => {
-	const { addTask } = useBoardContext()
 	const [isEditing, setIsEditing] = useState(false)
 	const [title, setTitle] = useState('')
 	const inputRef = useRef<HTMLInputElement>(null)
@@ -28,12 +27,12 @@ export const AddTaskCard = ({ columnId }: AddTaskCardProps) => {
 	}
 
 	const handleSubmit = (title: string, description?: string) => {
-		const trimmed = title.trim()
-		if (!trimmed) {
+		const trimmedTitle = title.trim()
+		if (!trimmedTitle) {
 			return false
 		}
 
-		addTask(columnId, trimmed, description)
+		addTask(columnId, trimmedTitle, description)
 		resetInput()
 		return true
 	}

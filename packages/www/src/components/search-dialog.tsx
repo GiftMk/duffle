@@ -3,7 +3,6 @@ import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { Fragment, useEffect, useState } from 'react'
 import { Tooltip } from '@/components/tooltip'
-import { useTasks } from '@/hooks/use-tasks'
 import { ICON_SIZE_PX } from '@/lib/constants'
 import { searchWorker } from '@/workers/search'
 import type { SearchItem } from '@/workers/search.worker'
@@ -12,12 +11,6 @@ export const SearchDialog = () => {
 	const [open, setOpen] = useState(false)
 	const [query, setQuery] = useState('')
 	const [results, setResults] = useState<SearchItem[]>([])
-	const showRecentTasks = !query.length && !results.length
-	const recentTasks = useTasks({
-		skip: !open || !showRecentTasks,
-		orderBy: 'createdAt',
-		limit: 3,
-	})
 
 	const closeDialog = () => {
 		setOpen(false)
@@ -77,13 +70,6 @@ export const SearchDialog = () => {
 							/>
 						</span>
 						<Autocomplete.List className='flex max-h-[min(432px,35svh)] flex-col overflow-y-auto px-4'>
-							{showRecentTasks &&
-								recentTasks.map((card) => (
-									<Fragment key={card.id}>
-										<SearchResult item={card} onClick={closeDialog} />
-										<hr className='my-2 text-surface-400' />
-									</Fragment>
-								))}
 							{results.map((card) => (
 								<Fragment key={card.id}>
 									<SearchResult item={card} onClick={closeDialog} />

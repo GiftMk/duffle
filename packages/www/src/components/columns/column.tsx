@@ -1,21 +1,20 @@
 import { Droppable } from '@hello-pangea/dnd'
-import type { ColumnEntity } from '@/lib/db'
+import { useColumn } from '@/hooks/columns'
 import { cn } from '@/lib/utils'
-import { useBoardContext } from '../board/board-provider'
-import { TaskCard } from '../tasks/task-card'
 import { AddTaskCard } from '../tasks/add-task-card'
+import { TaskCard } from '../tasks/task-card'
 import { ColumnTitle } from './column-title'
 
 type ColumnProps = {
-	column: ColumnEntity
+	id: string
 }
 
-export const Column = ({ column }: ColumnProps) => {
-	const { tasks } = useBoardContext()
+export const Column = ({ id }: ColumnProps) => {
+	const column = useColumn(id)
 
 	return (
 		<div className='flex w-80 shrink-0 flex-col gap-3'>
-			<ColumnTitle columnId={column.id} title={column.title} />
+			<ColumnTitle id={column.id} title={column.title} />
 			<Droppable droppableId={column.id}>
 				{(provided, snapshot) => (
 					<div
@@ -26,18 +25,9 @@ export const Column = ({ column }: ColumnProps) => {
 							snapshot.isDraggingOver && 'bg-surface-200',
 						)}
 					>
-						{column.cardIds.map((cardId, index) => {
-							const card = tasks[cardId]
-							if (!card) return null
-							return (
-								<TaskCard
-									key={card.id}
-									task={card}
-									index={index}
-									className='mb-3'
-								/>
-							)
-						})}
+						{column.tasks.map((id, index) => (
+							<TaskCard key={id} id={id} index={index} className='mb-3' />
+						))}
 						{provided.placeholder}
 					</div>
 				)}
