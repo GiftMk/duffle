@@ -1,6 +1,6 @@
 import { Dialog } from '@base-ui/react'
 import { XIcon } from '@phosphor-icons/react'
-import { type ReactElement, useState } from 'react'
+import { type ReactElement, useEffect, useState } from 'react'
 import { MarkdownEditor } from '@/components/tasks/editor'
 import { ICON_SIZE_PX } from '@/lib/constants'
 import { splitMarkdown } from '@/lib/utils'
@@ -9,7 +9,7 @@ import { IconButton } from '../icon-button'
 type TaskDialogProps = {
 	trigger: ReactElement
 	title: string
-	onSubmit: (title: string, description?: string) => boolean
+	onSubmit: (title: string, description?: string) => void
 	onCancel: () => void
 }
 
@@ -19,8 +19,10 @@ export const TaskDialog = ({
 	onSubmit,
 	onCancel,
 }: TaskDialogProps) => {
-	const [markdown, setMarkdown] = useState(`# ${title}`)
+	const [markdown, setMarkdown] = useState('')
 	const [open, setOpen] = useState(false)
+
+	useEffect(() => setMarkdown(`# ${title}`), [title])
 
 	const handleSubmit = () => {
 		const { title, description } = splitMarkdown(markdown)
@@ -82,7 +84,7 @@ export const TaskDialog = ({
 						<button
 							type='button'
 							onClick={handleSubmit}
-							className='rounded-md bg-primary-600 px-3 py-2 text-sm text-surface-50 hover:bg-primary-700'
+							className='rounded-md bg-primary-600 px-3 py-2 text-sm text-surface-50 hover:bg-primary-700 dark:text-typography-900'
 						>
 							Create
 						</button>

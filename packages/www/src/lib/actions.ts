@@ -24,6 +24,29 @@ export const updateBoard = (
 	boardsStore.trigger.update({ board: updatedBoard })
 }
 
+export const deleteBoard = (id: string) => {
+	const board = boardsStore.get().context.boards[id]
+
+	if (!board) {
+		throw new Error(`Board with id '${id}' not found`)
+	}
+
+	for (const columnId of board.columns) {
+		const column = columnsStore.get().context.columns[columnId]
+		if (!column) {
+			continue
+		}
+
+		for (const taskId of column.tasks) {
+			tasksStore.trigger.delete({ id: taskId })
+		}
+
+		columnsStore.trigger.delete({ id: columnId })
+	}
+
+	boardsStore.trigger.delete({ id })
+}
+
 export const updateColumn = (
 	id: string,
 	recipe: (draft: Omit<ColumnEntity, 'tasks'>) => void,
@@ -41,6 +64,31 @@ export const updateColumn = (
 	}
 
 	columnsStore.trigger.update({ column: updatedColumn })
+}
+
+export const deleteColumn = (id: string) => {
+	const column = columnsStore.get().context.columns[id]
+
+	if (!column) {
+		throw new Error(`Column with id '${id}' not found`)
+	}
+
+	for (const taskId of column.tasks) {
+		tasksStore.trigger.delete({ id: taskId })
+	}
+
+	const board = Object.values(boardsStore.get().context.boards).find((board) =>
+		board.columns.includes(id),
+	)
+
+	if (board) {
+		const updatedBoard = produce(board, (draft) => {
+			draft.columns = draft.columns.filter((columnId) => columnId !== id)
+		})
+		boardsStore.trigger.update({ board: updatedBoard })
+	}
+
+	columnsStore.trigger.delete({ id })
 }
 
 export const updateTask = (id: string, recipe: (draft: TaskEntity) => void) => {

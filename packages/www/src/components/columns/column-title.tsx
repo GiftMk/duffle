@@ -1,83 +1,107 @@
-import { PencilSimpleIcon } from '@phosphor-icons/react'
-import { useEffect, useRef, useState } from 'react'
-import { updateColumn } from '@/lib/actions'
+import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
+import { useState } from 'react'
+import { deleteColumn, updateColumn } from '@/lib/actions'
 import { ICON_SIZE_PX } from '@/lib/constants'
+import { cn } from '@/lib/utils'
+import {
+	AlertDialogAction,
+	AlertDialogActions,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogRoot,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from '../alert-dialog'
 import { IconButton } from '../icon-button'
+import { TitleInput } from '../title-input'
 
 type ColumnTitleProps = {
 	id: string
-	title: string
+	value: string
 }
 
-export const ColumnTitle = ({ id, title }: ColumnTitleProps) => {
+export const ColumnTitle = ({ id, value }: ColumnTitleProps) => {
 	const [isEditing, setIsEditing] = useState(false)
-	const [value, setValue] = useState(title)
-	const cancelledRef = useRef(false)
-	const inputRef = useRef<HTMLInputElement>(null)
-
-	useEffect(() => {
-		if (isEditing) {
-			inputRef.current?.focus()
-		}
-	}, [isEditing])
+	const [title, setTitle] = useState(value)
 
 	const startEditing = () => {
-		setValue(title)
 		setIsEditing(true)
 	}
 
-	const handleBlur = () => {
+	const handleSubmit = (title: string) => {
 		setIsEditing(false)
-
-		if (cancelledRef.current) {
-			cancelledRef.current = false
-			return
-		}
-
 		updateColumn(id, (draft) => {
-			const trimmedTitle = value.trim()
-			if (trimmedTitle) {
-				draft.title = trimmedTitle
-			}
+			draft.title = title
 		})
 	}
 
-	if (!isEditing) {
-		return (
-			<div className='group flex items-center justify-between px-1'>
-				<h2 className='font-semibold text-sm text-typography-950'>{title}</h2>
-				<IconButton
-					onClick={startEditing}
-					className='opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100'
-				>
-					<PencilSimpleIcon size={ICON_SIZE_PX} />
-				</IconButton>
-			</div>
-		)
-	}
-
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setValue(e.target.value)
-	}
-
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter') {
-			e.currentTarget.blur()
-		}
-		if (e.key === 'Escape') {
-			cancelledRef.current = true
-			e.currentTarget.blur()
-		}
+	const handleCancel = () => {
+		setIsEditing(false)
 	}
 
 	return (
-		<input
-			ref={inputRef}
-			value={value}
-			onChange={handleChange}
-			onBlur={handleBlur}
-			onKeyDown={handleKeyDown}
-			className='w-full rounded-md border border-surface-400 bg-surface-100 px-3 py-2 text-sm text-typography-950 focus:outline-none'
-		/>
+		<div className='group flex items-center justify-between px-1'>
+			{isEditing ? (
+				<TitleInput
+					className='font-bold'
+					value={title}
+					onChange={setTitle}
+					onSubmit={handleSubmit}
+					onCancel={handleCancel}
+				/>
+			) : (
+				<h2 className='font-bold text-sm text-typography-950'>{title}</h2>
+			)}
+			<div
+				className={cn(
+					'flex gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100',
+					{ invisible: isEditing },
+				)}
+			>
+				<IconButton onClick={startEditing}>
+					<PencilSimpleIcon size={ICON_SIZE_PX} />
+				</IconButton>
+				<DeleteColumnDialog id={id} title={title} />
+			</div>
+		</div>
+	)
+}
+
+const DeleteColumnDialog = ({
+	id,
+	title,
+	disabled,
+}: {
+	id: string
+	title: string
+	disabled?: boolean
+}) => {
+	return (
+		<AlertDialogRoot>
+			<AlertDialogTrigger
+				disabled={disabled}
+				render={
+					<IconButton variant='destructive'>
+						<TrashIcon size={ICON_SIZE_PX} />
+					</IconButton>
+				}
+			/>
+			<AlertDialogContent>
+				<AlertDialogTitle>Delete column?</AlertDialogTitle>
+				<AlertDialogDescription>
+					This will permanently delete &quot;{title}&quot; and all of its tasks.
+				</AlertDialogDescription>
+				<AlertDialogActions>
+					<AlertDialogCancel>Cancel</AlertDialogCancel>
+					<AlertDialogAction
+						variant='destructive'
+						onClick={() => deleteColumn(id)}
+					>
+						Delete
+					</AlertDialogAction>
+				</AlertDialogActions>
+			</AlertDialogContent>
+		</AlertDialogRoot>
 	)
 }

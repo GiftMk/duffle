@@ -14,14 +14,14 @@ export const Column = ({ id }: ColumnProps) => {
 
 	return (
 		<div className='flex w-80 shrink-0 flex-col'>
-			<ColumnTitle id={column.id} title={column.title} />
+			<ColumnTitle id={column.id} value={column.title} />
 			<Droppable droppableId={column.id}>
 				{(provided, snapshot) => (
 					<div
 						ref={provided.innerRef}
 						{...provided.droppableProps}
 						className={cn(
-							'mt-3 flex min-h-6 flex-col rounded-md p-1 transition-colors',
+							'mt-3 flex min-h-2 flex-col rounded-md p-1 transition-colors',
 							{ 'bg-surface-200': snapshot.isDraggingOver },
 						)}
 					>

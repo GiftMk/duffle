@@ -1,6 +1,8 @@
 import { PlusIcon } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
+import { BoardContainer } from '@/components/boards/board-container'
+import { TitleInput } from '@/components/title-input'
 import { createBoard } from '@/lib/actions'
 import { ICON_SIZE_PX } from '@/lib/constants'
 
@@ -8,67 +10,36 @@ export const AddBoardCard = () => {
 	const navigate = useNavigate()
 	const [isEditing, setIsEditing] = useState(false)
 	const [title, setTitle] = useState('')
-	const cancelledRef = useRef(false)
-	const inputRef = useRef<HTMLInputElement>(null)
 
-	useEffect(() => {
-		if (isEditing) {
-			inputRef.current?.focus()
-		}
-	}, [isEditing])
-
-	const startEditing = () => {
-		setTitle('')
-		setIsEditing(true)
-	}
-
-	const handleBlur = () => {
+	const handleSubmit = (title: string) => {
 		setIsEditing(false)
-
-		if (cancelledRef.current) {
-			cancelledRef.current = false
-			return
-		}
-
-		const trimmedTitle = title.trim()
-		if (!trimmedTitle) {
-			return
-		}
-
-		const board = createBoard(trimmedTitle)
+		const board = createBoard(title)
 		navigate({ to: '/boards/$boardId', params: { boardId: board.id } })
 	}
 
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter') {
-			e.currentTarget.blur()
-		}
-		if (e.key === 'Escape') {
-			cancelledRef.current = true
-			e.currentTarget.blur()
-		}
+	const handleCancel = () => {
+		setIsEditing(false)
 	}
 
 	if (isEditing) {
 		return (
-			<div className='flex h-44 w-72 shrink-0 items-center justify-center rounded-md border border-surface-400 hover:bg-surface-100 dark:bg-surface-300 dark:hover:bg-surface-200'>
-				<input
-					ref={inputRef}
+			<BoardContainer>
+				<TitleInput
 					value={title}
-					onChange={(e) => setTitle(e.target.value)}
-					onBlur={handleBlur}
-					onKeyDown={handleKeyDown}
+					onChange={setTitle}
 					placeholder='Board name'
-					className='w-fit rounded-md border border-surface-400 bg-transparent px-3 py-2 text-sm text-typography-950 focus:outline-none'
+					onSubmit={handleSubmit}
+					onCancel={handleCancel}
+					className='w-fit'
 				/>
-			</div>
+			</BoardContainer>
 		)
 	}
 
 	return (
 		<button
 			type='button'
-			onClick={startEditing}
+			onClick={() => setIsEditing(true)}
 			className='flex h-44 w-72 shrink-0 items-center justify-center rounded-md border border-surface-400 bg-surface-50 text-typography-500 transition-colors hover:bg-surface-200 hover:text-typography-600 dark:bg-surface-300'
 		>
 			<PlusIcon size={ICON_SIZE_PX} />

@@ -1,10 +1,10 @@
 import { ArrowsOutIcon, PlusIcon } from '@phosphor-icons/react'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { addTask } from '@/lib/actions'
 import { ICON_SIZE_PX } from '@/lib/constants'
-import { AddTaskInput } from './add-task-input'
-import { TaskDialog } from './task-dialog'
 import { IconButton } from '../icon-button'
+import { TitleInput } from '../title-input'
+import { TaskDialog } from './task-dialog'
 
 type AddTaskCardProps = {
 	columnId: string
@@ -13,14 +13,7 @@ type AddTaskCardProps = {
 export const AddTaskCard = ({ columnId }: AddTaskCardProps) => {
 	const [isEditing, setIsEditing] = useState(false)
 	const [title, setTitle] = useState('')
-	const inputRef = useRef<HTMLInputElement>(null)
 	const dialogTriggerRef = useRef<HTMLButtonElement>(null)
-
-	useEffect(() => {
-		if (isEditing) {
-			inputRef.current?.focus()
-		}
-	}, [isEditing])
 
 	const resetInput = () => {
 		setIsEditing(false)
@@ -28,22 +21,12 @@ export const AddTaskCard = ({ columnId }: AddTaskCardProps) => {
 	}
 
 	const handleSubmit = (title: string, description?: string) => {
-		const trimmedTitle = title.trim()
-		if (!trimmedTitle) {
-			return false
-		}
-
-		addTask(columnId, trimmedTitle, description)
+		addTask(columnId, title, description)
 		resetInput()
-		return true
 	}
 
-	const handleInputBlur = (e: React.FocusEvent): 'cancel' | 'continue' => {
-		if (e.relatedTarget === dialogTriggerRef.current) {
-			return 'cancel'
-		}
-
-		return 'continue'
+	const handleInputBlur = (e: React.FocusEvent) => {
+		return e.relatedTarget === dialogTriggerRef.current ? 'break' : 'continue'
 	}
 
 	if (!isEditing) {
@@ -60,14 +43,15 @@ export const AddTaskCard = ({ columnId }: AddTaskCardProps) => {
 	}
 
 	return (
-		<div className='flex items-center rounded-md border border-surface-400 bg-surface-100'>
-			<AddTaskInput
-				ref={inputRef}
-				onSubmit={handleSubmit}
-				onBlur={handleInputBlur}
-				onCancel={resetInput}
+		<div className='flex items-center gap-2 rounded-md'>
+			<TitleInput
 				value={title}
 				onChange={setTitle}
+				onSubmit={handleSubmit}
+				onCancel={resetInput}
+				onBlur={handleInputBlur}
+				placeholder='Task title'
+				className='mx-2 w-full'
 			/>
 			<TaskDialog
 				trigger={

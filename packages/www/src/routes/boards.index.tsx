@@ -4,7 +4,7 @@ import { BoardCard } from '@/components/boards/board-card'
 import { Sidebar } from '@/components/sidebar'
 import { useBoards } from '@/hooks/boards'
 
-export const Route = createFileRoute('/boards')({
+export const Route = createFileRoute('/boards/')({
 	component: RouteComponent,
 })
 
@@ -17,7 +17,7 @@ function RouteComponent() {
 	return (
 		<main className='flex h-full w-full bg-surface-100'>
 			<Sidebar />
-			<div className='h-full w-full overflow-y-auto p-8'>
+			<div className='h-full w-full overflow-y-auto px-8 py-4'>
 				<h1 className='font-bold text-3xl text-typography-950 tracking-tight'>
 					Boards
 				</h1>

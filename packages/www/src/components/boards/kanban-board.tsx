@@ -1,6 +1,6 @@
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
-import { useActiveBoard } from '@/hooks/boards'
 import { moveCard } from '@/lib/actions'
+import type { BoardEntity } from '@/state/boards-store'
 import { Column } from '../columns/column'
 
 const handleDragEnd = (result: DropResult) => {
@@ -15,16 +15,14 @@ const handleDragEnd = (result: DropResult) => {
 	)
 }
 
-export const KanbanBoard = () => {
-	const board = useActiveBoard()
+type KanbanBoardProps = {
+	board: BoardEntity
+}
 
-	if (!board) {
-		return null
-	}
-
+export const KanbanBoard = ({ board }: KanbanBoardProps) => {
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>
-			<div className='flex h-full w-full items-start gap-6 overflow-x-auto p-8'>
+			<div className='mt-8 flex items-start gap-6 overflow-x-auto'>
 				{board.columns.map((id) => (
 					<Column key={id} id={id} />
 				))}
