@@ -42,6 +42,7 @@ function RouteComponent() {
 
 const BoardTitle = ({ board }: { board: BoardEntity }) => {
 	const [isEditing, setIsEditing] = useState(false)
+	const [title, setTitle] = useState(board.title)
 
 	const startEditing = () => setIsEditing(true)
 
@@ -57,7 +58,8 @@ const BoardTitle = ({ board }: { board: BoardEntity }) => {
 	if (isEditing) {
 		return (
 			<TitleInput
-				defaultValue={board.title}
+				value={title}
+				onChange={setTitle}
 				onSubmit={handleSubmit}
 				onCancel={handleCancel}
 				className='shrink-0 font-bold text-3xl tracking-tight'

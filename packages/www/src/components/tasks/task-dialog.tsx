@@ -6,34 +6,49 @@ import { ICON_SIZE_PX } from '@/lib/constants'
 import { splitMarkdown } from '@/lib/utils'
 import { IconButton } from '../icon-button'
 
+const getMarkdown = (title: string, description?: string) => {
+	if (!description) {
+		return `# ${title}`
+	}
+
+	return `# ${title}\n${description}`
+}
+
 type TaskDialogProps = {
 	trigger: ReactElement
 	title: string
+	description?: string
 	onSubmit: (title: string, description?: string) => void
-	onCancel: () => void
+	onCancel?: () => void
+	submitLabel: string
 }
 
 export const TaskDialog = ({
 	trigger,
 	title,
+	description,
 	onSubmit,
 	onCancel,
+	submitLabel,
 }: TaskDialogProps) => {
 	const [markdown, setMarkdown] = useState('')
 	const [open, setOpen] = useState(false)
 
-	useEffect(() => setMarkdown(`# ${title}`), [title])
+	useEffect(() => {
+		setMarkdown(getMarkdown(title, description))
+	}, [title, description])
 
 	const handleSubmit = () => {
 		const { title, description } = splitMarkdown(markdown)
 		if (!title) return
 
 		onSubmit(title, description)
+		setOpen(false)
 	}
 
 	const handleCancel = () => {
+		onCancel?.()
 		setOpen(false)
-		onCancel()
 	}
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -53,7 +68,7 @@ export const TaskDialog = ({
 
 	return (
 		<Dialog.Root open={open} onOpenChange={handleOpenChange}>
-			<Dialog.Trigger render={trigger} />
+			<Dialog.Trigger nativeButton={false} render={trigger} />
 			<Dialog.Portal>
 				<Dialog.Backdrop className='fixed inset-0 bg-surface-950/20' />
 				<Dialog.Popup
@@ -86,7 +101,7 @@ export const TaskDialog = ({
 							onClick={handleSubmit}
 							className='rounded-md bg-primary-600 px-3 py-2 text-sm text-surface-50 hover:bg-primary-700 dark:text-typography-900'
 						>
-							Create
+							{submitLabel}
 						</button>
 					</div>
 				</Dialog.Popup>

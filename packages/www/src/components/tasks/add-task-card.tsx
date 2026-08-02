@@ -62,6 +62,7 @@ export const AddTaskCard = ({ columnId }: AddTaskCardProps) => {
 				title={title}
 				onSubmit={handleSubmit}
 				onCancel={resetInput}
+				submitLabel='Create'
 			/>
 		</div>
 	)

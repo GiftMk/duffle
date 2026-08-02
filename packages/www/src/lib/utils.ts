@@ -22,7 +22,11 @@ export const splitMarkdown = (
 	const stripped = stripMarkdown(markdown)
 	const lines = stripped.split('\n')
 	const title = lines[0]?.trim() || undefined
-	const description = lines.slice(1).join('\n').trim() || undefined
+	const description =
+		lines
+			.slice(1)
+			.map((line) => line.trim())
+			.join('\n') || undefined
 
 	return { title, description }
 }

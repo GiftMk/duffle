@@ -70,10 +70,15 @@ const EditorContent = ({ defaultValue, onChange }: EditorContentProps) => {
 			.use(indent)
 	})
 
-	useEffect(() => {
-		const editor = get()
-		if (loading || !editor) return
+	const initRef = useRef(false)
 
+	useEffect(() => {
+		if (initRef.current || loading) return
+
+		const editor = get()
+		if (!editor) return
+
+		initRef.current = true
 		editor.action((ctx) => {
 			const view = ctx.get(editorViewCtx)
 			const selection = TextSelection.atEnd(view.state.doc)
