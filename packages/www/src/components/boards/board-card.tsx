@@ -16,6 +16,7 @@ import { IconButton } from '@/components/icon-button'
 import { TitleInput } from '@/components/title-input'
 import { deleteBoard, updateBoard } from '@/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
+import { onNextTick } from '@/lib/utils'
 import type { BoardEntity } from '@/state/boards-store'
 
 type BoardCardProps = {
@@ -43,9 +44,8 @@ export const BoardCard = ({ board }: BoardCardProps) => {
 		}
 	}
 
-	const handlePointerEnter = () => setCanNavigate(false)
-
-	const handlePointerLeave = () => setCanNavigate(true)
+	const disableNavigation = () => setCanNavigate(false)
+	const enableNavigation = () => setCanNavigate(true)
 
 	const startEditing = (e: React.MouseEvent) => {
 		e.stopPropagation()
@@ -63,6 +63,10 @@ export const BoardCard = ({ board }: BoardCardProps) => {
 		setIsEditing(false)
 	}
 
+	const handleDialogClose = (open: boolean) => {
+		if (!open) onNextTick(enableNavigation)
+	}
+
 	return (
 		<BoardContainer
 			role='button'
@@ -72,14 +76,14 @@ export const BoardCard = ({ board }: BoardCardProps) => {
 			className='group relative bg-surface-50 px-4 text-sm text-typography-950'
 		>
 			<div
-				onPointerEnter={handlePointerEnter}
-				onPointerLeave={handlePointerLeave}
+				onPointerEnter={disableNavigation}
+				onPointerLeave={enableNavigation}
 				className='absolute top-2 right-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100'
 			>
 				<IconButton onClick={startEditing}>
 					<PencilSimpleIcon size={ICON_SIZE_MD} />
 				</IconButton>
-				<DeleteBoardDialog board={board} />
+				<DeleteBoardDialog board={board} onOpenChange={handleDialogClose} />
 			</div>
 			{isEditing ? (
 				<TitleInput
@@ -96,12 +100,21 @@ export const BoardCard = ({ board }: BoardCardProps) => {
 	)
 }
 
-const DeleteBoardDialog = ({ board }: { board: BoardEntity }) => {
+const DeleteBoardDialog = ({
+	board,
+	onOpenChange,
+}: {
+	board: BoardEntity
+	onOpenChange?: (open: boolean) => void
+}) => {
 	return (
-		<AlertDialogRoot>
+		<AlertDialogRoot onOpenChange={onOpenChange}>
 			<AlertDialogTrigger
 				render={
-					<IconButton variant='destructive'>
+					<IconButton
+						variant='destructive'
+						onClick={(e) => e.stopPropagation()}
+					>
 						<TrashIcon size={ICON_SIZE_MD} />
 					</IconButton>
 				}

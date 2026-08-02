@@ -30,3 +30,7 @@ export const splitMarkdown = (
 
 	return { title, description }
 }
+
+export const onNextTick = (callback: () => void) => {
+	return setTimeout(callback, 0)
+}

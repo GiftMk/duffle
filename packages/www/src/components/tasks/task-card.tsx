@@ -15,7 +15,7 @@ import { IconButton } from '@/components/icon-button'
 import { useTaskOrThrow } from '@/hooks/tasks'
 import { deleteTask, updateTask } from '@/lib/actions'
 import { ICON_SIZE_SM } from '@/lib/constants'
-import { cn, stripMarkdown } from '@/lib/utils'
+import { cn, onNextTick, stripMarkdown } from '@/lib/utils'
 import type { TaskEntity } from '@/state/tasks-store'
 import { TaskDialog } from './task-dialog'
 
@@ -37,9 +37,12 @@ export const TaskCard = ({ id, index, className }: TaskCardProps) => {
 		})
 	}
 
-	const handlePointerEnter = () => setDisabled(true)
+	const disableTaskDialog = () => setDisabled(true)
+	const enableTaskDialog = () => setDisabled(false)
 
-	const handlePointerLeave = () => setDisabled(false)
+	const handleDeleteDialogClose = (open: boolean) => {
+		if (!open) onNextTick(enableTaskDialog)
+	}
 
 	return (
 		<TaskDialog
@@ -57,11 +60,14 @@ export const TaskCard = ({ id, index, className }: TaskCardProps) => {
 								)}
 							>
 								<div
-									onPointerEnter={handlePointerEnter}
-									onPointerLeave={handlePointerLeave}
+									onPointerEnter={disableTaskDialog}
+									onPointerLeave={enableTaskDialog}
 									className='absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100'
 								>
-									<DeleteTaskDialog task={task} />
+									<DeleteTaskDialog
+										task={task}
+										onOpenChange={handleDeleteDialogClose}
+									/>
 								</div>
 								<p className='line-clamp-1 pr-6'>{task.title}</p>
 								{preview && (
@@ -83,9 +89,15 @@ export const TaskCard = ({ id, index, className }: TaskCardProps) => {
 	)
 }
 
-const DeleteTaskDialog = ({ task }: { task: TaskEntity }) => {
+const DeleteTaskDialog = ({
+	task,
+	onOpenChange,
+}: {
+	task: TaskEntity
+	onOpenChange?: (open: boolean) => void
+}) => {
 	return (
-		<AlertDialogRoot>
+		<AlertDialogRoot onOpenChange={onOpenChange}>
 			<AlertDialogTrigger
 				render={
 					<IconButton variant='destructive'>
