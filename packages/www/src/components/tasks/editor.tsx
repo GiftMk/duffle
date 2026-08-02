@@ -112,7 +112,7 @@ export const MarkdownEditor = ({
 				className,
 			)}
 		>
-			<div className='h-full w-full max-w-[75ch]'>
+			<div className='h-full w-full max-w-[80ch]'>
 				<MilkdownProvider>
 					<ProsemirrorAdapterProvider>
 						<EditorContent defaultValue={defaultValue} onChange={onChange} />

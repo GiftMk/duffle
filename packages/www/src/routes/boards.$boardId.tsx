@@ -8,7 +8,7 @@ import { Sidebar } from '@/components/sidebar'
 import { TitleInput } from '@/components/title-input'
 import { useBoard } from '@/hooks/boards'
 import { updateBoard } from '@/lib/actions'
-import { ICON_SIZE_PX } from '@/lib/constants'
+import { ICON_SIZE_MD } from '@/lib/constants'
 import { type BoardEntity, boardsStore } from '@/state/boards-store'
 
 export const Route = createFileRoute('/boards/$boardId')({
@@ -32,7 +32,7 @@ function RouteComponent() {
 	return (
 		<main className='flex h-full w-full bg-surface-100'>
 			<Sidebar />
-			<div className='flex h-full w-full flex-col px-8 py-4'>
+			<div className='flex h-full w-full flex-col gap-6 px-8 py-4'>
 				<BoardTitle board={board} />
 				<KanbanBoard board={board} />
 			</div>
@@ -76,7 +76,7 @@ const BoardTitle = ({ board }: { board: BoardEntity }) => {
 				onClick={startEditing}
 				className='opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100'
 			>
-				<PencilSimpleIcon size={ICON_SIZE_PX} />
+				<PencilSimpleIcon size={ICON_SIZE_MD} />
 			</IconButton>
 		</div>
 	)

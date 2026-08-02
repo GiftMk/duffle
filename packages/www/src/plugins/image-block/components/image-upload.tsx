@@ -1,7 +1,7 @@
 import { Input } from '@base-ui/react'
 import { ImageIcon, UploadSimpleIcon } from '@phosphor-icons/react/dist/ssr'
 import { useId, useRef, useState } from 'react'
-import { ICON_SIZE_PX } from '@/lib/constants'
+import { ICON_SIZE_MD } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
 export const ImageUpload = ({
@@ -48,7 +48,7 @@ export const ImageUpload = ({
 				uploading && 'opacity-60',
 			)}
 		>
-			<ImageIcon size={ICON_SIZE_PX} className='shrink-0 text-typography-500' />
+			<ImageIcon size={ICON_SIZE_MD} className='shrink-0 text-typography-500' />
 			<Input
 				ref={linkInputRef}
 				value={link}
@@ -74,7 +74,7 @@ export const ImageUpload = ({
 				htmlFor={inputId}
 				className='flex shrink-0 cursor-pointer items-center gap-1 rounded-md bg-surface-300/50 px-2 py-1 text-typography-600 text-xs hover:bg-surface-300'
 			>
-				<UploadSimpleIcon size={ICON_SIZE_PX} />
+				<UploadSimpleIcon size={ICON_SIZE_MD} />
 				Upload
 			</label>
 		</div>

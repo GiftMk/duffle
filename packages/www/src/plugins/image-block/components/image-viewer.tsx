@@ -4,7 +4,7 @@ import {
 	XIcon,
 } from '@phosphor-icons/react/dist/ssr'
 import { useState } from 'react'
-import { ICON_SIZE_PX } from '@/lib/constants'
+import { ICON_SIZE_MD } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
 export const ImageViewer = ({
@@ -31,20 +31,20 @@ export const ImageViewer = ({
 					onClick={() => setShowCaption((prev) => !prev)}
 					className='rounded-md bg-surface-950/60 p-1.5 text-surface-100 hover:bg-surface-950/80'
 				>
-					<ChatCircleIcon size={ICON_SIZE_PX} />
+					<ChatCircleIcon size={ICON_SIZE_MD} />
 				</button>
 				<button
 					type='button'
 					onClick={onRemove}
 					className='rounded-md bg-surface-950/60 p-1.5 text-surface-100 hover:bg-surface-950/80'
 				>
-					<XIcon size={ICON_SIZE_PX} />
+					<XIcon size={ICON_SIZE_MD} />
 				</button>
 			</div>
 			{failedToLoad ? (
 				<div className='flex flex-col items-center gap-2 rounded-md border border-surface-400 bg-surface-100 p-6 text-center'>
 					<ImageBrokenIcon
-						size={ICON_SIZE_PX * 1.5}
+						size={ICON_SIZE_MD * 1.5}
 						className='text-typography-400'
 					/>
 					<p className='text-sm text-typography-500'>

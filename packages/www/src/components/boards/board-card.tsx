@@ -15,7 +15,7 @@ import { BoardContainer } from '@/components/boards/board-container'
 import { IconButton } from '@/components/icon-button'
 import { TitleInput } from '@/components/title-input'
 import { deleteBoard, updateBoard } from '@/lib/actions'
-import { ICON_SIZE_PX } from '@/lib/constants'
+import { ICON_SIZE_MD } from '@/lib/constants'
 import type { BoardEntity } from '@/state/boards-store'
 
 type BoardCardProps = {
@@ -74,10 +74,10 @@ export const BoardCard = ({ board }: BoardCardProps) => {
 			<div
 				onPointerEnter={handlePointerEnter}
 				onPointerLeave={handlePointerLeave}
-				className='absolute top-2 right-2 flex gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100'
+				className='absolute top-2 right-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100'
 			>
 				<IconButton onClick={startEditing}>
-					<PencilSimpleIcon size={ICON_SIZE_PX} />
+					<PencilSimpleIcon size={ICON_SIZE_MD} />
 				</IconButton>
 				<DeleteBoardDialog board={board} />
 			</div>
@@ -102,7 +102,7 @@ const DeleteBoardDialog = ({ board }: { board: BoardEntity }) => {
 			<AlertDialogTrigger
 				render={
 					<IconButton variant='destructive'>
-						<TrashIcon size={ICON_SIZE_PX} />
+						<TrashIcon size={ICON_SIZE_MD} />
 					</IconButton>
 				}
 			/>

@@ -22,7 +22,7 @@ type KanbanBoardProps = {
 export const KanbanBoard = ({ board }: KanbanBoardProps) => {
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>
-			<div className='mt-8 flex items-start gap-6 overflow-x-auto'>
+			<div className='flex items-start gap-6 overflow-x-auto'>
 				{board.columns.map((id) => (
 					<Column key={id} id={id} />
 				))}

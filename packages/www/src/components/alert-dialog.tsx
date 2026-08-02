@@ -2,7 +2,7 @@ import { AlertDialog } from '@base-ui/react'
 import { XIcon } from '@phosphor-icons/react'
 import type { ComponentProps } from 'react'
 import { IconButton } from '@/components/icon-button'
-import { ICON_SIZE_PX } from '@/lib/constants'
+import { ICON_SIZE_MD } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
 export const AlertDialogRoot = AlertDialog.Root
@@ -36,7 +36,7 @@ export const AlertDialogContent = ({
 				<AlertDialog.Close
 					render={
 						<IconButton className='absolute top-4 right-4'>
-							<XIcon size={ICON_SIZE_PX} />
+							<XIcon size={ICON_SIZE_MD} />
 						</IconButton>
 					}
 				/>

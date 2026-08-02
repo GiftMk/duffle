@@ -1,7 +1,7 @@
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { deleteColumn, updateColumn } from '@/lib/actions'
-import { ICON_SIZE_PX } from '@/lib/constants'
+import { ICON_SIZE_MD } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import {
 	AlertDialogAction,
@@ -55,12 +55,12 @@ export const ColumnTitle = ({ id, value }: ColumnTitleProps) => {
 			)}
 			<div
 				className={cn(
-					'flex gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100',
+					'flex gap-1 opacity-0 transition-opacity group-hover:opacity-100',
 					{ invisible: isEditing },
 				)}
 			>
 				<IconButton onClick={startEditing}>
-					<PencilSimpleIcon size={ICON_SIZE_PX} />
+					<PencilSimpleIcon size={ICON_SIZE_MD} />
 				</IconButton>
 				<DeleteColumnDialog id={id} title={title} />
 			</div>
@@ -83,7 +83,7 @@ const DeleteColumnDialog = ({
 				disabled={disabled}
 				render={
 					<IconButton variant='destructive'>
-						<TrashIcon size={ICON_SIZE_PX} />
+						<TrashIcon size={ICON_SIZE_MD} />
 					</IconButton>
 				}
 			/>

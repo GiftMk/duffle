@@ -3,7 +3,7 @@ import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { Fragment, useEffect, useState } from 'react'
 import { Tooltip } from '@/components/tooltip'
-import { ICON_SIZE_PX } from '@/lib/constants'
+import { ICON_SIZE_MD } from '@/lib/constants'
 import { searchWorker } from '@/workers/search'
 import type { SearchItem } from '@/workers/search.worker'
 
@@ -43,7 +43,7 @@ export const SearchDialog = () => {
 							type='button'
 							className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
 						>
-							<MagnifyingGlassIcon size={ICON_SIZE_PX} />
+							<MagnifyingGlassIcon size={ICON_SIZE_MD} />
 						</button>
 					}
 				/>
@@ -54,7 +54,7 @@ export const SearchDialog = () => {
 						onClick={closeDialog}
 						className='absolute top-2 right-2 rounded-full p-1.5 text-surface-800 hover:bg-surface-300'
 					>
-						<XIcon size={ICON_SIZE_PX} weight='bold' />
+						<XIcon size={ICON_SIZE_MD} weight='bold' />
 					</Dialog.Close>
 					<Autocomplete.Root
 						value={query}

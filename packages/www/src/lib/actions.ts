@@ -107,6 +107,27 @@ export const updateTask = (id: string, recipe: (draft: TaskEntity) => void) => {
 	tasksStore.trigger.update({ task: updatedTask })
 }
 
+export const deleteTask = (id: string) => {
+	const task = tasksStore.get().context.tasks[id]
+
+	if (!task) {
+		throw new Error(`Task with id '${id}' not found`)
+	}
+
+	const column = Object.values(columnsStore.get().context.columns).find(
+		(column) => column.tasks.includes(id),
+	)
+
+	if (column) {
+		const updatedColumn = produce(column, (draft) => {
+			draft.tasks = draft.tasks.filter((taskId) => taskId !== id)
+		})
+		columnsStore.trigger.update({ column: updatedColumn })
+	}
+
+	tasksStore.trigger.delete({ id })
+}
+
 export const addTask = (
 	columnId: string,
 	title: string,

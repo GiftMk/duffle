@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { BoardContainer } from '@/components/boards/board-container'
 import { TitleInput } from '@/components/title-input'
 import { createBoard } from '@/lib/actions'
-import { ICON_SIZE_PX } from '@/lib/constants'
+import { ICON_SIZE_MD } from '@/lib/constants'
 
 export const AddBoardCard = () => {
 	const navigate = useNavigate()
@@ -42,7 +42,7 @@ export const AddBoardCard = () => {
 			onClick={() => setIsEditing(true)}
 			className='flex h-44 w-72 shrink-0 items-center justify-center rounded-md border border-surface-400 bg-surface-50 text-typography-500 transition-colors hover:bg-surface-200 hover:text-typography-600 dark:bg-surface-300'
 		>
-			<PlusIcon size={ICON_SIZE_PX} />
+			<PlusIcon size={ICON_SIZE_MD} />
 		</button>
 	)
 }

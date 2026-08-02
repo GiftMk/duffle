@@ -2,7 +2,7 @@ import { Dialog } from '@base-ui/react'
 import { XIcon } from '@phosphor-icons/react'
 import { type ReactElement, useEffect, useState } from 'react'
 import { MarkdownEditor } from '@/components/tasks/editor'
-import { ICON_SIZE_PX } from '@/lib/constants'
+import { ICON_SIZE_MD } from '@/lib/constants'
 import { splitMarkdown } from '@/lib/utils'
 import { IconButton } from '../icon-button'
 
@@ -21,6 +21,7 @@ type TaskDialogProps = {
 	onSubmit: (title: string, description?: string) => void
 	onCancel?: () => void
 	submitLabel: string
+	disabled?: boolean
 }
 
 export const TaskDialog = ({
@@ -30,6 +31,7 @@ export const TaskDialog = ({
 	onSubmit,
 	onCancel,
 	submitLabel,
+	disabled,
 }: TaskDialogProps) => {
 	const [markdown, setMarkdown] = useState('')
 	const [open, setOpen] = useState(false)
@@ -59,6 +61,8 @@ export const TaskDialog = ({
 	}
 
 	const handleOpenChange = (open: boolean) => {
+		if (open && disabled) return
+
 		if (!open) {
 			handleCancel()
 		} else {
@@ -78,7 +82,7 @@ export const TaskDialog = ({
 					<Dialog.Close
 						render={
 							<IconButton className='absolute top-4 right-4'>
-								<XIcon size={ICON_SIZE_PX} />
+								<XIcon size={ICON_SIZE_MD} />
 							</IconButton>
 						}
 						onClick={handleCancel}
