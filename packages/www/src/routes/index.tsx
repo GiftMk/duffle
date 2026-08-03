@@ -1,9 +1,9 @@
 import { ArrowFatRightIcon } from '@phosphor-icons/react/dist/ssr'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { motion } from 'framer-motion'
 import { type Ref, useRef } from 'react'
 import { TypeAnimation } from 'react-type-animation'
+import { FadeIn, SpringPopIn } from '@/components/animations'
 import { createDefaultBoard } from '@/lib/actions'
 import { boardsStore } from '@/state/boards-store'
 
@@ -12,13 +12,9 @@ export const Route = createFileRoute('/')({
 })
 
 const Heading = () => (
-	<motion.div
-		initial={{ opacity: 0 }}
-		animate={{ opacity: 1 }}
-		transition={{ duration: 0.5 }}
-	>
+	<FadeIn>
 		<h1 className='font-bold text-9xl tracking-tight'>Duffle.</h1>
-	</motion.div>
+	</FadeIn>
 )
 
 const SubHeading = () => (
@@ -46,12 +42,7 @@ const EnterButton = ({ ref }: { ref?: Ref<HTMLButtonElement> }) => {
 	}
 
 	return (
-		<motion.div
-			className='flex items-center gap-2'
-			initial={{ opacity: 0, scale: 0.8, y: -300 }}
-			animate={{ opacity: 1, scale: 1, y: 0 }}
-			transition={{ type: 'spring', duration: 0.6, bounce: 0.6, delay: 0.3 }}
-		>
+		<SpringPopIn className='flex items-center gap-2' initial={{ y: -300 }}>
 			<button
 				ref={ref}
 				type='button'
@@ -64,7 +55,7 @@ const EnterButton = ({ ref }: { ref?: Ref<HTMLButtonElement> }) => {
 					weight='duotone'
 				/>
 			</button>
-		</motion.div>
+		</SpringPopIn>
 	)
 }
 

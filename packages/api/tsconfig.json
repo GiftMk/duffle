@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "esnext",
+		"skipLibCheck": true,
+		"types": ["node"],
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"]
+		},
+
+		/* Linting */
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"erasableSyntaxOnly": true,
+		"noFallthroughCasesInSwitch": true
+	},
+	"exclude": ["node_modules"]
+}

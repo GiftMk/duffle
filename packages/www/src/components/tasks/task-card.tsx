@@ -1,5 +1,7 @@
+import { ContextMenu } from '@base-ui/react/context-menu'
 import { Draggable } from '@hello-pangea/dnd'
-import { TrashIcon } from '@phosphor-icons/react'
+import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
+import type { ReactNode } from 'react'
 import { useState } from 'react'
 import {
 	AlertDialogAction,
@@ -9,13 +11,11 @@ import {
 	AlertDialogDescription,
 	AlertDialogRoot,
 	AlertDialogTitle,
-	AlertDialogTrigger,
 } from '@/components/alert-dialog'
-import { IconButton } from '@/components/icon-button'
 import { useTaskOrThrow } from '@/hooks/tasks'
 import { deleteTask, updateTask } from '@/lib/actions'
 import { ICON_SIZE_SM } from '@/lib/constants'
-import { cn, onNextTick, stripMarkdown } from '@/lib/utils'
+import { cn, stripMarkdown } from '@/lib/utils'
 import type { TaskEntity } from '@/state/tasks-store'
 import { TaskDialog } from './task-dialog'
 
@@ -28,7 +28,7 @@ type TaskCardProps = {
 export const TaskCard = ({ id, index, className }: TaskCardProps) => {
 	const task = useTaskOrThrow(id)
 	const preview = task.description ? stripMarkdown(task.description).trim() : ''
-	const [disabled, setDisabled] = useState(false)
+	const [dialogOpen, setDialogOpen] = useState(false)
 
 	const handleSubmit = (title: string, description?: string) => {
 		updateTask(task.id, (draft) => {
@@ -37,89 +37,102 @@ export const TaskCard = ({ id, index, className }: TaskCardProps) => {
 		})
 	}
 
-	const disableTaskDialog = () => setDisabled(true)
-	const enableTaskDialog = () => setDisabled(false)
-
-	const handleDeleteDialogClose = (open: boolean) => {
-		if (!open) onNextTick(enableTaskDialog)
-	}
-
 	return (
-		<TaskDialog
-			trigger={
-				<div className='select-none focus:outline-none'>
-					<Draggable draggableId={task.id} index={index}>
-						{(provided) => (
-							<div
-								ref={provided.innerRef}
-								{...provided.draggableProps}
-								{...provided.dragHandleProps}
-								className={cn(
-									'group relative min-h-16 cursor-auto! space-y-1.5 rounded-md border border-surface-400 bg-surface-50 px-3 py-3 text-sm text-typography-950 dark:bg-surface-300',
-									className,
-								)}
-							>
-								<div
-									onPointerEnter={disableTaskDialog}
-									onPointerLeave={enableTaskDialog}
-									className='absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100'
-								>
-									<DeleteTaskDialog
-										task={task}
-										onOpenChange={handleDeleteDialogClose}
-									/>
-								</div>
-								<p className='line-clamp-1 pr-6'>{task.title}</p>
-								{preview && (
-									<p className='mt-1 line-clamp-1 text-typography-600 text-xs'>
-										{preview}
-									</p>
-								)}
+		<TaskCardContextMenu task={task} onEdit={() => setDialogOpen(true)}>
+			<TaskDialog
+				open={dialogOpen}
+				onOpenChange={setDialogOpen}
+				trigger={
+					<ContextMenu.Trigger
+						render={
+							<div className='select-none focus:outline-none'>
+								<Draggable draggableId={task.id} index={index}>
+									{(provided) => (
+										<div
+											ref={provided.innerRef}
+											{...provided.draggableProps}
+											{...provided.dragHandleProps}
+											className={cn(
+												'min-h-16 cursor-auto! space-y-1.5 rounded-md border border-surface-400 bg-surface-50 px-3 py-3 text-sm text-typography-950 dark:bg-surface-300',
+												className,
+											)}
+										>
+											<p className='line-clamp-1'>{task.title}</p>
+											{preview && (
+												<p className='mt-1 line-clamp-1 text-typography-600 text-xs'>
+													{preview}
+												</p>
+											)}
+										</div>
+									)}
+								</Draggable>
 							</div>
-						)}
-					</Draggable>
-				</div>
-			}
-			title={task.title}
-			description={task.description}
-			onSubmit={handleSubmit}
-			submitLabel='Save'
-			disabled={disabled}
-		/>
+						}
+					/>
+				}
+				title={task.title}
+				description={task.description}
+				onSubmit={handleSubmit}
+				submitLabel='Save'
+			/>
+		</TaskCardContextMenu>
 	)
 }
 
-const DeleteTaskDialog = ({
+const TaskCardContextMenu = ({
 	task,
-	onOpenChange,
+	onEdit,
+	children,
 }: {
 	task: TaskEntity
-	onOpenChange?: (open: boolean) => void
+	onEdit: () => void
+	children: ReactNode
 }) => {
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+
 	return (
-		<AlertDialogRoot onOpenChange={onOpenChange}>
-			<AlertDialogTrigger
-				render={
-					<IconButton variant='destructive'>
-						<TrashIcon size={ICON_SIZE_SM} />
-					</IconButton>
-				}
-			/>
-			<AlertDialogContent>
-				<AlertDialogTitle>Delete task?</AlertDialogTitle>
-				<AlertDialogDescription>
-					This will permanently delete &quot;{task.title}&quot;.
-				</AlertDialogDescription>
-				<AlertDialogActions>
-					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction
-						variant='destructive'
-						onClick={() => deleteTask(task.id)}
-					>
-						Delete
-					</AlertDialogAction>
-				</AlertDialogActions>
-			</AlertDialogContent>
-		</AlertDialogRoot>
+		<ContextMenu.Root>
+			{children}
+			<ContextMenu.Portal>
+				<ContextMenu.Positioner className='outline-none'>
+					<ContextMenu.Popup className='min-w-40 rounded-md border border-surface-400 bg-surface-100 py-1 shadow-md shadow-surface-400/40 focus:outline-none'>
+						<ContextMenu.Item
+							onClick={onEdit}
+							className='flex cursor-default items-center gap-2 px-3 py-1.5 text-sm text-typography-950 outline-none data-[highlighted]:bg-surface-200'
+						>
+							<PencilSimpleIcon size={ICON_SIZE_SM} />
+							Edit
+						</ContextMenu.Item>
+						<ContextMenu.Item
+							onClick={() => setDeleteDialogOpen(true)}
+							className='flex cursor-default items-center gap-2 px-3 py-1.5 text-sm text-red-600 outline-none data-[highlighted]:bg-surface-200'
+						>
+							<TrashIcon size={ICON_SIZE_SM} />
+							Delete
+						</ContextMenu.Item>
+					</ContextMenu.Popup>
+				</ContextMenu.Positioner>
+			</ContextMenu.Portal>
+			<AlertDialogRoot
+				open={deleteDialogOpen}
+				onOpenChange={setDeleteDialogOpen}
+			>
+				<AlertDialogContent>
+					<AlertDialogTitle>Delete task?</AlertDialogTitle>
+					<AlertDialogDescription>
+						This will permanently delete &quot;{task.title}&quot;.
+					</AlertDialogDescription>
+					<AlertDialogActions>
+						<AlertDialogCancel>Cancel</AlertDialogCancel>
+						<AlertDialogAction
+							variant='destructive'
+							onClick={() => deleteTask(task.id)}
+						>
+							Delete
+						</AlertDialogAction>
+					</AlertDialogActions>
+				</AlertDialogContent>
+			</AlertDialogRoot>
+		</ContextMenu.Root>
 	)
 }

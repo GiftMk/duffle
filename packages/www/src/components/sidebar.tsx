@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useRef } from 'react'
 import { useRoughSvg } from '@/hooks/use-rough-svg'
 import { ICON_SIZE_MD } from '@/lib/constants'
+import { AccountButton } from './account-button'
 import { SearchDialog } from './search-dialog'
 import { ThemeToggle } from './theme-toggle'
 import { Tooltip } from './tooltip'
@@ -45,6 +46,7 @@ export const Sidebar = () => {
 					</button>
 				</Tooltip>
 				<ThemeToggle />
+				<AccountButton />
 			</section>
 			<section className='relative flex justify-center'>
 				<h2 className='rotate-180 font-bold text-sm text-typography-500/75 tracking-tight [writing-mode:vertical-rl]'>

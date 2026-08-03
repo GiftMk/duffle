@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SignOutRouteImport } from './routes/sign-out'
+import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as ThemeRouteImport } from './routes/theme'
 import { Route as BoardsIndexRouteImport } from './routes/boards.index'
 import { Route as BoardsBoardIdRouteImport } from './routes/boards.$boardId'
@@ -17,6 +19,16 @@ import { Route as BoardsBoardIdRouteImport } from './routes/boards.$boardId'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignOutRoute = SignOutRouteImport.update({
+  id: '/sign-out',
+  path: '/sign-out',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignUpRoute = SignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ThemeRoute = ThemeRouteImport.update({
@@ -37,12 +49,16 @@ const BoardsBoardIdRoute = BoardsBoardIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/sign-out': typeof SignOutRoute
+  '/sign-up': typeof SignUpRoute
   '/theme': typeof ThemeRoute
   '/boards/$boardId': typeof BoardsBoardIdRoute
   '/boards/': typeof BoardsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/sign-out': typeof SignOutRoute
+  '/sign-up': typeof SignUpRoute
   '/theme': typeof ThemeRoute
   '/boards/$boardId': typeof BoardsBoardIdRoute
   '/boards': typeof BoardsIndexRoute
@@ -50,20 +66,32 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/sign-out': typeof SignOutRoute
+  '/sign-up': typeof SignUpRoute
   '/theme': typeof ThemeRoute
   '/boards/$boardId': typeof BoardsBoardIdRoute
   '/boards/': typeof BoardsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/theme' | '/boards/$boardId' | '/boards/'
+  fullPaths:
+    '/' | '/sign-out' | '/sign-up' | '/theme' | '/boards/$boardId' | '/boards/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/theme' | '/boards/$boardId' | '/boards'
-  id: '__root__' | '/' | '/theme' | '/boards/$boardId' | '/boards/'
+  to: '/' | '/sign-out' | '/sign-up' | '/theme' | '/boards/$boardId' | '/boards'
+  id:
+    | '__root__'
+    | '/'
+    | '/sign-out'
+    | '/sign-up'
+    | '/theme'
+    | '/boards/$boardId'
+    | '/boards/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SignOutRoute: typeof SignOutRoute
+  SignUpRoute: typeof SignUpRoute
   ThemeRoute: typeof ThemeRoute
   BoardsBoardIdRoute: typeof BoardsBoardIdRoute
   BoardsIndexRoute: typeof BoardsIndexRoute
@@ -76,6 +104,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-out': {
+      id: '/sign-out'
+      path: '/sign-out'
+      fullPath: '/sign-out'
+      preLoaderRoute: typeof SignOutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-up': {
+      id: '/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof SignUpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/theme': {
@@ -104,6 +146,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SignOutRoute: SignOutRoute,
+  SignUpRoute: SignUpRoute,
   ThemeRoute: ThemeRoute,
   BoardsBoardIdRoute: BoardsBoardIdRoute,
   BoardsIndexRoute: BoardsIndexRoute,

@@ -22,6 +22,8 @@ type TaskDialogProps = {
 	onCancel?: () => void
 	submitLabel: string
 	disabled?: boolean
+	open?: boolean
+	onOpenChange?: (open: boolean) => void
 }
 
 export const TaskDialog = ({
@@ -32,9 +34,13 @@ export const TaskDialog = ({
 	onCancel,
 	submitLabel,
 	disabled,
+	open: openProp,
+	onOpenChange: onOpenChangeProp,
 }: TaskDialogProps) => {
 	const [markdown, setMarkdown] = useState('')
-	const [open, setOpen] = useState(false)
+	const [internalOpen, setInternalOpen] = useState(false)
+	const open = openProp ?? internalOpen
+	const setOpen = onOpenChangeProp ?? setInternalOpen
 
 	useEffect(() => {
 		setMarkdown(getMarkdown(title, description))
