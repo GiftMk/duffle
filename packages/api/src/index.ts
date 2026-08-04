@@ -6,6 +6,7 @@ import { auth, type RequestEnv } from './lib/auth'
 import { boardsRoutes } from './routes/boards'
 import { columnsRoutes } from './routes/columns'
 import { tasksRoutes } from './routes/tasks'
+import { handle } from 'hono/vercel'
 
 const app = new Hono()
 
@@ -26,6 +27,12 @@ const apiRoutes = new Hono<RequestEnv>()
 	.route('/columns', columnsRoutes)
 	.route('/tasks', tasksRoutes)
 
-export default app;
 export const routes = app.route('/api', apiRoutes)
 export type AppType = typeof routes
+
+export const GET = handle(app)
+export const POST = handle(app)
+export const PUT = handle(app)
+export const DELETE = handle(app)
+export const PATCH = handle(app)
+export default app
