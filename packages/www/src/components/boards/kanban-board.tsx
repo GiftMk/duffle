@@ -1,8 +1,8 @@
-import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
-import { moveTask } from '@/lib/actions'
 import type { BoardEntity } from '@duffle/api'
-import { Column } from '../columns/column'
+import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 import { useColumns } from '@/hooks/columns'
+import { moveTask } from '@/lib/actions'
+import { Column } from '../columns/column'
 
 const handleDragEnd = (result: DropResult) => {
 	if (!result.destination) return

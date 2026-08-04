@@ -1,10 +1,10 @@
+import type { ColumnEntity } from '@duffle/api'
 import { Droppable } from '@hello-pangea/dnd'
+import { useTasks } from '@/hooks/tasks'
 import { cn } from '@/lib/utils'
 import { AddTaskCard } from '../tasks/add-task-card'
 import { TaskCard } from '../tasks/task-card'
 import { ColumnTitle } from './column-title'
-import type { ColumnEntity } from '@duffle/api'
-import { useTasks } from '@/hooks/tasks'
 
 type ColumnProps = {
 	column: ColumnEntity

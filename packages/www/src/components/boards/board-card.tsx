@@ -1,3 +1,4 @@
+import type { BoardEntity } from '@duffle/api'
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
@@ -17,7 +18,6 @@ import { TitleInput } from '@/components/title-input'
 import { deleteBoard, updateBoard } from '@/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { onNextTick } from '@/lib/utils'
-import type { BoardEntity } from '@duffle/api'
 
 type BoardCardProps = {
 	board: BoardEntity

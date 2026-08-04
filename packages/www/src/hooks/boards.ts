@@ -1,11 +1,15 @@
-import { useSelector } from '@xstate/store-react'
 import { eq, useLiveQuery } from '@tanstack/react-db'
+import { useSelector } from '@xstate/store-react'
 import { boardsCollection } from '@/state/collections'
 import { preferencesStore } from '@/state/preferences-store'
 
 export const useBoard = (id: string) => {
 	const { data } = useLiveQuery(
-		(q) => q.from({ board: boardsCollection }).where(({ board }) => eq(board.id, id)).findOne(),
+		(q) =>
+			q
+				.from({ board: boardsCollection })
+				.where(({ board }) => eq(board.id, id))
+				.findOne(),
 		[id],
 	)
 	return data

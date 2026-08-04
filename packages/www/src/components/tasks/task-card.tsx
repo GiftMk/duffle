@@ -1,4 +1,5 @@
 import { ContextMenu } from '@base-ui/react/context-menu'
+import type { TaskEntity } from '@duffle/api'
 import { Draggable } from '@hello-pangea/dnd'
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 import type { ReactNode } from 'react'
@@ -15,7 +16,6 @@ import {
 import { deleteTask, updateTask } from '@/lib/actions'
 import { ICON_SIZE_SM } from '@/lib/constants'
 import { cn, stripMarkdown } from '@/lib/utils'
-import type { TaskEntity } from '@duffle/api'
 import { TaskDialog } from './task-dialog'
 
 type TaskCardProps = {
@@ -105,7 +105,7 @@ const TaskCardContextMenu = ({
 						</ContextMenu.Item>
 						<ContextMenu.Item
 							onClick={() => setDeleteDialogOpen(true)}
-							className='flex cursor-default items-center gap-2 px-3 py-1.5 text-sm text-red-600 outline-none data-[highlighted]:bg-surface-200'
+							className='flex cursor-default items-center gap-2 px-3 py-1.5 text-red-600 text-sm outline-none data-[highlighted]:bg-surface-200'
 						>
 							<TrashIcon size={ICON_SIZE_SM} />
 							Delete

@@ -1,7 +1,7 @@
 import { createStore } from '@xstate/store'
+import { persist } from '@xstate/store/persist'
 import { produce } from 'immer'
 import { z } from 'zod'
-import { persist } from '@xstate/store/persist'
 
 const STORAGE_KEY = 'duffle-preferences'
 

@@ -1,3 +1,4 @@
+import type { BoardEntity } from '@duffle/api'
 import { PencilSimpleIcon } from '@phosphor-icons/react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
@@ -10,7 +11,6 @@ import { useBoard } from '@/hooks/boards'
 import { updateBoard } from '@/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { preferencesStore } from '@/state/preferences-store'
-import type { BoardEntity } from '@duffle/api'
 
 export const Route = createFileRoute('/boards/$boardId')({
 	component: RouteComponent,
