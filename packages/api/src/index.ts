@@ -22,6 +22,7 @@ app.use(
 app.on(['POST', 'GET'], '/api/auth/*', (c) => auth.handler(c.req.raw))
 
 const apiRoutes = new Hono<RequestEnv>()
+	.get('/ping', (c) => c.text('pong'))
 	.route('/boards', boardsRoutes)
 	.route('/columns', columnsRoutes)
 	.route('/tasks', tasksRoutes)
