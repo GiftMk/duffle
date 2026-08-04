@@ -1,0 +1,27 @@
+name: DB Migrate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/api/drizzle/**"
+      - "packages/api/src/db/**"
+      - ".github/workflows/db-migrate.yml"
+
+concurrency:
+  group: db-migrate
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun --filter ./packages/api db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}

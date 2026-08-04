@@ -1,7 +1,7 @@
 import { defineRelations } from 'drizzle-orm'
 import { pgTable, text, timestamp, boolean, index } from 'drizzle-orm/pg-core'
 
-export const usersTable = pgTable('users', {
+export const user = pgTable('users', {
 	id: text('id').primaryKey(),
 	name: text('name').notNull(),
 	email: text('email').notNull().unique(),
@@ -14,7 +14,7 @@ export const usersTable = pgTable('users', {
 		.notNull(),
 })
 
-export const sessionsTable = pgTable(
+export const session = pgTable(
 	'sessions',
 	{
 		id: text('id').primaryKey(),
@@ -28,12 +28,12 @@ export const sessionsTable = pgTable(
 		userAgent: text('user_agent'),
 		userId: text('user_id')
 			.notNull()
-			.references(() => usersTable.id, { onDelete: 'cascade' }),
+			.references(() => user.id, { onDelete: 'cascade' }),
 	},
 	(table) => [index('session_userId_idx').on(table.userId)],
 )
 
-export const accountsTable = pgTable(
+export const account = pgTable(
 	'accounts',
 	{
 		id: text('id').primaryKey(),
@@ -41,7 +41,7 @@ export const accountsTable = pgTable(
 		providerId: text('provider_id').notNull(),
 		userId: text('user_id')
 			.notNull()
-			.references(() => usersTable.id, { onDelete: 'cascade' }),
+			.references(() => user.id, { onDelete: 'cascade' }),
 		accessToken: text('access_token'),
 		refreshToken: text('refresh_token'),
 		idToken: text('id_token'),
@@ -57,7 +57,7 @@ export const accountsTable = pgTable(
 	(table) => [index('account_userId_idx').on(table.userId)],
 )
 
-export const verificationTable = pgTable(
+export const verification = pgTable(
 	'verification',
 	{
 		id: text('id').primaryKey(),
@@ -74,7 +74,7 @@ export const verificationTable = pgTable(
 )
 
 export const schemaRelations = defineRelations(
-	{ user: usersTable, session: sessionsTable, account: accountsTable },
+	{ user: user, session: session, account: account },
 	(r) => ({
 		user: {
 			sessions: r.many.session(),

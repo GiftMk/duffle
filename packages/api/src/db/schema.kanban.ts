@@ -1,10 +1,10 @@
 import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
-import { usersTable } from './schema.auth'
+import { user } from './schema.auth'
 
 const userReference = () =>
 	text()
 		.notNull()
-		.references(() => usersTable.id, { onDelete: 'cascade' })
+		.references(() => user.id, { onDelete: 'cascade' })
 
 export const boardsTable = pgTable('boards', {
 	id: uuid().primaryKey(),
@@ -17,7 +17,9 @@ export const boardsTable = pgTable('boards', {
 export const columnsTable = pgTable('columns', {
 	id: uuid().primaryKey(),
 	userId: userReference(),
-	boardId: uuid().references(() => boardsTable.id, { onDelete: 'cascade' }),
+	boardId: uuid()
+		.notNull()
+		.references(() => boardsTable.id, { onDelete: 'cascade' }),
 	title: text().notNull(),
 	createdAt: timestamp({ mode: 'string' }).notNull(),
 	updatedAt: timestamp({ mode: 'string' }).notNull(),
@@ -27,7 +29,9 @@ export const columnsTable = pgTable('columns', {
 export const tasksTable = pgTable('tasks', {
 	id: uuid().primaryKey(),
 	userId: userReference(),
-	columnId: uuid().references(() => columnsTable.id, { onDelete: 'cascade' }),
+	columnId: uuid()
+		.notNull()
+		.references(() => columnsTable.id, { onDelete: 'cascade' }),
 	title: text().notNull(),
 	description: text(),
 	createdAt: timestamp({ mode: 'string' }).notNull(),

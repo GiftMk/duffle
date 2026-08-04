@@ -11,7 +11,7 @@ export const Route = createRootRoute({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	// Collections load synchronously from localStorage on the client, but the
+	// Collections load asynchronously from the API on the client, but the
 	// server renders with an empty in-memory fallback - gate on client mount
 	// so the two don't mismatch.
 	const [mounted, setMounted] = useState(false)

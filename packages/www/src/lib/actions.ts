@@ -1,11 +1,13 @@
+import type { BoardEntity, ColumnEntity, TaskEntity } from '@duffle/api'
+import { createOptimisticAction } from '@tanstack/react-db'
 import { uuidv7 } from 'uuidv7'
+import { client } from '@/lib/api'
 import {
 	boardsCollection,
 	columnsCollection,
 	tasksCollection,
 } from '@/state/collections'
 import { preferencesStore } from '@/state/preferences-store'
-import type { BoardEntity, ColumnEntity, TaskEntity } from '@duffle/api'
 import { utcNow } from './utils'
 
 export const updateBoard = (
@@ -100,7 +102,7 @@ const getSortedTasks = (columnId: string, tasks: TaskEntity[]) => {
 		.sort((a, b) => a.position - b.position)
 }
 
-type DndTarget = Pick<TaskEntity, 'id' | 'position' | 'columnId'>
+type DndTarget = Pick<TaskEntity, 'position' | 'columnId'>
 
 export const moveTask = (source: DndTarget, destination: DndTarget) => {
 	const tasks = tasksCollection.toArray
@@ -127,6 +129,28 @@ export const moveTask = (source: DndTarget, destination: DndTarget) => {
 	updateTaskPositions(destination.columnId, destinationTasks)
 }
 
+type CreateBoardVars = { board: BoardEntity; columns: ColumnEntity[] }
+
+const createBoardAction = createOptimisticAction<CreateBoardVars>({
+	onMutate: ({ board, columns }) => {
+		boardsCollection.insert(board)
+		columnsCollection.insert(columns)
+	},
+	mutationFn: async ({ board, columns }) => {
+		await client.api.boards.create.$post({ json: board })
+		await Promise.all(
+			columns.map((column) =>
+				client.api.columns.create.$post({ json: column }),
+			),
+		)
+
+		await Promise.all([
+			boardsCollection.utils.refetch(),
+			columnsCollection.utils.refetch(),
+		])
+	},
+})
+
 export const createBoard = (title: string) => {
 	const timestamp = utcNow()
 
@@ -148,8 +172,7 @@ export const createBoard = (title: string) => {
 		}),
 	)
 
-	columnsCollection.insert(columns)
-	boardsCollection.insert(board)
+	createBoardAction({ board, columns })
 	preferencesStore.trigger.setActive({ id: board.id })
 
 	return board
