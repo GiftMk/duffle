@@ -16,6 +16,6 @@
 		"concurrently": "^10.0.4"
 	},
 	"peerDependencies": {
-		"typescript": "^5"
+		"typescript": "~6.0.3"
 	}
 }

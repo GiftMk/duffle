@@ -8,6 +8,7 @@
 	},
 	"scripts": {
 		"dev": "tsx watch --env-file-if-exists=.env src/node.ts",
+		"tsc": "tsc --noEmit",
 		"db:push": "drizzle-kit push",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
@@ -28,6 +29,6 @@
 		"@types/pg": "^8.20.3",
 		"drizzle-kit": "^1.0.0-rc.4",
 		"tsx": "^4.23.0",
-		"typescript": "^7.0.2"
+		"typescript": "~6.0.3"
 	}
 }
