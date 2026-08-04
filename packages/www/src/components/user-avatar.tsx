@@ -11,7 +11,10 @@ type UserAvatarProps = {
 }
 
 export const UserAvatar = ({ seed, size = 19, className }: UserAvatarProps) => {
-	const uri = new Avatar(style, { seed, backgroundColor: '#f5f1f2' }).toDataUri()
+	const uri = new Avatar(style, {
+		seed,
+		backgroundColor: '#f5f1f2',
+	}).toDataUri()
 
 	return (
 		<img
