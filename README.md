@@ -24,5 +24,5 @@ BLOB_STORE_ID=store_****
 BLOB_READ_WRITE_TOKEN=vercel_blob_rw_****
 ```
 
-We use bun, make sure you have that installed.
-Run `bun i` and then `bun dev` to get going.
+We use pnpm on Node.js, make sure you have those installed.
+Run `pnpm i` and then `pnpm dev` to get going.

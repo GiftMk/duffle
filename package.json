@@ -1,31 +1,21 @@
 {
-	"module": "index.ts",
 	"type": "module",
 	"private": true,
-	"workspaces": [
-		"packages/*"
-	],
+	"packageManager": "pnpm@10.20.0",
+	"engines": {
+		"node": "24.x"
+	},
 	"scripts": {
-		"dev": "concurrently -c \"blue,magenta\" -n \"API,WWW\" \"bun --elide-lines=0 --filter ./packages/api dev\" \"bun --elide-lines=0 --filter ./packages/www dev\"",
-		"db:up": "docker desktop start && docker compose up -d --wait && bun --filter ./packages/api db:push",
-		"tidy": "bun run --workspaces --if-present tidy",
-		"tsc": "bun run --workspaces --if-present tsc"
+		"dev": "concurrently -c \"blue,magenta\" -n \"API,WWW\" \"pnpm --filter @duffle/api dev\" \"pnpm --filter @duffle/www dev\"",
+		"db:up": "docker desktop start && docker compose up -d --wait && pnpm --filter @duffle/api db:push",
+		"tidy": "pnpm -r --if-present run tidy",
+		"tsc": "pnpm -r --if-present run tsc"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.4",
-		"@types/bun": "latest",
 		"concurrently": "^10.0.4"
 	},
 	"peerDependencies": {
 		"typescript": "^5"
-	},
-	"dependencies": {
-		"@dicebear/core": "^10.3.0",
-		"@dicebear/styles": "^10.2.0",
-		"@tailwindcss/vite": "^4.2.2",
-		"@xstate/store": "^4.2.1",
-		"@xstate/store-react": "^2.0.0",
-		"framer-motion": "^12.38.0",
-		"tailwindcss": "^4.2.2"
 	}
 }

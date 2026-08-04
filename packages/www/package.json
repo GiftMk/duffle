@@ -25,6 +25,7 @@
 		"@dicebear/core": "^10.3.0",
 		"@dicebear/styles": "^10.2.0",
 		"@hello-pangea/dnd": "^18.0.1",
+		"framer-motion": "^12.38.0",
 		"@milkdown/kit": "^7.21.2",
 		"@milkdown/prose": "^7.21.2",
 		"@milkdown/react": "^7.21.2",
@@ -64,8 +65,10 @@
 		"@types/node": "^24.12.2",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
+		"@tailwindcss/vite": "^4.2.2",
 		"@vitejs/plugin-react": "^6.0.1",
 		"nitro": "^3.0.260610-beta",
+		"tailwindcss": "^4.2.2",
 		"typescript": "~6.0.2",
 		"vite": "^8.0.4",
 		"@duffle/api": "workspace:*"

@@ -18,10 +18,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: pnpm/action-setup@v4
 
-      - run: bun install --frozen-lockfile
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
 
-      - run: bun --filter ./packages/api db:migrate
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm --filter @duffle/api db:migrate
         env:
           DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
