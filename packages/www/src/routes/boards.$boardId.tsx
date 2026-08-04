@@ -9,7 +9,8 @@ import { TitleInput } from '@/components/title-input'
 import { useBoard } from '@/hooks/boards'
 import { updateBoard } from '@/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
-import { type BoardEntity, boardsStore } from '@/state/boards-store'
+import { preferencesStore } from '@/state/preferences-store'
+import type { BoardEntity } from '@duffle/api'
 
 export const Route = createFileRoute('/boards/$boardId')({
 	component: RouteComponent,
@@ -21,7 +22,7 @@ function RouteComponent() {
 
 	useEffect(() => {
 		if (board) {
-			boardsStore.trigger.setActive({ id: board.id })
+			preferencesStore.trigger.setActive({ id: board.id })
 		}
 	}, [board])
 

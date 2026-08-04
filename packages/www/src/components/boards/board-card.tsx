@@ -17,7 +17,7 @@ import { TitleInput } from '@/components/title-input'
 import { deleteBoard, updateBoard } from '@/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { onNextTick } from '@/lib/utils'
-import type { BoardEntity } from '@/state/boards-store'
+import type { BoardEntity } from '@duffle/api'
 
 type BoardCardProps = {
 	board: BoardEntity

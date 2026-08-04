@@ -1,6 +1,6 @@
 import { expose } from 'comlink'
 import MiniSearch from 'minisearch'
-import type { TaskEntity } from '@/state/tasks-store'
+import type { TaskEntity } from '@duffle/api'
 
 export type SearchItem = Pick<TaskEntity, 'id' | 'title'>
 

@@ -1,131 +1,62 @@
-import { produce } from 'immer'
 import { uuidv7 } from 'uuidv7'
-import { defaultBoardConfig } from '@/lib/default-board'
-import { type BoardEntity, boardsStore } from '@/state/boards-store'
-import { type ColumnEntity, columnsStore } from '@/state/columns-store'
-import { type TaskEntity, tasksStore } from '@/state/tasks-store'
+import {
+	boardsCollection,
+	columnsCollection,
+	tasksCollection,
+} from '@/state/collections'
+import { preferencesStore } from '@/state/preferences-store'
+import type { BoardEntity, ColumnEntity, TaskEntity } from '@duffle/api'
+import { utcNow } from './utils'
 
 export const updateBoard = (
 	id: string,
 	recipe: (draft: Omit<BoardEntity, 'columns'>) => void,
 ) => {
-	const board = boardsStore.get().context.boards[id]
-
-	if (!board) {
-		throw new Error(`Board with id '${id}' not found`)
-	}
-
-	const updatedBoard = produce(board, recipe)
-
-	if (board === updatedBoard) {
-		return
-	}
-
-	boardsStore.trigger.update({ board: updatedBoard })
+	boardsCollection.update(id, (draft) => {
+		recipe(draft)
+		draft.updatedAt = utcNow()
+	})
 }
 
 export const deleteBoard = (id: string) => {
-	const board = boardsStore.get().context.boards[id]
-
-	if (!board) {
-		throw new Error(`Board with id '${id}' not found`)
-	}
-
-	for (const columnId of board.columns) {
-		const column = columnsStore.get().context.columns[columnId]
-		if (!column) {
-			continue
-		}
-
-		for (const taskId of column.tasks) {
-			tasksStore.trigger.delete({ id: taskId })
-		}
-
-		columnsStore.trigger.delete({ id: columnId })
-	}
-
-	boardsStore.trigger.delete({ id })
+	boardsCollection.delete(id)
 }
 
 export const updateColumn = (
 	id: string,
-	recipe: (draft: Omit<ColumnEntity, 'tasks'>) => void,
+	recipe: (draft: ColumnEntity) => void,
 ) => {
-	const column = columnsStore.get().context.columns[id]
-
-	if (!column) {
-		throw new Error(`Column with id '${id}' not found`)
-	}
-
-	const updatedColumn = produce(column, recipe)
-
-	if (column === updatedColumn) {
-		return
-	}
-
-	columnsStore.trigger.update({ column: updatedColumn })
+	columnsCollection.update(id, (draft) => {
+		recipe(draft)
+		draft.updatedAt = utcNow()
+	})
 }
 
 export const deleteColumn = (id: string) => {
-	const column = columnsStore.get().context.columns[id]
-
-	if (!column) {
-		throw new Error(`Column with id '${id}' not found`)
-	}
-
-	for (const taskId of column.tasks) {
-		tasksStore.trigger.delete({ id: taskId })
-	}
-
-	const board = Object.values(boardsStore.get().context.boards).find((board) =>
-		board.columns.includes(id),
-	)
-
-	if (board) {
-		const updatedBoard = produce(board, (draft) => {
-			draft.columns = draft.columns.filter((columnId) => columnId !== id)
-		})
-		boardsStore.trigger.update({ board: updatedBoard })
-	}
-
-	columnsStore.trigger.delete({ id })
+	columnsCollection.delete(id)
 }
 
 export const updateTask = (id: string, recipe: (draft: TaskEntity) => void) => {
-	const task = tasksStore.get().context.tasks[id]
+	const task = tasksCollection.get(id)
 
 	if (!task) {
 		throw new Error(`Task with id '${id}' not found`)
 	}
 
-	const updatedTask = produce(task, recipe)
-
-	if (task === updatedTask) {
-		return
-	}
-
-	tasksStore.trigger.update({ task: updatedTask })
+	tasksCollection.update(id, (draft) => {
+		recipe(draft)
+		draft.updatedAt = utcNow()
+	})
 }
 
 export const deleteTask = (id: string) => {
-	const task = tasksStore.get().context.tasks[id]
+	const task = tasksCollection.get(id)
 
 	if (!task) {
 		throw new Error(`Task with id '${id}' not found`)
 	}
 
-	const column = Object.values(columnsStore.get().context.columns).find(
-		(column) => column.tasks.includes(id),
-	)
-
-	if (column) {
-		const updatedColumn = produce(column, (draft) => {
-			draft.tasks = draft.tasks.filter((taskId) => taskId !== id)
-		})
-		columnsStore.trigger.update({ column: updatedColumn })
-	}
-
-	tasksStore.trigger.delete({ id })
+	tasksCollection.delete(id)
 }
 
 export const addTask = (
@@ -133,129 +64,93 @@ export const addTask = (
 	title: string,
 	description?: string,
 ) => {
-	const task: Omit<TaskEntity, 'createdAt' | 'updatedAt'> = {
+	const timestamp = utcNow()
+	const lastTask = tasksCollection.toArray
+		.filter((task) => task.columnId === columnId)
+		.sort((a, b) => a.position - b.position)
+		.at(-1)
+	const position = lastTask === undefined ? 0 : lastTask.position + 1
+
+	const task: TaskEntity = {
 		id: uuidv7(),
+		columnId,
 		title,
 		description,
+		createdAt: timestamp,
+		updatedAt: timestamp,
+		position,
 	}
 
-	const column = columnsStore.get().context.columns[columnId]
-	if (!column) {
-		throw new Error(
-			`Failed to add task. Column with id '${columnId}' not found.`,
-		)
+	tasksCollection.insert(task)
+}
+
+const updateTaskPositions = (columnId: string, tasks: TaskEntity[]) => {
+	for (const [i, task] of tasks.entries()) {
+		tasksCollection.update(task.id, (draft) => {
+			draft.columnId = columnId
+			draft.position = i
+			draft.updatedAt = utcNow()
+		})
 	}
-
-	const updatedColumn = produce(column, (draft) => {
-		draft.tasks.push(task.id)
-	})
-
-	tasksStore.trigger.add({ task })
-	columnsStore.trigger.update({ column: updatedColumn })
 }
 
-type CardPosition = {
-	columnId: string
-	taskIndex: number
+const getSortedTasks = (columnId: string, tasks: TaskEntity[]) => {
+	return tasks
+		.filter((t) => t.columnId === columnId)
+		.sort((a, b) => a.position - b.position)
 }
 
-const getColumn = (id: string) => {
-	const column = columnsStore.get().context.columns[id]
-	if (!column) {
-		throw new Error(`Column with id '${id}' not found`)
-	}
+type DndTarget = Pick<TaskEntity, 'id' | 'position' | 'columnId'>
 
-	return column
-}
+export const moveTask = (source: DndTarget, destination: DndTarget) => {
+	const tasks = tasksCollection.toArray
+	const sourceTasks = getSortedTasks(source.columnId, tasks)
+	const sourceTask = sourceTasks[source.position]
 
-export const moveCard = (source: CardPosition, destination: CardPosition) => {
-	const sourceColumn = getColumn(source.columnId)
-
-	const sourceTaskId = sourceColumn.tasks[source.taskIndex]
-	if (sourceTaskId === undefined) {
-		throw new Error(
-			`No task at index ${source.taskIndex} in column '${source.columnId}'`,
-		)
+	if (!sourceTask) {
+		throw new Error(`Failed to move task, could not find source task.`)
 	}
 
 	if (source.columnId === destination.columnId) {
-		const updatedColumn = produce(sourceColumn, (draft) => {
-			draft.tasks.splice(source.taskIndex, 1)
-			draft.tasks.splice(destination.taskIndex, 0, sourceTaskId)
-		})
-		columnsStore.trigger.update({ column: updatedColumn })
+		sourceTasks.splice(source.position, 1)
+		sourceTasks.splice(destination.position, 0, sourceTask)
+		updateTaskPositions(source.columnId, sourceTasks)
+
 		return
 	}
 
-	const updatedSourceColumn = produce(sourceColumn, (draft) => {
-		draft.tasks.splice(source.taskIndex, 1)
-	})
+	sourceTasks.splice(source.position, 1)
+	updateTaskPositions(source.columnId, sourceTasks)
 
-	const destinationColumn = getColumn(destination.columnId)
-	const updatedDestinationColumn = produce(destinationColumn, (draft) => {
-		draft.tasks.splice(destination.taskIndex, 0, sourceTaskId)
-	})
-
-	columnsStore.trigger.update({ column: updatedSourceColumn })
-	columnsStore.trigger.update({ column: updatedDestinationColumn })
+	const destinationTasks = getSortedTasks(destination.columnId, tasks)
+	destinationTasks.splice(destination.position, 0, sourceTask)
+	updateTaskPositions(destination.columnId, destinationTasks)
 }
 
 export const createBoard = (title: string) => {
-	const columns: Omit<ColumnEntity, 'createdAt' | 'updatedAt'>[] =
-		defaultBoardConfig.columns.map((column) => ({
-			id: uuidv7(),
-			title: column.title,
-			tasks: [],
-		}))
+	const timestamp = utcNow()
 
-	for (const column of columns) {
-		columnsStore.trigger.add({ column })
-	}
-
-	const board: Omit<BoardEntity, 'createdAt' | 'updatedAt'> = {
+	const board: BoardEntity = {
 		id: uuidv7(),
 		title,
-		columns: columns.map((column) => column.id),
+		createdAt: timestamp,
+		updatedAt: timestamp,
 	}
 
-	boardsStore.trigger.add({ board })
-	boardsStore.trigger.setActive({ id: board.id })
+	const columns: ColumnEntity[] = ['Todo', 'In Progress', 'Done'].map(
+		(title, i) => ({
+			id: uuidv7(),
+			boardId: board.id,
+			position: i,
+			title,
+			createdAt: timestamp,
+			updatedAt: timestamp,
+		}),
+	)
 
-	return board
-}
-
-export const createDefaultBoard = () => {
-	const columns: Omit<ColumnEntity, 'createdAt' | 'updatedAt'>[] =
-		defaultBoardConfig.columns.map((column) => {
-			const tasks: Omit<TaskEntity, 'createdAt' | 'updatedAt'>[] =
-				column.tasks.map((title) => ({
-					id: uuidv7(),
-					title,
-				}))
-
-			for (const task of tasks) {
-				tasksStore.trigger.add({ task })
-			}
-
-			return {
-				id: uuidv7(),
-				title: column.title,
-				tasks: tasks.map((task) => task.id),
-			}
-		})
-
-	for (const column of columns) {
-		columnsStore.trigger.add({ column })
-	}
-
-	const board: Omit<BoardEntity, 'createdAt' | 'updatedAt'> = {
-		id: uuidv7(),
-		title: defaultBoardConfig.title,
-		columns: columns.map((column) => column.id),
-	}
-
-	boardsStore.trigger.add({ board })
-	boardsStore.trigger.setActive({ id: board.id })
+	columnsCollection.insert(columns)
+	boardsCollection.insert(board)
+	preferencesStore.trigger.setActive({ id: board.id })
 
 	return board
 }

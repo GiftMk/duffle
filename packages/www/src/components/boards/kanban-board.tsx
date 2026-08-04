@@ -1,16 +1,17 @@
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
-import { moveCard } from '@/lib/actions'
-import type { BoardEntity } from '@/state/boards-store'
+import { moveTask } from '@/lib/actions'
+import type { BoardEntity } from '@duffle/api'
 import { Column } from '../columns/column'
+import { useColumns } from '@/hooks/columns'
 
 const handleDragEnd = (result: DropResult) => {
 	if (!result.destination) return
 
-	moveCard(
-		{ columnId: result.source.droppableId, taskIndex: result.source.index },
+	moveTask(
+		{ columnId: result.source.droppableId, position: result.source.index },
 		{
 			columnId: result.destination.droppableId,
-			taskIndex: result.destination.index,
+			position: result.destination.index,
 		},
 	)
 }
@@ -20,11 +21,13 @@ type KanbanBoardProps = {
 }
 
 export const KanbanBoard = ({ board }: KanbanBoardProps) => {
+	const columns = useColumns(board.id)
+
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>
 			<div className='flex items-start gap-6 overflow-x-auto'>
-				{board.columns.map((id) => (
-					<Column key={id} id={id} />
+				{columns.map((column) => (
+					<Column key={column.id} column={column} />
 				))}
 			</div>
 		</DragDropContext>

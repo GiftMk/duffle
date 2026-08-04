@@ -1,17 +1,12 @@
-import { useSelector } from '@xstate/store-react'
-import { columnsStore } from '@/state/columns-store'
+import { eq, useLiveQuery } from '@tanstack/react-db'
+import { columnsCollection } from '@/state/collections'
 
-export const useColumnOrThrow = (id: string) => {
-	const column = useSelector(columnsStore, (store) => store.context.columns[id])
-
-	if (!column) {
-		throw new Error(`Column with id '${id}' not found`)
-	}
-
-	return column
-}
-
-export const useColumns = () => {
-	const columns = useSelector(columnsStore, (store) => store.context.columns)
-	return Object.values(columns)
+export const useColumns = (boardId: string) => {
+	const { data } = useLiveQuery((q) =>
+		q
+			.from({ column: columnsCollection })
+			.where(({ column }) => eq(column.boardId, boardId))
+			.orderBy(({ column }) => column.position, 'asc'),
+	)
+	return data
 }

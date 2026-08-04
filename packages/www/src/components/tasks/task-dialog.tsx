@@ -78,7 +78,7 @@ export const TaskDialog = ({
 
 	return (
 		<Dialog.Root open={open} onOpenChange={handleOpenChange}>
-			<Dialog.Trigger nativeButton={false} render={trigger} />
+			<Dialog.Trigger render={trigger} />
 			<Dialog.Portal>
 				<Dialog.Backdrop className='fixed inset-0 bg-surface-950/20' />
 				<Dialog.Popup

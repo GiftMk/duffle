@@ -4,7 +4,6 @@ import '@/index.css'
 import { LoadingPage } from '@/components/loading-page'
 import { ThemeProvider } from '@/components/theme-provider'
 import { TooltipProvider } from '@/components/tooltip'
-import { hydrateStores } from '@/state/hydrate'
 
 export const Route = createRootRoute({
 	pendingComponent: LoadingPage,
@@ -12,10 +11,13 @@ export const Route = createRootRoute({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	const [hydrated, setHydrated] = useState(false)
+	// Collections load synchronously from localStorage on the client, but the
+	// server renders with an empty in-memory fallback - gate on client mount
+	// so the two don't mismatch.
+	const [mounted, setMounted] = useState(false)
 
 	useEffect(() => {
-		hydrateStores().then(() => setHydrated(true))
+		setMounted(true)
 	}, [])
 
 	return (
@@ -29,7 +31,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<body>
 				<ThemeProvider>
 					<TooltipProvider delay={300}>
-						{hydrated ? children : <LoadingPage />}
+						{mounted ? children : <LoadingPage />}
 					</TooltipProvider>
 				</ThemeProvider>
 				<Scripts />

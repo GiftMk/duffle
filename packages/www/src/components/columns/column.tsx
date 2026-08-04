@@ -1,16 +1,17 @@
 import { Droppable } from '@hello-pangea/dnd'
-import { useColumnOrThrow } from '@/hooks/columns'
 import { cn } from '@/lib/utils'
 import { AddTaskCard } from '../tasks/add-task-card'
 import { TaskCard } from '../tasks/task-card'
 import { ColumnTitle } from './column-title'
+import type { ColumnEntity } from '@duffle/api'
+import { useTasks } from '@/hooks/tasks'
 
 type ColumnProps = {
-	id: string
+	column: ColumnEntity
 }
 
-export const Column = ({ id }: ColumnProps) => {
-	const column = useColumnOrThrow(id)
+export const Column = ({ column }: ColumnProps) => {
+	const tasks = useTasks(column.id)
 
 	return (
 		<div className='flex w-80 shrink-0 flex-col'>
@@ -25,8 +26,8 @@ export const Column = ({ id }: ColumnProps) => {
 							{ 'bg-surface-200': snapshot.isDraggingOver },
 						)}
 					>
-						{column.tasks.map((id, index) => (
-							<TaskCard key={id} id={id} index={index} className='mb-3' />
+						{tasks.map((task) => (
+							<TaskCard key={task.id} task={task} className='mb-3' />
 						))}
 						{provided.placeholder}
 					</div>

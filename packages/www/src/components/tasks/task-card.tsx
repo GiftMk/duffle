@@ -12,21 +12,18 @@ import {
 	AlertDialogRoot,
 	AlertDialogTitle,
 } from '@/components/alert-dialog'
-import { useTaskOrThrow } from '@/hooks/tasks'
 import { deleteTask, updateTask } from '@/lib/actions'
 import { ICON_SIZE_SM } from '@/lib/constants'
 import { cn, stripMarkdown } from '@/lib/utils'
-import type { TaskEntity } from '@/state/tasks-store'
+import type { TaskEntity } from '@duffle/api'
 import { TaskDialog } from './task-dialog'
 
 type TaskCardProps = {
-	id: string
-	index: number
+	task: TaskEntity
 	className?: string
 }
 
-export const TaskCard = ({ id, index, className }: TaskCardProps) => {
-	const task = useTaskOrThrow(id)
+export const TaskCard = ({ task, className }: TaskCardProps) => {
 	const preview = task.description ? stripMarkdown(task.description).trim() : ''
 	const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -45,8 +42,11 @@ export const TaskCard = ({ id, index, className }: TaskCardProps) => {
 				trigger={
 					<ContextMenu.Trigger
 						render={
-							<div className='select-none focus:outline-none'>
-								<Draggable draggableId={task.id} index={index}>
+							<button
+								type='button'
+								className='select-none text-start focus:outline-none'
+							>
+								<Draggable draggableId={task.id} index={task.position}>
 									{(provided) => (
 										<div
 											ref={provided.innerRef}
@@ -66,7 +66,7 @@ export const TaskCard = ({ id, index, className }: TaskCardProps) => {
 										</div>
 									)}
 								</Draggable>
-							</div>
+							</button>
 						}
 					/>
 				}

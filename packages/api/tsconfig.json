@@ -2,11 +2,11 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"module": "esnext",
+		"moduleResolution": "bundler",
 		"skipLibCheck": true,
 		"types": ["node"],
 		"rootDir": "./src",
 		"outDir": "./dist",
-		"baseUrl": ".",
 		"paths": {
 			"@/*": ["./src/*"]
 		},
@@ -17,5 +17,5 @@
 		"erasableSyntaxOnly": true,
 		"noFallthroughCasesInSwitch": true
 	},
-	"exclude": ["node_modules"]
+	"exclude": ["node_modules", "drizzle.config.ts"]
 }

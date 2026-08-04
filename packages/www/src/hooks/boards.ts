@@ -1,13 +1,19 @@
 import { useSelector } from '@xstate/store-react'
-import { boardsStore } from '@/state/boards-store'
+import { eq, useLiveQuery } from '@tanstack/react-db'
+import { boardsCollection } from '@/state/collections'
+import { preferencesStore } from '@/state/preferences-store'
 
 export const useBoard = (id: string) => {
-	return useSelector(boardsStore, (store) => store.context.boards[id])
+	const { data } = useLiveQuery(
+		(q) => q.from({ board: boardsCollection }).where(({ board }) => eq(board.id, id)).findOne(),
+		[id],
+	)
+	return data
 }
 
 export const useBoards = () => {
-	const boards = useSelector(boardsStore, (store) => store.context.boards)
-	return Object.values(boards)
+	const { data } = useLiveQuery((q) => q.from({ board: boardsCollection }))
+	return data
 }
 
 export const useActiveBoardOrThrow = () => {
@@ -20,9 +26,10 @@ export const useActiveBoardOrThrow = () => {
 }
 
 export const useActiveBoard = () => {
-	return useSelector(boardsStore, (store) =>
-		store.context.active
-			? store.context.boards[store.context.active]
-			: undefined,
+	const activeBoardId = useSelector(
+		preferencesStore,
+		(store) => store.context.activeBoardId,
 	)
+
+	return useBoard(activeBoardId ?? '')
 }

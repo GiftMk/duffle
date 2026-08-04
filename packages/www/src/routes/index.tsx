@@ -4,8 +4,8 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { type Ref, useRef } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { FadeIn, SpringPopIn } from '@/components/animations'
-import { createDefaultBoard } from '@/lib/actions'
-import { boardsStore } from '@/state/boards-store'
+import { boardsCollection } from '@/state/collections'
+import { createBoard } from '@/lib/actions'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,
@@ -29,14 +29,15 @@ const EnterButton = ({ ref }: { ref?: Ref<HTMLButtonElement> }) => {
 	const navigate = useNavigate()
 
 	const handleClick = () => {
-		const boards = Object.values(boardsStore.get().context.boards)
-
+		const boards = boardsCollection.toArray
+		const lastUpdated = boards
+			.toSorted(
+				(a, b) =>
+					new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
+			)
+			.at(0)
 		const board =
-			boards.length === 0
-				? createDefaultBoard()
-				: boards.reduce((mostRecent, board) =>
-						board.updatedAt > mostRecent.updatedAt ? board : mostRecent,
-					)
+			lastUpdated === undefined ? createBoard('Getting Started') : lastUpdated
 
 		navigate({ to: '/boards/$boardId', params: { boardId: board.id } })
 	}
@@ -62,11 +63,11 @@ const EnterButton = ({ ref }: { ref?: Ref<HTMLButtonElement> }) => {
 function RouteComponent() {
 	const enterButtonRef = useRef<HTMLButtonElement>(null)
 
-	useHotkey('Enter', () => {
-		if (enterButtonRef.current) {
-			enterButtonRef.current.click()
-		}
-	})
+	// useHotkey('Enter', () => {
+	// 	if (enterButtonRef.current) {
+	// 		enterButtonRef.current.click()
+	// 	}
+	// })
 
 	return (
 		<main className='flex h-full w-full flex-col items-center justify-center gap-12 text-center text-typography-950'>

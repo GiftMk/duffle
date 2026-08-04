@@ -1,17 +1,12 @@
-import { useSelector } from '@xstate/store-react'
-import { tasksStore } from '@/state/tasks-store'
+import { eq, useLiveQuery } from '@tanstack/react-db'
+import { tasksCollection } from '@/state/collections'
 
-export const useTaskOrThrow = (id: string) => {
-	const task = useSelector(tasksStore, (store) => store.context.tasks[id])
-
-	if (!task) {
-		throw new Error(`Task with id '${id}' not found`)
-	}
-
-	return task
-}
-
-export const useTasks = () => {
-	const tasks = useSelector(tasksStore, (store) => store.context.tasks)
-	return Object.values(tasks)
+export const useTasks = (columnId: string) => {
+	const { data } = useLiveQuery((q) =>
+		q
+			.from({ task: tasksCollection })
+			.where(({ task }) => eq(task.columnId, columnId))
+			.orderBy(({ task }) => task.position, 'asc'),
+	)
+	return data
 }
