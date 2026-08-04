@@ -1,4 +1,4 @@
-import { boardSchema, columnSchema, taskSchema } from '@duffle/api'
+import { boardSchema, columnSchema, taskSchema } from '@duffle/api/schemas'
 import { queryCollectionOptions } from '@tanstack/query-db-collection'
 import { createCollection } from '@tanstack/react-db'
 import { client } from '@/lib/api'

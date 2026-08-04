@@ -4,7 +4,8 @@
 	"private": true,
 	"type": "module",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./schemas": "./src/lib/schemas.ts"
 	},
 	"scripts": {
 		"dev": "tsx watch --env-file-if-exists=.env src/node.ts",
