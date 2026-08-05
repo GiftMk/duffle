@@ -1,5 +1,5 @@
 import { eq, useLiveQuery } from '@tanstack/react-db'
-import { tasksCollection } from '@/lib/collections'
+import { tasksCollection } from '@/features/kanban/lib/collections'
 
 export const useTasks = (columnId: string) => {
 	const { data } = useLiveQuery((q) =>

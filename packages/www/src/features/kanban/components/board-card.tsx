@@ -12,10 +12,10 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '@/components/alert-dialog'
-import { BoardContainer } from '@/components/boards/board-container'
 import { IconButton } from '@/components/icon-button'
 import { TitleInput } from '@/components/title-input'
-import { deleteBoard, updateBoard } from '@/lib/actions'
+import { BoardContainer } from '@/features/kanban/components/board-container'
+import { deleteBoard, updateBoard } from '@/features/kanban/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { onNextTick } from '@/lib/utils'
 

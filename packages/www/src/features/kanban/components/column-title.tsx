@@ -1,6 +1,6 @@
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { deleteColumn, updateColumn } from '@/lib/actions'
+import { deleteColumn, updateColumn } from '@/features/kanban/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import {
@@ -12,9 +12,9 @@ import {
 	AlertDialogRoot,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from '../alert-dialog'
-import { IconButton } from '../icon-button'
-import { TitleInput } from '../title-input'
+} from '@/components/alert-dialog'
+import { IconButton } from '@/components/icon-button'
+import { TitleInput } from '@/components/title-input'
 
 type ColumnTitleProps = {
 	id: string

@@ -1,7 +1,7 @@
 import { eq, useLiveQuery } from '@tanstack/react-db'
 import { useSelector } from '@xstate/store-react'
-import { boardsCollection } from '@/lib/collections'
-import { preferencesStore } from '@/lib/stores'
+import { boardsCollection } from '@/features/kanban/lib/collections'
+import { preferencesStore } from '@/features/kanban/lib/stores'
 
 export const useBoard = (id: string) => {
 	const { data } = useLiveQuery(

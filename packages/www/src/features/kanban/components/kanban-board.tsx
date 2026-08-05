@@ -1,8 +1,8 @@
 import type { BoardEntity } from '@/lib/schemas'
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
-import { useColumns } from '@/hooks/columns'
-import { moveTask } from '@/lib/actions'
-import { Column } from '../columns/column'
+import { useColumns } from '@/features/kanban/hooks/columns'
+import { moveTask } from '@/features/kanban/lib/actions'
+import { Column } from './column'
 
 const handleDragEnd = (result: DropResult) => {
 	if (!result.destination) return

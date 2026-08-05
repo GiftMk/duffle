@@ -1,6 +1,6 @@
 import { Plugin, PluginKey } from '@milkdown/prose/state'
 import { $prose } from '@milkdown/utils'
-import { EDITOR_SPACER_HEIGHT_PX, ELEMENT_IDS } from '@/lib/constants'
+import { EDITOR_SPACER_HEIGHT_PX, ELEMENT_IDS } from '@/features/markdown/lib/constants'
 
 export const autoscroll = $prose(
 	() =>

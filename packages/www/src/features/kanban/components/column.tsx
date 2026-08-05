@@ -1,9 +1,9 @@
 import type { ColumnEntity } from '@/lib/schemas'
 import { Droppable } from '@hello-pangea/dnd'
-import { useTasks } from '@/hooks/tasks'
+import { useTasks } from '@/features/kanban/hooks/tasks'
 import { cn } from '@/lib/utils'
-import { AddTaskCard } from '../tasks/add-task-card'
-import { TaskCard } from '../tasks/task-card'
+import { AddTaskCard } from './add-task-card'
+import { TaskCard } from './task-card'
 import { ColumnTitle } from './column-title'
 
 type ColumnProps = {

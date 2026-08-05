@@ -2,9 +2,9 @@ import type { Node } from '@milkdown/prose/model'
 import type { EditorView } from '@milkdown/prose/view'
 import type { EditorView as CodeMirror } from 'codemirror'
 import { createContext, type PropsWithChildren, useContext } from 'react'
-import type { CodeMirrorBridge } from '../lib/code-mirror-bridge'
-import type { LanguageRepository } from '../lib/language-repository'
-import type { Reference } from '../lib/reference'
+import type { CodeMirrorBridge } from '../code-mirror-bridge'
+import type { LanguageRepository } from '../language-repository'
+import type { Reference } from '../reference'
 
 type CodeEditorState = {
 	codeMirror: Reference<CodeMirror | null>

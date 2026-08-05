@@ -36,11 +36,11 @@ import type { NodeViewConstructor } from '@milkdown/prose/view'
 import { $ctx, $view } from '@milkdown/utils'
 import type { EditorView as CodeMirror } from 'codemirror'
 import { ReactDomAdapter } from './components/react-dom-adapter'
-import { CodeBlockView } from './lib/code-block-view'
-import { CodeMirrorBridge } from './lib/code-mirror-bridge'
-import { KeymapExtension } from './lib/keymap-extension'
-import { LanguageRepository } from './lib/language-repository'
-import { Reference } from './lib/reference'
+import { CodeBlockView } from './code-block-view'
+import { CodeMirrorBridge } from './code-mirror-bridge'
+import { KeymapExtension } from './keymap-extension'
+import { LanguageRepository } from './language-repository'
+import { Reference } from './reference'
 
 type CodeBlockContext = {
 	languages: LanguageDescription[]

@@ -7,9 +7,9 @@ import {
 	boardsCollection,
 	columnsCollection,
 	tasksCollection,
-} from '@/lib/collections'
-import { preferencesStore } from '@/lib/stores'
-import { utcNow } from './utils'
+} from '@/features/kanban/lib/collections'
+import { preferencesStore } from '@/features/kanban/lib/stores'
+import { utcNow } from '@/lib/utils'
 
 export const updateBoard = (
 	id: string,

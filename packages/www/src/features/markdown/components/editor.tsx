@@ -14,7 +14,6 @@ import {
 	ProsemirrorAdapterProvider,
 	useNodeViewFactory,
 } from '@prosemirror-adapter/react'
-import { headingLevelIndicator } from '../../plugins/heading-level-indicator'
 import './editor.css'
 import '@milkdown/kit/prose/view/style/prosemirror.css'
 import { history } from '@milkdown/kit/plugin/history'
@@ -22,13 +21,14 @@ import { indent } from '@milkdown/kit/plugin/indent'
 import { trailing } from '@milkdown/kit/plugin/trailing'
 import { gfm } from '@milkdown/kit/preset/gfm'
 import { useEffect, useRef } from 'react'
+import { autoscroll } from '@/features/markdown/plugins/autoscroll'
+import { blockquote } from '@/features/markdown/plugins/blockquote'
+import { codeBlock } from '@/features/markdown/plugins/code-block'
+import { headingLevelIndicator } from '@/features/markdown/plugins/heading-level-indicator'
+import { imageBlock } from '@/features/markdown/plugins/image-block'
+import { inlineCode } from '@/features/markdown/plugins/inline-code'
+import { listItem } from '@/features/markdown/plugins/list-item'
 import { cn } from '@/lib/utils'
-import { autoscroll } from '@/plugins/autoscroll'
-import { blockquote } from '@/plugins/blockquote'
-import { codeBlock } from '@/plugins/code-block'
-import { imageBlock } from '@/plugins/image-block'
-import { inlineCode } from '@/plugins/inline-code'
-import { listItem } from '@/plugins/list-item'
 
 type EditorContentProps = {
 	defaultValue: string

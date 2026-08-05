@@ -1,5 +1,5 @@
 import { useState, useSyncExternalStore } from 'react'
-import { escapeCodeMirror } from '../lib/utils'
+import { escapeCodeMirror } from '../utils'
 import { useCodeEditor } from './use-code-editor'
 
 export const useLanguage = () => {

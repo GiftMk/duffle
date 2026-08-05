@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
-import { Kanmoji } from './kanmoji'
+import { Kanmoji } from '@/components/kanmoji'
 
 export const BoardNotFound = () => {
 	const navigate = useNavigate()

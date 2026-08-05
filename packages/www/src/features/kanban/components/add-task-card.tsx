@@ -1,9 +1,9 @@
 import { ArrowsOutIcon, PlusIcon } from '@phosphor-icons/react'
 import { useRef, useState } from 'react'
-import { addTask } from '@/lib/actions'
+import { addTask } from '@/features/kanban/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
-import { IconButton } from '../icon-button'
-import { TitleInput } from '../title-input'
+import { IconButton } from '@/components/icon-button'
+import { TitleInput } from '@/components/title-input'
 import { TaskDialog } from './task-dialog'
 
 type AddTaskCardProps = {
