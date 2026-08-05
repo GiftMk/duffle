@@ -14,9 +14,8 @@ app.use(
 	cors({
 		origin: env.WEB_URL,
 		credentials: true,
-		allowHeaders: ['Content-Type', 'Authorization'],
+		allowHeaders: ['Content-Type'],
 		allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
-		exposeHeaders: ['set-auth-token'],
 	}),
 )
 
