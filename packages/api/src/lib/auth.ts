@@ -13,6 +13,12 @@ export const auth = betterAuth({
 	}),
 	trustedOrigins: [env.WEB_URL],
 	plugins: [bearer()],
+	account: {
+		// The state cookie set during `signIn.social()` is a third-party cookie here
+		// (www calls api cross-origin), so it never survives the GitHub round trip.
+		// The DB-backed verification record (still checked) is the real CSRF defense.
+		skipStateCookieCheck: true,
+	},
 	socialProviders: {
 		github: {
 			clientId: env.GITHUB_CLIENT_ID as string,
