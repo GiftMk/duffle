@@ -1,16 +1,16 @@
-import type { BoardEntity } from '@/lib/schemas'
 import { PencilSimpleIcon } from '@phosphor-icons/react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { BoardNotFound } from '@/components/board-not-found'
-import { KanbanBoard } from '@/components/boards/kanban-board'
 import { IconButton } from '@/components/icon-button'
 import { Sidebar } from '@/components/sidebar'
 import { TitleInput } from '@/components/title-input'
-import { useBoard } from '@/hooks/boards'
-import { updateBoard } from '@/lib/actions'
+import { BoardNotFound } from '@/features/kanban/components/board-not-found'
+import { KanbanBoard } from '@/features/kanban/components/kanban-board'
+import { useBoard } from '@/features/kanban/hooks/boards'
+import { updateBoard } from '@/features/kanban/lib/actions'
+import { preferencesStore } from '@/features/kanban/lib/stores'
+import type { BoardEntity } from '@/lib/schemas'
 import { ICON_SIZE_MD } from '@/lib/constants'
-import { preferencesStore } from '@/lib/stores'
 
 export const Route = createFileRoute('/boards/$boardId')({
 	component: RouteComponent,

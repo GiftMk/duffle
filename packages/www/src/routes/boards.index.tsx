@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { AddBoardCard } from '@/components/boards/add-board-card'
-import { BoardCard } from '@/components/boards/board-card'
 import { Sidebar } from '@/components/sidebar'
-import { useBoards } from '@/hooks/boards'
+import { AddBoardCard } from '@/features/kanban/components/add-board-card'
+import { BoardCard } from '@/features/kanban/components/board-card'
+import { useBoards } from '@/features/kanban/hooks/boards'
 
 export const Route = createFileRoute('/boards/')({
 	component: RouteComponent,
