@@ -1,8 +1,8 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { db } from '../db'
-import * as schema from '../db/schema.auth'
-import { env } from '../env'
+import { db } from '../db/index.js'
+import * as schema from '../db/schema.auth.js'
+import { env } from '../env.js'
 import { createMiddleware } from 'hono/factory'
 
 export const auth = betterAuth({

@@ -1,12 +1,12 @@
 import { zValidator } from '@hono/zod-validator'
 import { and, eq } from 'drizzle-orm'
 import { Hono } from 'hono'
-import { db } from '../db'
-import { tasksTable } from '../db/schema.kanban'
-import type { RequestEnv } from '../lib/auth'
-import { requireAuth } from '../lib/auth'
-import { taskSchema } from '../lib/schemas'
-import { withIsoTimestamps } from '../lib/utils'
+import { db } from '../db/index.js'
+import { tasksTable } from '../db/schema.kanban.js'
+import type { RequestEnv } from '../lib/auth.js'
+import { requireAuth } from '../lib/auth.js'
+import { taskSchema } from '../lib/schemas.js'
+import { withIsoTimestamps } from '../lib/utils.js'
 
 export const tasksRoutes = new Hono<RequestEnv>()
 	.get('/', requireAuth, async (c) => {

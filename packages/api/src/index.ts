@@ -1,11 +1,11 @@
-export * from './lib/schemas'
+export * from './lib/schemas.js'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { env } from './env'
-import { auth, type RequestEnv } from './lib/auth'
-import { boardsRoutes } from './routes/boards'
-import { columnsRoutes } from './routes/columns'
-import { tasksRoutes } from './routes/tasks'
+import { env } from './env.js'
+import { auth, type RequestEnv } from './lib/auth.js'
+import { boardsRoutes } from './routes/boards.js'
+import { columnsRoutes } from './routes/columns.js'
+import { tasksRoutes } from './routes/tasks.js'
 
 const app = new Hono()
 
@@ -18,6 +18,11 @@ app.use(
 		allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
 	}),
 )
+
+app.onError((err, c) => {
+	console.error(err)
+	return c.json({ error: 'internal_server_error' }, 500)
+})
 
 app.on(['POST', 'GET'], '/api/auth/*', (c) => auth.handler(c.req.raw))
 
