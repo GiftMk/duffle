@@ -1,5 +1,5 @@
 import { eq, useLiveQuery } from '@tanstack/react-db'
-import { columnsCollection } from '@/state/collections'
+import { columnsCollection } from '@/lib/collections'
 
 export const useColumns = (boardId: string) => {
 	const { data } = useLiveQuery((q) =>

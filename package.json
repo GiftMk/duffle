@@ -6,14 +6,13 @@
 		"node": "24.x"
 	},
 	"scripts": {
-		"dev": "concurrently -c \"blue,magenta\" -n \"API,WWW\" \"pnpm --filter @duffle/api dev\" \"pnpm --filter @duffle/www dev\"",
-		"db:up": "docker desktop start && docker compose up -d --wait && pnpm --filter @duffle/api db:push",
+		"dev": "pnpm --filter @duffle/www dev",
+		"db:up": "docker desktop start && docker compose up -d --wait && pnpm --filter @duffle/www db:push",
 		"tidy": "pnpm -r --if-present run tidy",
 		"tsc": "pnpm -r --if-present run tsc"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.4.4",
-		"concurrently": "^10.0.4"
+		"@biomejs/biome": "2.4.4"
 	},
 	"peerDependencies": {
 		"typescript": "~6.0.3"

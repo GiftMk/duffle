@@ -1,4 +1,4 @@
-import type { BoardEntity } from '@duffle/api'
+import type { BoardEntity } from '@/lib/schemas'
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'

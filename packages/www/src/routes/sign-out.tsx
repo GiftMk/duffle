@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { FadeIn, SpringPopIn } from '@/components/animations'
 import { LoadingPage } from '@/components/loading-page'
 import { UserAvatar } from '@/components/user-avatar'
-import { authClient, signOut } from '@/lib/auth'
+import { signOut, useSession } from '@/lib/auth'
 
 export const Route = createFileRoute('/sign-out')({
 	component: RouteComponent,
@@ -11,7 +11,7 @@ export const Route = createFileRoute('/sign-out')({
 
 function RouteComponent() {
 	const navigate = useNavigate()
-	const { data: session, isPending } = authClient.useSession()
+	const { data: session, isPending } = useSession()
 	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {

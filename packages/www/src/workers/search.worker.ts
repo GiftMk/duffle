@@ -1,4 +1,4 @@
-import type { TaskEntity } from '@duffle/api'
+import type { TaskEntity } from '@/lib/schemas'
 import { expose } from 'comlink'
 import MiniSearch from 'minisearch'
 

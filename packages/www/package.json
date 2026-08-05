@@ -9,7 +9,11 @@
 		"start": "node .output/server/index.mjs",
 		"preview": "vite preview",
 		"tidy": "biome check --write --unsafe .",
-		"tsc": "tsc -b --noEmit"
+		"tsc": "tsc -b --noEmit",
+		"db:push": "drizzle-kit push",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"db:studio": "drizzle-kit studio"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.4.1",
@@ -25,6 +29,7 @@
 		"@dicebear/core": "^10.3.0",
 		"@dicebear/styles": "^10.2.0",
 		"@hello-pangea/dnd": "^18.0.1",
+		"drizzle-orm": "^1.0.0-rc.4",
 		"framer-motion": "^12.38.0",
 		"@milkdown/kit": "^7.21.2",
 		"@milkdown/prose": "^7.21.2",
@@ -46,9 +51,9 @@
 		"clsx": "^2.1.1",
 		"codemirror": "^6.0.2",
 		"comlink": "^4.4.2",
-		"hono": "^4.13.0",
 		"immer": "^11.1.15",
 		"minisearch": "^7.2.0",
+		"pg": "^8.22.0",
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4",
 		"react-type-animation": "^3.2.0",
@@ -63,14 +68,15 @@
 	},
 	"devDependencies": {
 		"@types/node": "^24.12.2",
+		"@types/pg": "^8.20.3",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
 		"@tailwindcss/vite": "^4.2.2",
 		"@vitejs/plugin-react": "^6.0.1",
+		"drizzle-kit": "^1.0.0-rc.4",
 		"nitro": "^3.0.260610-beta",
 		"tailwindcss": "^4.2.2",
 		"typescript": "~6.0.3",
-		"vite": "^8.0.4",
-		"@duffle/api": "workspace:*"
+		"vite": "^8.0.4"
 	}
 }

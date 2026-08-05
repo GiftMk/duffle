@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { FadeIn, SpringPopIn } from '@/components/animations'
 import { LoadingPage } from '@/components/loading-page'
 import { UserAvatar } from '@/components/user-avatar'
-import { authClient, signIn } from '@/lib/auth'
+import { signIn, useSession } from '@/lib/auth'
 import { ICON_SIZE_MD } from '@/lib/constants'
 
 export const Route = createFileRoute('/sign-up')({
@@ -21,7 +21,7 @@ const AVATAR_SEED = 'xlelgneb'
 
 function RouteComponent() {
 	const navigate = useNavigate()
-	const { data: session, isPending } = authClient.useSession()
+	const { data: session, isPending } = useSession()
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 

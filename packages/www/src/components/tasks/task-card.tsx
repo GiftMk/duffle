@@ -1,5 +1,5 @@
 import { ContextMenu } from '@base-ui/react/context-menu'
-import type { TaskEntity } from '@duffle/api'
+import type { TaskEntity } from '@/lib/schemas'
 import { Draggable } from '@hello-pangea/dnd'
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 import type { ReactNode } from 'react'

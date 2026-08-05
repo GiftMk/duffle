@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - "packages/api/drizzle/**"
-      - "packages/api/src/db/**"
+      - "packages/www/drizzle/**"
+      - "packages/www/src/db/**"
       - ".github/workflows/db-migrate.yml"
 
 concurrency:
@@ -27,6 +27,6 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm --filter @duffle/api db:migrate
+      - run: pnpm --filter @duffle/www db:migrate
         env:
           DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}

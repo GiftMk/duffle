@@ -1,13 +1,14 @@
-import type { BoardEntity, ColumnEntity, TaskEntity } from '@duffle/api'
 import { createOptimisticAction } from '@tanstack/react-db'
 import { uuidv7 } from 'uuidv7'
-import { client } from '@/lib/api'
+import { createBoard as createBoardFn } from '@/server/boards'
+import { createColumn as createColumnFn } from '@/server/columns'
+import type { BoardEntity, ColumnEntity, TaskEntity } from '@/lib/schemas'
 import {
 	boardsCollection,
 	columnsCollection,
 	tasksCollection,
-} from '@/state/collections'
-import { preferencesStore } from '@/state/preferences-store'
+} from '@/lib/collections'
+import { preferencesStore } from '@/lib/stores'
 import { utcNow } from './utils'
 
 export const updateBoard = (
@@ -137,12 +138,8 @@ const createBoardAction = createOptimisticAction<CreateBoardVars>({
 		columnsCollection.insert(columns)
 	},
 	mutationFn: async ({ board, columns }) => {
-		await client.api.boards.create.$post({ json: board })
-		await Promise.all(
-			columns.map((column) =>
-				client.api.columns.create.$post({ json: column }),
-			),
-		)
+		await createBoardFn({ data: board })
+		await Promise.all(columns.map((column) => createColumnFn({ data: column })))
 
 		await Promise.all([
 			boardsCollection.utils.refetch(),

@@ -1,5 +1,5 @@
 import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
-import { user } from './schema.auth.js'
+import { user } from './schema.auth'
 
 const userReference = () =>
 	text()

@@ -15,6 +15,7 @@ import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as ThemeRouteImport } from './routes/theme'
 import { Route as BoardsIndexRouteImport } from './routes/boards.index'
 import { Route as BoardsBoardIdRouteImport } from './routes/boards.$boardId'
+import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const BoardsBoardIdRoute = BoardsBoardIdRouteImport.update({
   path: '/boards/$boardId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/theme': typeof ThemeRoute
   '/boards/$boardId': typeof BoardsBoardIdRoute
   '/boards/': typeof BoardsIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/theme': typeof ThemeRoute
   '/boards/$boardId': typeof BoardsBoardIdRoute
   '/boards': typeof BoardsIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,13 +79,27 @@ export interface FileRoutesById {
   '/theme': typeof ThemeRoute
   '/boards/$boardId': typeof BoardsBoardIdRoute
   '/boards/': typeof BoardsIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/sign-out' | '/sign-up' | '/theme' | '/boards/$boardId' | '/boards/'
+    | '/'
+    | '/sign-out'
+    | '/sign-up'
+    | '/theme'
+    | '/boards/$boardId'
+    | '/boards/'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sign-out' | '/sign-up' | '/theme' | '/boards/$boardId' | '/boards'
+  to:
+    | '/'
+    | '/sign-out'
+    | '/sign-up'
+    | '/theme'
+    | '/boards/$boardId'
+    | '/boards'
+    | '/api/auth/$'
   id:
     | '__root__'
     | '/'
@@ -86,6 +108,7 @@ export interface FileRouteTypes {
     | '/theme'
     | '/boards/$boardId'
     | '/boards/'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -95,6 +118,7 @@ export interface RootRouteChildren {
   ThemeRoute: typeof ThemeRoute
   BoardsBoardIdRoute: typeof BoardsBoardIdRoute
   BoardsIndexRoute: typeof BoardsIndexRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -141,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BoardsBoardIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -151,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   ThemeRoute: ThemeRoute,
   BoardsBoardIdRoute: BoardsBoardIdRoute,
   BoardsIndexRoute: BoardsIndexRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

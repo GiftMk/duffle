@@ -1,7 +1,7 @@
 import { UserIcon } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
-import { authClient } from '@/lib/auth'
 import { ICON_SIZE_MD } from '@/lib/constants'
+import { useSession } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 import { Tooltip } from './tooltip'
 import { UserAvatar } from './user-avatar'
@@ -10,7 +10,7 @@ const AVATAR_FILL_SIZE = 35
 
 export const AccountButton = () => {
 	const navigate = useNavigate()
-	const { data: session } = authClient.useSession()
+	const { data: session } = useSession()
 
 	const handleClick = () => {
 		navigate({ to: session ? '/sign-out' : '/sign-up' })

@@ -25,5 +25,5 @@
 			"@/*": ["./src/*"]
 		}
 	},
-	"include": ["src", "environment.ts", "../api/src/lib/schemas.ts"]
+	"include": ["src"]
 }

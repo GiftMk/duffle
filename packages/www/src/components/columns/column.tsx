@@ -1,4 +1,4 @@
-import type { ColumnEntity } from '@duffle/api'
+import type { ColumnEntity } from '@/lib/schemas'
 import { Droppable } from '@hello-pangea/dnd'
 import { useTasks } from '@/hooks/tasks'
 import { cn } from '@/lib/utils'

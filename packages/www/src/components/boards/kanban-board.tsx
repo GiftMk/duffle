@@ -1,4 +1,4 @@
-import type { BoardEntity } from '@duffle/api'
+import type { BoardEntity } from '@/lib/schemas'
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 import { useColumns } from '@/hooks/columns'
 import { moveTask } from '@/lib/actions'
