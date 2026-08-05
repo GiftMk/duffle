@@ -1,5 +1,6 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { bearer } from 'better-auth/plugins'
 import { db } from '../db/index.js'
 import * as schema from '../db/schema.auth.js'
 import { env } from '../env.js'
@@ -11,6 +12,7 @@ export const auth = betterAuth({
 		schema,
 	}),
 	trustedOrigins: [env.WEB_URL],
+	plugins: [bearer()],
 	socialProviders: {
 		github: {
 			clientId: env.GITHUB_CLIENT_ID as string,
