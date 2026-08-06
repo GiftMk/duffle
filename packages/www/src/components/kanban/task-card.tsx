@@ -14,7 +14,7 @@ import {
 	AlertDialogTitle,
 } from '@/components/alert-dialog'
 import { deleteTask, updateTask } from '@/lib/actions'
-import { stripMarkdown } from '@/lib/markdown'
+import { stripMarkdown } from '@/lib/utils'
 import { ICON_SIZE_SM } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { TaskDialog } from './task-dialog'
