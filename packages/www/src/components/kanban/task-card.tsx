@@ -13,7 +13,7 @@ import {
 	AlertDialogRoot,
 	AlertDialogTitle,
 } from '@/components/alert-dialog'
-import { deleteTask, updateTask } from '@/features/kanban/lib/actions'
+import { deleteTask, updateTask } from '@/lib/actions'
 import { stripMarkdown } from '@/features/markdown/lib/utils'
 import { ICON_SIZE_SM } from '@/lib/constants'
 import { cn } from '@/lib/utils'

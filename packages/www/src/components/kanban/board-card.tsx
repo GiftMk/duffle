@@ -15,7 +15,7 @@ import {
 import { IconButton } from '@/components/icon-button'
 import { TitleInput } from '@/components/title-input'
 import { BoardContainer } from '@/components/kanban/board-container'
-import { deleteBoard, updateBoard } from '@/features/kanban/lib/actions'
+import { deleteBoard, updateBoard } from '@/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { onNextTick } from '@/lib/utils'
 

@@ -3,8 +3,8 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { type Ref, useRef } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { FadeIn, SpringPopIn } from '@/components/animations'
-import { createBoard } from '@/features/kanban/lib/actions'
-import { boardsCollection } from '@/features/kanban/lib/collections'
+import { createBoard } from '@/lib/actions'
+import { boardsCollection } from '@/lib/collections'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,

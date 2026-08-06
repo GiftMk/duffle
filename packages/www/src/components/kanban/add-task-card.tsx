@@ -1,6 +1,6 @@
 import { ArrowsOutIcon, PlusIcon } from '@phosphor-icons/react'
 import { useRef, useState } from 'react'
-import { addTask } from '@/features/kanban/lib/actions'
+import { addTask } from '@/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { IconButton } from '@/components/icon-button'
 import { TitleInput } from '@/components/title-input'

@@ -1,6 +1,6 @@
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { deleteColumn, updateColumn } from '@/features/kanban/lib/actions'
+import { deleteColumn, updateColumn } from '@/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import {

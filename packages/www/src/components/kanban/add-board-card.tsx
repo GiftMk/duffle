@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { TitleInput } from '@/components/title-input'
 import { BoardContainer } from '@/components/kanban/board-container'
-import { createBoard } from '@/features/kanban/lib/actions'
+import { createBoard } from '@/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
 
 export const AddBoardCard = () => {

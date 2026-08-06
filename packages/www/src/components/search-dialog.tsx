@@ -3,8 +3,8 @@ import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { Fragment, useEffect, useState } from 'react'
 import { Tooltip } from '@/components/tooltip'
-import { searchWorker } from '@/features/kanban/lib/search'
-import type { SearchItem } from '@/features/kanban/lib/search.worker'
+import { searchWorker } from '@/lib/search'
+import type { SearchItem } from '@/lib/search.worker'
 import { ICON_SIZE_MD } from '@/lib/constants'
 
 export const SearchDialog = () => {

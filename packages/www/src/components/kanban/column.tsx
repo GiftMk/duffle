@@ -1,6 +1,6 @@
 import type { ColumnEntity } from '@/lib/schemas'
 import { Droppable } from '@hello-pangea/dnd'
-import { useTasks } from '@/features/kanban/hooks/tasks'
+import { useTasks } from '@/hooks/tasks'
 import { cn } from '@/lib/utils'
 import { AddTaskCard } from './add-task-card'
 import { TaskCard } from './task-card'
