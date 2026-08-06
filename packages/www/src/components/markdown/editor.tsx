@@ -21,6 +21,7 @@ import { indent } from '@milkdown/kit/plugin/indent'
 import { trailing } from '@milkdown/kit/plugin/trailing'
 import { gfm } from '@milkdown/kit/preset/gfm'
 import { useEffect, useRef } from 'react'
+import { cn } from '@/lib/utils'
 import { autoscroll } from '@/plugins/autoscroll'
 import { blockquote } from '@/plugins/blockquote'
 import { codeBlock } from '@/plugins/code-block'
@@ -28,7 +29,6 @@ import { headingLevelIndicator } from '@/plugins/heading-level-indicator'
 import { imageBlock } from '@/plugins/image-block'
 import { inlineCode } from '@/plugins/inline-code'
 import { listItem } from '@/plugins/list-item'
-import { cn } from '@/lib/utils'
 
 type EditorContentProps = {
 	defaultValue: string

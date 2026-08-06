@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from 'clsx'
-import { twMerge } from 'tailwind-merge'
 import { remark } from 'remark'
 import strip from 'strip-markdown'
+import { twMerge } from 'tailwind-merge'
 
 export const cn = (...inputs: ClassValue[]) => {
 	return twMerge(clsx(inputs))

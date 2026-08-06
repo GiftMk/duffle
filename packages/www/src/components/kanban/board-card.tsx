@@ -1,4 +1,3 @@
-import type { BoardEntity } from '@/lib/schemas'
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
@@ -13,10 +12,11 @@ import {
 	AlertDialogTrigger,
 } from '@/components/alert-dialog'
 import { IconButton } from '@/components/icon-button'
-import { TitleInput } from '@/components/title-input'
 import { BoardContainer } from '@/components/kanban/board-container'
+import { TitleInput } from '@/components/title-input'
 import { deleteBoard, updateBoard } from '@/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
+import type { BoardEntity } from '@/lib/schemas'
 import { onNextTick } from '@/lib/utils'
 
 type BoardCardProps = {

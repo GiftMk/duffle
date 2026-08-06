@@ -3,9 +3,9 @@ import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { Fragment, useEffect, useState } from 'react'
 import { Tooltip } from '@/components/tooltip'
+import { ICON_SIZE_MD } from '@/lib/constants'
 import { searchWorker } from '@/lib/search'
 import type { SearchItem } from '@/lib/search.worker'
-import { ICON_SIZE_MD } from '@/lib/constants'
 
 export const SearchDialog = () => {
 	const [open, setOpen] = useState(false)

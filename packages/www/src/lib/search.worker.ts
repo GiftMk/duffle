@@ -1,6 +1,6 @@
-import type { TaskEntity } from '@/lib/schemas'
 import { expose } from 'comlink'
 import MiniSearch from 'minisearch'
+import type { TaskEntity } from '@/lib/schemas'
 
 export type SearchItem = Pick<TaskEntity, 'id' | 'title'>
 

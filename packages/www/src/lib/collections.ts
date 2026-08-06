@@ -1,6 +1,7 @@
-import { QueryClient } from '@tanstack/react-query'
 import { queryCollectionOptions } from '@tanstack/query-db-collection'
 import { createCollection } from '@tanstack/react-db'
+import { QueryClient } from '@tanstack/react-query'
+import { boardSchema, columnSchema, taskSchema } from '@/lib/schemas'
 import {
 	createBoard,
 	deleteBoard,
@@ -13,13 +14,7 @@ import {
 	getColumns,
 	updateColumn,
 } from '@/server/columns'
-import {
-	createTask,
-	deleteTask,
-	getTasks,
-	updateTask,
-} from '@/server/tasks'
-import { boardSchema, columnSchema, taskSchema } from '@/lib/schemas'
+import { createTask, deleteTask, getTasks, updateTask } from '@/server/tasks'
 
 export const queryClient = new QueryClient()
 
@@ -43,9 +38,7 @@ export const boardsCollection = createCollection(
 		},
 		onDelete: async ({ transaction }) => {
 			await Promise.all(
-				transaction.mutations.map((m) =>
-					deleteBoard({ data: { id: m.key } }),
-				),
+				transaction.mutations.map((m) => deleteBoard({ data: { id: m.key } })),
 			)
 		},
 	}),
@@ -71,9 +64,7 @@ export const columnsCollection = createCollection(
 		},
 		onDelete: async ({ transaction }) => {
 			await Promise.all(
-				transaction.mutations.map((m) =>
-					deleteColumn({ data: { id: m.key } }),
-				),
+				transaction.mutations.map((m) => deleteColumn({ data: { id: m.key } })),
 			)
 		},
 	}),

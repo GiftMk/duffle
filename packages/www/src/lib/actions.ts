@@ -1,14 +1,14 @@
 import { createOptimisticAction } from '@tanstack/react-db'
 import { uuidv7 } from 'uuidv7'
-import { createBoard as createBoardFn } from '@/server/boards'
-import { createColumn as createColumnFn } from '@/server/columns'
-import type { BoardEntity, ColumnEntity, TaskEntity } from '@/lib/schemas'
 import {
 	boardsCollection,
 	columnsCollection,
 	tasksCollection,
 } from '@/lib/collections'
+import type { BoardEntity, ColumnEntity, TaskEntity } from '@/lib/schemas'
 import { utcNow } from '@/lib/utils'
+import { createBoard as createBoardFn } from '@/server/boards'
+import { createColumn as createColumnFn } from '@/server/columns'
 
 export const updateBoard = (
 	id: string,

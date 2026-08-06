@@ -1,5 +1,4 @@
 import { ContextMenu } from '@base-ui/react/context-menu'
-import type { TaskEntity } from '@/lib/schemas'
 import { Draggable } from '@hello-pangea/dnd'
 import { PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 import type { ReactNode } from 'react'
@@ -14,9 +13,9 @@ import {
 	AlertDialogTitle,
 } from '@/components/alert-dialog'
 import { deleteTask, updateTask } from '@/lib/actions'
-import { stripMarkdown } from '@/lib/utils'
 import { ICON_SIZE_SM } from '@/lib/constants'
-import { cn } from '@/lib/utils'
+import type { TaskEntity } from '@/lib/schemas'
+import { cn, stripMarkdown } from '@/lib/utils'
 import { TaskDialog } from './task-dialog'
 
 type TaskCardProps = {

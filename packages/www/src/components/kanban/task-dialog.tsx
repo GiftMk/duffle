@@ -1,10 +1,10 @@
 import { Dialog } from '@base-ui/react'
 import { XIcon } from '@phosphor-icons/react'
 import { type ReactElement, useEffect, useState } from 'react'
-import { MarkdownEditor } from '@/components/markdown/editor'
-import { splitMarkdown } from '@/lib/utils'
 import { IconButton } from '@/components/icon-button'
+import { MarkdownEditor } from '@/components/markdown/editor'
 import { ICON_SIZE_MD } from '@/lib/constants'
+import { splitMarkdown } from '@/lib/utils'
 
 const getMarkdown = (title: string, description?: string) => {
 	if (!description) {

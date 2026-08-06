@@ -1,7 +1,7 @@
 import { UserIcon } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
-import { ICON_SIZE_MD } from '@/lib/constants'
 import { useSession } from '@/lib/auth'
+import { ICON_SIZE_MD } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { Tooltip } from './tooltip'
 import { UserAvatar } from './user-avatar'
