@@ -28,7 +28,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<title>Duffle</title>
 				<HeadContent />
 			</head>
-			<body>
+			<body className='text-typography-950'>
 				<ThemeProvider>
 					<TooltipProvider delay={300}>
 						{mounted ? children : <LoadingPage />}

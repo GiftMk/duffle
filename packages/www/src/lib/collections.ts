@@ -3,29 +3,12 @@ import { createCollection } from '@tanstack/react-db'
 import { QueryClient } from '@tanstack/react-query'
 import { boardSchema, columnSchema, taskSchema } from '@/lib/schemas'
 import {
-	createBoard,
-	deleteBoard,
-	getBoards,
-	updateBoard,
-} from '@/server/boards'
-import {
-	createColumn,
-	deleteColumn,
-	getColumns,
-	updateColumn,
-} from '@/server/columns'
-import { getSession } from '@/server/session.server'
-import { createTask, deleteTask, getTasks, updateTask } from '@/server/tasks'
-import { LocalEntityStore } from './local-storage'
+	boardRepository,
+	columnRepository,
+	taskRepository,
+} from './repositories'
 
 export const queryClient = new QueryClient()
-
-const isAnonymous = async () => {
-	const session = await getSession()
-	return session?.user === undefined
-}
-
-export const localBoards = new LocalEntityStore('boards', boardSchema)
 
 export const boardsCollection = createCollection(
 	queryCollectionOptions({
@@ -34,44 +17,21 @@ export const boardsCollection = createCollection(
 		queryKey: ['boards'],
 		getKey: (board) => board.id,
 		schema: boardSchema,
-		queryFn: async () => {
-			if (await isAnonymous()) {
-				return localBoards.getAll()
-			}
-
-			return getBoards()
-		},
+		queryFn: () => boardRepository.getAll(),
 		onInsert: async ({ transaction }) => {
 			const { modified } = transaction.mutations[0]
-
-			if (await isAnonymous()) {
-				localBoards.add(modified)
-			}
-
-			await createBoard({ data: modified })
+			await boardRepository.add(modified)
 		},
 		onUpdate: async ({ transaction }) => {
 			const { modified } = transaction.mutations[0]
-
-			if (await isAnonymous()) {
-				localBoards.update(modified)
-			}
-
-			await updateBoard({ data: modified })
+			await boardRepository.update(modified)
 		},
 		onDelete: async ({ transaction }) => {
 			const { key: id } = transaction.mutations[0]
-
-			if (await isAnonymous()) {
-				localBoards.delete(id)
-			}
-
-			await deleteBoard({ data: { id } })
+			await boardRepository.delete(id)
 		},
 	}),
 )
-
-const localColumns = new LocalEntityStore('columns', columnSchema)
 
 export const columnsCollection = createCollection(
 	queryCollectionOptions({
@@ -80,44 +40,21 @@ export const columnsCollection = createCollection(
 		queryKey: ['columns'],
 		getKey: (column) => column.id,
 		schema: columnSchema,
-		queryFn: async () => {
-			if (await isAnonymous()) {
-				return localColumns.getAll()
-			}
-
-			return await getColumns()
-		},
+		queryFn: () => columnRepository.getAll(),
 		onInsert: async ({ transaction }) => {
 			const { modified } = transaction.mutations[0]
-
-			if (await isAnonymous()) {
-				localColumns.add(modified)
-			}
-
-			await createColumn({ data: modified })
+			await columnRepository.add(modified)
 		},
 		onUpdate: async ({ transaction }) => {
 			const { modified } = transaction.mutations[0]
-
-			if (await isAnonymous()) {
-				localColumns.update(modified)
-			}
-
-			await updateColumn({ data: modified })
+			await columnRepository.update(modified)
 		},
 		onDelete: async ({ transaction }) => {
 			const { key: id } = transaction.mutations[0]
-
-			if (await isAnonymous()) {
-				localColumns.delete(id)
-			}
-
-			await deleteColumn({ data: { id } })
+			await columnRepository.delete(id)
 		},
 	}),
 )
-
-const localTasks = new LocalEntityStore('tasks', taskSchema)
 
 export const tasksCollection = createCollection(
 	queryCollectionOptions({
@@ -126,39 +63,18 @@ export const tasksCollection = createCollection(
 		queryKey: ['tasks'],
 		getKey: (task) => task.id,
 		schema: taskSchema,
-		queryFn: async () => {
-			if (await isAnonymous()) {
-				return localTasks.getAll()
-			}
-
-			return await getTasks()
-		},
+		queryFn: () => taskRepository.getAll(),
 		onInsert: async ({ transaction }) => {
 			const { modified } = transaction.mutations[0]
-
-			if (await isAnonymous()) {
-				localTasks.add(modified)
-			}
-
-			await createTask({ data: modified })
+			await taskRepository.add(modified)
 		},
 		onUpdate: async ({ transaction }) => {
 			const { modified } = transaction.mutations[0]
-
-			if (await isAnonymous()) {
-				localTasks.update(modified)
-			}
-
-			await updateTask({ data: modified })
+			await taskRepository.update(modified)
 		},
 		onDelete: async ({ transaction }) => {
 			const { key: id } = transaction.mutations[0]
-
-			if (await isAnonymous()) {
-				localTasks.delete(id)
-			}
-
-			await deleteTask({ data: { id } })
+			await taskRepository.delete(id)
 		},
 	}),
 )

@@ -18,9 +18,7 @@ function RouteComponent() {
 		<main className='flex h-full w-full bg-surface-100'>
 			<Sidebar />
 			<div className='h-full w-full overflow-y-auto px-8 py-4'>
-				<h1 className='font-bold text-3xl text-typography-950 tracking-tight'>
-					Boards
-				</h1>
+				<h1 className='font-bold text-3xl tracking-tight'>Boards</h1>
 				<div className='mt-8 flex flex-wrap gap-6'>
 					<AddBoardCard />
 					{sortedBoards.map((board) => (

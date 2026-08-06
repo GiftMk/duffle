@@ -6,6 +6,7 @@ import { LoadingPage } from '@/components/loading-page'
 import { UserAvatar } from '@/components/user-avatar'
 import { signIn, useSession } from '@/lib/auth'
 import { ICON_SIZE_MD } from '@/lib/constants'
+import { Sidebar } from '@/components/sidebar'
 
 export const Route = createFileRoute('/login')({
 	component: RouteComponent,
@@ -52,30 +53,33 @@ function RouteComponent() {
 	}
 
 	return (
-		<main className='flex h-full w-full flex-col items-center justify-center gap-8 text-center text-typography-950'>
-			<FadeIn className='flex flex-col items-center gap-3'>
-				<UserAvatar seed={AVATAR_SEED} size={64} />
-				<h1 className='font-bold text-2xl tracking-tight'>Hey Stranger.</h1>
-				<p className='text-pretty text-typography-600'>
-					Sign up to get cross-device sync and more.
-				</p>
-			</FadeIn>
-			<SpringPopIn className='flex flex-col items-center gap-3'>
-				<button
-					type='button'
-					onClick={handleGithubSignIn}
-					disabled={loading}
-					className='flex items-center gap-2 rounded-sm border border-primary-500 px-5 py-2 transition-all duration-200 hover:scale-110 hover:bg-primary-500/10 disabled:pointer-events-none disabled:opacity-50'
-				>
-					<GithubLogoIcon
-						size={ICON_SIZE_MD}
-						className='fill-primary-500'
-						weight='duotone'
-					/>
-					{loading ? 'Redirecting…' : 'Continue with GitHub'}
-				</button>
-				{error && <p className='text-red-600 text-sm'>{error}</p>}
-			</SpringPopIn>
+		<main className='h-full w-full'>
+			<Sidebar />
+			<div className='flex w-full flex-col items-center justify-center gap-8 text-center'>
+				<FadeIn className='flex flex-col items-center gap-3'>
+					<UserAvatar seed={AVATAR_SEED} size={64} />
+					<h1 className='font-bold text-2xl tracking-tight'>Hey Stranger.</h1>
+					<p className='text-pretty text-typography-600'>
+						Sign up to get cross-device sync and more.
+					</p>
+				</FadeIn>
+				<SpringPopIn className='flex flex-col items-center gap-3'>
+					<button
+						type='button'
+						onClick={handleGithubSignIn}
+						disabled={loading}
+						className='flex items-center gap-2 rounded-sm border border-primary-500 px-5 py-2 transition-all duration-200 hover:scale-110 hover:bg-primary-500/10 disabled:pointer-events-none disabled:opacity-50'
+					>
+						<GithubLogoIcon
+							size={ICON_SIZE_MD}
+							className='fill-primary-500'
+							weight='duotone'
+						/>
+						{loading ? 'Redirecting…' : 'Continue with GitHub'}
+					</button>
+					{error && <p className='text-red-600 text-sm'>{error}</p>}
+				</SpringPopIn>
+			</div>
 		</main>
 	)
 }

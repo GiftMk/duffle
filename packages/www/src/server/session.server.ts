@@ -1,7 +1,7 @@
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { auth } from '@/server/auth.server'
 
-export const getSession = async () => {
+const getSession = async () => {
 	return auth.api.getSession({ headers: getRequestHeaders() })
 }
 

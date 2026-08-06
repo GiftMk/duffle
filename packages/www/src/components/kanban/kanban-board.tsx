@@ -25,7 +25,7 @@ export const KanbanBoard = ({ board }: KanbanBoardProps) => {
 
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>
-			<div className='flex items-start gap-6 overflow-x-auto'>
+			<div className='flex h-full w-full items-start gap-6 overflow-x-auto'>
 				{columns.map((column) => (
 					<Column key={column.id} column={column} />
 				))}

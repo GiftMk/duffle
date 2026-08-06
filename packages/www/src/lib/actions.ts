@@ -7,8 +7,51 @@ import {
 } from '@/lib/collections'
 import type { BoardEntity, ColumnEntity, TaskEntity } from '@/lib/schemas'
 import { utcNow } from '@/lib/utils'
-import { createBoard as createBoardFn } from '@/server/boards'
-import { createColumn as createColumnFn } from '@/server/columns'
+import { boardRepository, columnRepository } from './repositories'
+
+type CreateBoardVars = { board: BoardEntity; columns: ColumnEntity[] }
+
+const createBoardAction = createOptimisticAction<CreateBoardVars>({
+	onMutate: ({ board, columns }) => {
+		boardsCollection.insert(board)
+		columnsCollection.insert(columns)
+	},
+	mutationFn: async ({ board, columns }) => {
+		await boardRepository.add(board)
+		await Promise.all(columns.map((column) => columnRepository.add(column)))
+
+		await Promise.all([
+			boardsCollection.utils.refetch(),
+			columnsCollection.utils.refetch(),
+		])
+	},
+})
+
+export const createBoard = (title: string) => {
+	const timestamp = utcNow()
+
+	const board: BoardEntity = {
+		id: uuidv7(),
+		title,
+		createdAt: timestamp,
+		updatedAt: timestamp,
+	}
+
+	const columns: ColumnEntity[] = ['Todo', 'In Progress', 'Done'].map(
+		(title, i) => ({
+			id: uuidv7(),
+			boardId: board.id,
+			position: i,
+			title,
+			createdAt: timestamp,
+			updatedAt: timestamp,
+		}),
+	)
+
+	createBoardAction({ board, columns })
+
+	return board
+}
 
 export const updateBoard = (
 	id: string,
@@ -127,48 +170,4 @@ export const moveTask = (source: DndTarget, destination: DndTarget) => {
 	const destinationTasks = getSortedTasks(destination.columnId, tasks)
 	destinationTasks.splice(destination.position, 0, sourceTask)
 	updateTaskPositions(destination.columnId, destinationTasks)
-}
-
-type CreateBoardVars = { board: BoardEntity; columns: ColumnEntity[] }
-
-const createBoardAction = createOptimisticAction<CreateBoardVars>({
-	onMutate: ({ board, columns }) => {
-		boardsCollection.insert(board)
-		columnsCollection.insert(columns)
-	},
-	mutationFn: async ({ board, columns }) => {
-		await createBoardFn({ data: board })
-		await Promise.all(columns.map((column) => createColumnFn({ data: column })))
-
-		await Promise.all([
-			boardsCollection.utils.refetch(),
-			columnsCollection.utils.refetch(),
-		])
-	},
-})
-
-export const createBoard = (title: string) => {
-	const timestamp = utcNow()
-
-	const board: BoardEntity = {
-		id: uuidv7(),
-		title,
-		createdAt: timestamp,
-		updatedAt: timestamp,
-	}
-
-	const columns: ColumnEntity[] = ['Todo', 'In Progress', 'Done'].map(
-		(title, i) => ({
-			id: uuidv7(),
-			boardId: board.id,
-			position: i,
-			title,
-			createdAt: timestamp,
-			updatedAt: timestamp,
-		}),
-	)
-
-	createBoardAction({ board, columns })
-
-	return board
 }

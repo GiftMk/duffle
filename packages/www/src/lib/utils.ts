@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx'
 import { remark } from 'remark'
 import strip from 'strip-markdown'
 import { twMerge } from 'tailwind-merge'
+import type z from 'zod'
 
 export const cn = (...inputs: ClassValue[]) => {
 	return twMerge(clsx(inputs))
@@ -45,4 +46,39 @@ export const splitMarkdown = (
 			.join('\n') || undefined
 
 	return { title, description }
+}
+
+export type SafeStorage<T> = {
+	get: () => T | null
+	set: (data: T) => void
+	remove: () => void
+}
+
+export const createSafeStorage = <T>(
+	storage: Storage,
+	key: string,
+	schema: z.ZodType<T>,
+): SafeStorage<T> => {
+	return {
+		get: (): T | null => {
+			const raw = storage.getItem(key)
+			if (!raw) return null
+			try {
+				return schema.parse(JSON.parse(raw))
+			} catch (err) {
+				console.warn(
+					`[ClientStorage] Invalid data found under key: "${key}"`,
+					err,
+				)
+				return null
+			}
+		},
+		set: (data: T): void => {
+			const validated = schema.parse(data)
+			storage.setItem(key, JSON.stringify(validated))
+		},
+		remove: (): void => {
+			storage.removeItem(key)
+		},
+	}
 }

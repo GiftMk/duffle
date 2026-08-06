@@ -1,16 +1,16 @@
 import type z from 'zod'
 
-type ClientStorage<T> = {
+type SafeStorage<T> = {
 	get: () => T | null
 	set: (data: T) => void
 	remove: () => void
 }
 
-export const createClientStorage = <T>(
+export const createSafeStorage = <T>(
 	storage: Storage,
 	key: string,
 	schema: z.ZodType<T>,
-): ClientStorage<T> => {
+): SafeStorage<T> => {
 	return {
 		get: (): T | null => {
 			const raw = storage.getItem(key)
@@ -32,51 +32,5 @@ export const createClientStorage = <T>(
 		remove: (): void => {
 			storage.removeItem(key)
 		},
-	}
-}
-
-export class LocalEntityStore<T extends { id: string }> {
-	private readonly storage: ClientStorage<T[]>
-
-	constructor(key: string, schema: z.ZodType<T>) {
-		this.storage = createClientStorage(localStorage, key, schema.array())
-	}
-
-	getAll(): T[] {
-		const items = this.storage.get()
-		return items ?? []
-	}
-
-	getById(id: string): T | undefined {
-		return this.getAll().find((item) => item.id === id)
-	}
-
-	add(item: T) {
-		const items = this.getAll()
-		items.push(item)
-
-		this.storage.set(items)
-	}
-
-	update(item: T) {
-		const items = this.getAll()
-		const index = items.findIndex(({ id }) => id === item.id)
-		if (index === -1) {
-			return
-		}
-
-		items.splice(index, 1, item)
-		this.storage.set(items)
-	}
-
-	delete(id: string) {
-		const items = this.getAll()
-		const index = items.findIndex((item) => item.id === id)
-		if (index === -1) {
-			return
-		}
-
-		items.splice(index, 1)
-		this.storage.set(items)
 	}
 }

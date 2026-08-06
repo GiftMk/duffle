@@ -19,24 +19,26 @@ const Heading = () => (
 const SubHeading = () => (
 	<TypeAnimation
 		className='text-pretty text-2xl'
-		sequence={[1000, 'A place to write and move sticky notes ദ്ദി˙ ᴗ ˙ )']}
+		sequence={[1000, 'A place to write and move sticky notes (˶ᵔ ᵕ ᵔ˶)']}
 		speed={65}
 	/>
 )
+
+const getLastUpdatedBoard = () => {
+	return boardsCollection.toArray
+		.toSorted(
+			(a, b) =>
+				new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
+		)
+		.at(0)
+}
 
 const EnterButton = ({ ref }: { ref?: Ref<HTMLButtonElement> }) => {
 	const navigate = useNavigate()
 
 	const handleClick = () => {
-		const boards = boardsCollection.toArray
-		const lastUpdated = boards
-			.toSorted(
-				(a, b) =>
-					new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
-			)
-			.at(0)
-		const board =
-			lastUpdated === undefined ? createBoard('Getting Started') : lastUpdated
+		const lastUpdated = getLastUpdatedBoard()
+		const board = lastUpdated ? lastUpdated : createBoard('Getting Started')
 
 		navigate({ to: '/boards/$boardId', params: { boardId: board.id } })
 	}
@@ -62,14 +64,8 @@ const EnterButton = ({ ref }: { ref?: Ref<HTMLButtonElement> }) => {
 function RouteComponent() {
 	const enterButtonRef = useRef<HTMLButtonElement>(null)
 
-	// useHotkey('Enter', () => {
-	// 	if (enterButtonRef.current) {
-	// 		enterButtonRef.current.click()
-	// 	}
-	// })
-
 	return (
-		<main className='flex h-full w-full flex-col items-center justify-center gap-12 text-center text-typography-950'>
+		<main className='flex h-full w-full flex-col items-center justify-center gap-12 text-center'>
 			<Heading />
 			<SubHeading />
 			<EnterButton ref={enterButtonRef} />

@@ -63,9 +63,7 @@ const BoardTitle = ({ board }: { board: BoardEntity }) => {
 
 	return (
 		<div className='group flex shrink-0 items-center gap-2'>
-			<h1 className='font-bold text-3xl text-typography-950 tracking-tight'>
-				{board.title}
-			</h1>
+			<h1 className='font-bold text-3xl tracking-tight'>{board.title}</h1>
 			<IconButton
 				onClick={startEditing}
 				className='opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100'
