@@ -7,7 +7,7 @@ import { UserAvatar } from '@/components/user-avatar'
 import { signIn, useSession } from '@/lib/auth'
 import { ICON_SIZE_MD } from '@/lib/constants'
 
-export const Route = createFileRoute('/sign-up')({
+export const Route = createFileRoute('/login')({
 	component: RouteComponent,
 })
 
@@ -42,7 +42,7 @@ function RouteComponent() {
 		const { error: signInError } = await signIn.social({
 			provider: 'github',
 			callbackURL: getCallbackUrl(),
-			errorCallbackURL: `${window.location.origin}/sign-up`,
+			errorCallbackURL: `${window.location.origin}/logout`,
 		})
 
 		if (signInError) {

@@ -13,7 +13,7 @@ export const AccountButton = () => {
 	const { data: session } = useSession()
 
 	const handleClick = () => {
-		navigate({ to: session ? '/sign-out' : '/sign-up' })
+		navigate({ to: session ? '/login' : '/logout' })
 	}
 
 	return (

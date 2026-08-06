@@ -5,7 +5,7 @@ import { LoadingPage } from '@/components/loading-page'
 import { UserAvatar } from '@/components/user-avatar'
 import { signOut, useSession } from '@/lib/auth'
 
-export const Route = createFileRoute('/sign-out')({
+export const Route = createFileRoute('/logout')({
 	component: RouteComponent,
 })
 
@@ -16,7 +16,7 @@ function RouteComponent() {
 
 	useEffect(() => {
 		if (!isPending && !session) {
-			navigate({ to: '/sign-up' })
+			navigate({ to: '/login' })
 		}
 	}, [isPending, session, navigate])
 
