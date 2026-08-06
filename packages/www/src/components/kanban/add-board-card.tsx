@@ -2,7 +2,7 @@ import { PlusIcon } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { TitleInput } from '@/components/title-input'
-import { BoardContainer } from '@/features/kanban/components/board-container'
+import { BoardContainer } from '@/components/kanban/board-container'
 import { createBoard } from '@/features/kanban/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
 
