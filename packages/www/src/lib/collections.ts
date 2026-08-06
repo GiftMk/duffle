@@ -15,8 +15,17 @@ import {
 	updateColumn,
 } from '@/server/columns'
 import { createTask, deleteTask, getTasks, updateTask } from '@/server/tasks'
+import { getSession } from '@/server/session.server'
+import { LocalEntityStore } from './local-storage'
 
 export const queryClient = new QueryClient()
+
+const isAnonymous = async () => {
+	const session = await getSession()
+	return session?.user === undefined
+}
+
+export const localBoards = new LocalEntityStore('boards', boardSchema)
 
 export const boardsCollection = createCollection(
 	queryCollectionOptions({
@@ -25,24 +34,44 @@ export const boardsCollection = createCollection(
 		queryKey: ['boards'],
 		getKey: (board) => board.id,
 		schema: boardSchema,
-		queryFn: () => getBoards(),
+		queryFn: async () => {
+			if (await isAnonymous()) {
+				return localBoards.getAll()
+			}
+
+			return getBoards()
+		},
 		onInsert: async ({ transaction }) => {
-			await Promise.all(
-				transaction.mutations.map((m) => createBoard({ data: m.modified })),
-			)
+			const { modified } = transaction.mutations[0]
+
+			if (await isAnonymous()) {
+				localBoards.add(modified)
+			}
+
+			await createBoard({ data: modified })
 		},
 		onUpdate: async ({ transaction }) => {
-			await Promise.all(
-				transaction.mutations.map((m) => updateBoard({ data: m.modified })),
-			)
+			const { modified } = transaction.mutations[0]
+
+			if (await isAnonymous()) {
+				localBoards.update(modified)
+			}
+
+			await updateBoard({ data: modified })
 		},
 		onDelete: async ({ transaction }) => {
-			await Promise.all(
-				transaction.mutations.map((m) => deleteBoard({ data: { id: m.key } })),
-			)
+			const { key: id } = transaction.mutations[0]
+
+			if (await isAnonymous()) {
+				localBoards.delete(id)
+			}
+
+			await deleteBoard({ data: { id } })
 		},
 	}),
 )
+
+const localColumns = new LocalEntityStore('columns', columnSchema)
 
 export const columnsCollection = createCollection(
 	queryCollectionOptions({
@@ -51,24 +80,44 @@ export const columnsCollection = createCollection(
 		queryKey: ['columns'],
 		getKey: (column) => column.id,
 		schema: columnSchema,
-		queryFn: () => getColumns(),
+		queryFn: async () => {
+			if (await isAnonymous()) {
+				return localColumns.getAll()
+			}
+
+			return await getColumns()
+		},
 		onInsert: async ({ transaction }) => {
-			await Promise.all(
-				transaction.mutations.map((m) => createColumn({ data: m.modified })),
-			)
+			const { modified } = transaction.mutations[0]
+
+			if (await isAnonymous()) {
+				localColumns.add(modified)
+			}
+
+			await createColumn({ data: modified })
 		},
 		onUpdate: async ({ transaction }) => {
-			await Promise.all(
-				transaction.mutations.map((m) => updateColumn({ data: m.modified })),
-			)
+			const { modified } = transaction.mutations[0]
+
+			if (await isAnonymous()) {
+				localColumns.update(modified)
+			}
+
+			await updateColumn({ data: modified })
 		},
 		onDelete: async ({ transaction }) => {
-			await Promise.all(
-				transaction.mutations.map((m) => deleteColumn({ data: { id: m.key } })),
-			)
+			const { key: id } = transaction.mutations[0]
+
+			if (await isAnonymous()) {
+				localColumns.delete(id)
+			}
+
+			await deleteColumn({ data: { id } })
 		},
 	}),
 )
+
+const localTasks = new LocalEntityStore('tasks', taskSchema)
 
 export const tasksCollection = createCollection(
 	queryCollectionOptions({
@@ -77,21 +126,39 @@ export const tasksCollection = createCollection(
 		queryKey: ['tasks'],
 		getKey: (task) => task.id,
 		schema: taskSchema,
-		queryFn: () => getTasks(),
+		queryFn: async () => {
+			if (await isAnonymous()) {
+				return localTasks.getAll()
+			}
+
+			return await getTasks()
+		},
 		onInsert: async ({ transaction }) => {
-			await Promise.all(
-				transaction.mutations.map((m) => createTask({ data: m.modified })),
-			)
+			const { modified } = transaction.mutations[0]
+
+			if (await isAnonymous()) {
+				localTasks.add(modified)
+			}
+
+			await createTask({ data: modified })
 		},
 		onUpdate: async ({ transaction }) => {
-			await Promise.all(
-				transaction.mutations.map((m) => updateTask({ data: m.modified })),
-			)
+			const { modified } = transaction.mutations[0]
+
+			if (await isAnonymous()) {
+				localTasks.update(modified)
+			}
+
+			await updateTask({ data: modified })
 		},
 		onDelete: async ({ transaction }) => {
-			await Promise.all(
-				transaction.mutations.map((m) => deleteTask({ data: { id: m.key } })),
-			)
+			const { key: id } = transaction.mutations[0]
+
+			if (await isAnonymous()) {
+				localTasks.delete(id)
+			}
+
+			await deleteTask({ data: { id } })
 		},
 	}),
 )
