@@ -1,8 +1,8 @@
 import { Dialog } from '@base-ui/react'
 import { XIcon } from '@phosphor-icons/react'
 import { type ReactElement, useEffect, useState } from 'react'
-import { MarkdownEditor } from '@/features/markdown/components/editor'
-import { splitMarkdown } from '@/features/markdown/lib/utils'
+import { MarkdownEditor } from '@/components/markdown/editor'
+import { splitMarkdown } from '@/lib/markdown'
 import { IconButton } from '@/components/icon-button'
 import { ICON_SIZE_MD } from '@/lib/constants'
 
