@@ -8,7 +8,6 @@ import {
 	columnsCollection,
 	tasksCollection,
 } from '@/lib/collections'
-import { preferencesStore } from '@/lib/stores'
 import { utcNow } from '@/lib/utils'
 
 export const updateBoard = (
@@ -170,7 +169,6 @@ export const createBoard = (title: string) => {
 	)
 
 	createBoardAction({ board, columns })
-	preferencesStore.trigger.setActive({ id: board.id })
 
 	return board
 }

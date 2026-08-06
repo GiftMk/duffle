@@ -8,7 +8,6 @@ import { BoardNotFound } from '@/components/kanban/board-not-found'
 import { KanbanBoard } from '@/components/kanban/kanban-board'
 import { useBoard } from '@/hooks/boards'
 import { updateBoard } from '@/lib/actions'
-import { preferencesStore } from '@/lib/stores'
 import type { BoardEntity } from '@/lib/schemas'
 import { ICON_SIZE_MD } from '@/lib/constants'
 
@@ -19,12 +18,6 @@ export const Route = createFileRoute('/boards/$boardId')({
 function RouteComponent() {
 	const { boardId } = Route.useParams()
 	const board = useBoard(boardId)
-
-	useEffect(() => {
-		if (board) {
-			preferencesStore.trigger.setActive({ id: board.id })
-		}
-	}, [board])
 
 	if (!board) {
 		return <BoardNotFound />
