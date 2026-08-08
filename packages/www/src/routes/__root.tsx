@@ -2,7 +2,7 @@ import { createRootRoute, HeadContent, Scripts } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import '@/index.css'
 import { LoadingPage } from '@/components/loading-page'
-import { ThemeProvider } from '@/components/theme-provider'
+import { ThemeProvider } from '@/components/sidebar/theme-provider'
 import { TooltipProvider } from '@/components/tooltip'
 
 export const Route = createRootRoute({

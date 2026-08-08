@@ -63,6 +63,15 @@ export const updateBoard = (
 	})
 }
 
+export const getLastUpdatedBoard = () => {
+	return boardsCollection.toArray
+		.toSorted(
+			(a, b) =>
+				new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
+		)
+		.at(0)
+}
+
 export const deleteBoard = (id: string) => {
 	boardsCollection.delete(id)
 }

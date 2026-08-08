@@ -1,7 +1,7 @@
 import { MoonIcon, SunIcon } from '@phosphor-icons/react/dist/ssr'
-import { useTheme } from '@/components/theme-provider'
+import { useTheme } from '@/components/sidebar/theme-provider'
 import { ICON_SIZE_MD } from '@/lib/constants'
-import { Tooltip } from './tooltip'
+import { Tooltip } from '../tooltip'
 
 export const ThemeToggle = () => {
 	const { resolvedTheme, setTheme } = useTheme()

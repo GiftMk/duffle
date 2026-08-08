@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import { TypeAnimation } from 'react-type-animation'
 import { Kanmoji } from './kanmoji'
 
 export const LoadingPage = () => {
@@ -14,9 +13,7 @@ export const LoadingPage = () => {
 				<Kanmoji className='font-bold text-4xl [animation-speed:3s]'>
 					(„• ֊ •„)੭
 				</Kanmoji>
-				<div className='flex items-baseline gap-2'>
-					<TypeAnimation sequence={[500, 'Loading', 500, '...']} speed={65} />
-				</div>
+				<p className='text-lg'>Almost there...</p>
 			</motion.div>
 		</div>
 	)

@@ -1,7 +1,8 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { FadeIn, SpringPopIn } from '@/components/animations'
 import { LoadingPage } from '@/components/loading-page'
+import { Sidebar } from '@/components/sidebar'
 import { UserAvatar } from '@/components/user-avatar'
 import { signOut, useSession } from '@/lib/auth'
 
@@ -10,13 +11,14 @@ export const Route = createFileRoute('/logout')({
 })
 
 function RouteComponent() {
+	const router = useRouter()
 	const navigate = useNavigate()
 	const { data: session, isPending } = useSession()
 	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {
 		if (!isPending && !session) {
-			navigate({ to: '/login' })
+			navigate({ to: '/' })
 		}
 	}, [isPending, session, navigate])
 
@@ -27,16 +29,20 @@ function RouteComponent() {
 	const handleSignOut = async () => {
 		setLoading(true)
 		await signOut()
-		navigate({ to: '/' })
 	}
 
 	const handleCancel = () => {
-		navigate({ to: '/boards' })
+		if (router.history.canGoBack()) {
+			router.history.back()
+		} else {
+			navigate({ to: '/boards' })
+		}
 	}
 
 	return (
-		<main className='h-full w-full'>
-			<div className='flex w-full flex-col items-center justify-center gap-8 text-center'>
+		<main className='flex h-full w-full'>
+			<Sidebar />
+			<div className='flex h-full w-full flex-col items-center justify-center gap-8 text-center'>
 				<FadeIn className='flex flex-col items-center gap-3'>
 					<UserAvatar seed={session.user.id} size={64} />
 					<h1 className='font-bold text-2xl tracking-tight'>

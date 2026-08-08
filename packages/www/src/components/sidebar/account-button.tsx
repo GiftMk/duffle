@@ -3,8 +3,8 @@ import { useNavigate } from '@tanstack/react-router'
 import { useSession } from '@/lib/auth'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { cn } from '@/lib/utils'
-import { Tooltip } from './tooltip'
-import { UserAvatar } from './user-avatar'
+import { Tooltip } from '../tooltip'
+import { UserAvatar } from '../user-avatar'
 
 const AVATAR_FILL_SIZE = 35
 
@@ -13,7 +13,7 @@ export const AccountButton = () => {
 	const { data: session } = useSession()
 
 	const handleClick = () => {
-		navigate({ to: session ? '/login' : '/logout' })
+		navigate({ to: session ? '/logout' : '/login' })
 	}
 
 	return (

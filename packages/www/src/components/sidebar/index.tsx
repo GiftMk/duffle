@@ -3,10 +3,10 @@ import { useNavigate } from '@tanstack/react-router'
 import { useRef } from 'react'
 import { useRoughSvg } from '@/hooks/use-rough-svg'
 import { ICON_SIZE_MD } from '@/lib/constants'
+import { Tooltip } from '../tooltip'
 import { AccountButton } from './account-button'
 import { SearchDialog } from './search-dialog'
 import { ThemeToggle } from './theme-toggle'
-import { Tooltip } from './tooltip'
 
 export const Sidebar = () => {
 	const svgRef = useRef<SVGSVGElement | null>(null)
