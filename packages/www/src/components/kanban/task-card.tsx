@@ -12,7 +12,7 @@ import {
 	AlertDialogRoot,
 	AlertDialogTitle,
 } from '@/components/alert-dialog'
-import { deleteTask, updateTask } from '@/lib/actions'
+import { useDeleteTask, useUpdateTask } from '@/hooks/tasks'
 import { ICON_SIZE_SM } from '@/lib/constants'
 import type { TaskEntity } from '@/lib/schemas'
 import { cn, stripMarkdown } from '@/lib/utils'
@@ -26,6 +26,7 @@ type TaskCardProps = {
 export const TaskCard = ({ task, className }: TaskCardProps) => {
 	const preview = task.description ? stripMarkdown(task.description).trim() : ''
 	const [dialogOpen, setDialogOpen] = useState(false)
+	const updateTask = useUpdateTask()
 
 	const handleSubmit = (title: string, description?: string) => {
 		updateTask(task.id, (draft) => {
@@ -89,6 +90,7 @@ const TaskCardContextMenu = ({
 	children: ReactNode
 }) => {
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+	const deleteTask = useDeleteTask()
 
 	return (
 		<ContextMenu.Root>

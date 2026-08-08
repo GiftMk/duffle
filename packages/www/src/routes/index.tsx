@@ -1,13 +1,12 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { FadeIn, SpringPopIn } from '@/components/animations'
 import { GithubLoginButton } from '@/components/github-login-button'
 import { useGithubAuth } from '@/hooks/use-github-auth'
-import { createBoard } from '@/lib/actions'
 import { useSession } from '@/lib/auth'
 import { LoadingPage } from '@/components/loading-page'
-import { useBoards } from '@/hooks/boards'
+import { useBoards, useCreateBoard } from '@/hooks/boards'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,
@@ -30,22 +29,17 @@ const SubHeading = () => (
 function RouteComponent() {
 	const { loading, signIn, error } = useGithubAuth()
 	const { data: session, isPending } = useSession()
-	const boards = useBoards()
-	const navigate = useNavigate()
-
-	useEffect(() => {
-		if (session && !isPending) {
-			const board = boards[0] ?? createBoard('Getting Started')
-			navigate({ to: '/boards/$boardId', params: { boardId: board.id } })
-		}
-	}, [session, navigate, isPending, boards])
 
 	const handleClick = async () => {
 		await signIn({ successRoute: '/', errorRoute: '/' })
 	}
 
 	if (session) {
-		return <LoadingPage message='Signing you in...' />
+		return (
+			<Suspense fallback={<LoadingPage message='Signing you in...' />}>
+				<RedirectToBoard />
+			</Suspense>
+		)
 	}
 
 	if (isPending) {
@@ -62,4 +56,19 @@ function RouteComponent() {
 			</SpringPopIn>
 		</main>
 	)
+}
+
+// Only mounted once a session is confirmed present, so useBoards() (which
+// suspends/throws via useSuspenseQuery) never runs while signed out.
+const RedirectToBoard = () => {
+	const boards = useBoards()
+	const createBoard = useCreateBoard()
+	const navigate = useNavigate()
+
+	useEffect(() => {
+		const board = boards[0] ?? createBoard('Getting Started')
+		navigate({ to: '/boards/$boardId', params: { boardId: board.id } })
+	}, [boards, navigate, createBoard])
+
+	return <LoadingPage message='Signing you in...' />
 }

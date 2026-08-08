@@ -1,20 +1,8 @@
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 import { useColumns } from '@/hooks/columns'
-import { moveTask } from '@/lib/actions'
+import { useMoveTask } from '@/hooks/tasks'
 import type { BoardEntity } from '@/lib/schemas'
 import { Column } from './column'
-
-const handleDragEnd = (result: DropResult) => {
-	if (!result.destination) return
-
-	moveTask(
-		{ columnId: result.source.droppableId, position: result.source.index },
-		{
-			columnId: result.destination.droppableId,
-			position: result.destination.index,
-		},
-	)
-}
 
 type KanbanBoardProps = {
 	board: BoardEntity
@@ -22,6 +10,19 @@ type KanbanBoardProps = {
 
 export const KanbanBoard = ({ board }: KanbanBoardProps) => {
 	const columns = useColumns(board.id)
+	const moveTask = useMoveTask()
+
+	const handleDragEnd = (result: DropResult) => {
+		if (!result.destination) return
+
+		moveTask(
+			{ columnId: result.source.droppableId, position: result.source.index },
+			{
+				columnId: result.destination.droppableId,
+				position: result.destination.index,
+			},
+		)
+	}
 
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>

@@ -1,12 +1,12 @@
 import { DetectiveIcon } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
-import { createBoard } from '@/lib/actions'
 import { ICON_SIZE_LG } from '@/lib/constants'
-import { useBoards } from '@/hooks/boards'
+import { useBoards, useCreateBoard } from '@/hooks/boards'
 
 export const IncognitoButton = () => {
 	const navigate = useNavigate()
 	const boards = useBoards()
+	const createBoard = useCreateBoard()
 
 	const handleClick = () => {
 		const board = boards[0] ?? createBoard('Getting Started')

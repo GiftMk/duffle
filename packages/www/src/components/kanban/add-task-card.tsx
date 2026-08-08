@@ -2,7 +2,7 @@ import { ArrowsOutIcon, PlusIcon } from '@phosphor-icons/react'
 import { useRef, useState } from 'react'
 import { IconButton } from '@/components/icon-button'
 import { TitleInput } from '@/components/title-input'
-import { addTask } from '@/lib/actions'
+import { useAddTask } from '@/hooks/tasks'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { TaskDialog } from './task-dialog'
 
@@ -14,6 +14,7 @@ export const AddTaskCard = ({ columnId }: AddTaskCardProps) => {
 	const [isEditing, setIsEditing] = useState(false)
 	const [title, setTitle] = useState('')
 	const dialogTriggerRef = useRef<HTMLButtonElement>(null)
+	const addTask = useAddTask()
 
 	const resetInput = () => {
 		setIsEditing(false)

@@ -2,12 +2,11 @@ import { createFileRoute } from '@tanstack/react-router'
 import { AddBoardCard } from '@/components/kanban/add-board-card'
 import { BoardCard } from '@/components/kanban/board-card'
 import { Sidebar } from '@/components/sidebar'
-import { useBoards } from '@/hooks/boards'
-import { boardsCollection } from '@/lib/collections'
+import { boardsQuery, useBoards } from '@/hooks/boards'
 
 export const Route = createFileRoute('/boards/')({
 	component: RouteComponent,
-	loader: () => boardsCollection.preload(),
+	loader: ({ context }) => context.queryClient.ensureQueryData(boardsQuery),
 })
 
 function RouteComponent() {

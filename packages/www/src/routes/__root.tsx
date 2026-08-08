@@ -1,25 +1,20 @@
-import { createRootRoute, HeadContent, Scripts } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import type { QueryClient } from '@tanstack/react-query'
+import {
+	createRootRouteWithContext,
+	HeadContent,
+	Scripts,
+} from '@tanstack/react-router'
 import '@/index.css'
 import { LoadingPage } from '@/components/loading-page'
 import { ThemeProvider } from '@/components/sidebar/theme-provider'
 import { TooltipProvider } from '@/components/tooltip'
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
 	pendingComponent: LoadingPage,
 	shellComponent: RootDocument,
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	// Collections load asynchronously from the API on the client, but the
-	// server renders with an empty in-memory fallback - gate on client mount
-	// so the two don't mismatch.
-	const [mounted, setMounted] = useState(false)
-
-	useEffect(() => {
-		setMounted(true)
-	}, [])
-
 	return (
 		<html lang='en'>
 			<head>
@@ -30,9 +25,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body className='text-typography-950'>
 				<ThemeProvider>
-					<TooltipProvider delay={300}>
-						{mounted ? children : <LoadingPage />}
-					</TooltipProvider>
+					<TooltipProvider delay={300}>{children}</TooltipProvider>
 				</ThemeProvider>
 				<Scripts />
 			</body>

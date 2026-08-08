@@ -14,7 +14,7 @@ import {
 import { IconButton } from '@/components/icon-button'
 import { BoardContainer } from '@/components/kanban/board-container'
 import { TitleInput } from '@/components/title-input'
-import { deleteBoard, updateBoard } from '@/lib/actions'
+import { useDeleteBoard, useUpdateBoard } from '@/hooks/boards'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import type { BoardEntity } from '@/lib/schemas'
 import { onNextTick } from '@/lib/utils'
@@ -28,6 +28,7 @@ export const BoardCard = ({ board }: BoardCardProps) => {
 	const [isEditing, setIsEditing] = useState(false)
 	const [canNavigate, setCanNavigate] = useState(true)
 	const [title, setTitle] = useState(board.title)
+	const updateBoard = useUpdateBoard()
 
 	const handleClick = () => {
 		if (!canNavigate) return
@@ -107,6 +108,8 @@ const DeleteBoardDialog = ({
 	board: BoardEntity
 	onOpenChange?: (open: boolean) => void
 }) => {
+	const deleteBoard = useDeleteBoard()
+
 	return (
 		<AlertDialogRoot onOpenChange={onOpenChange}>
 			<AlertDialogTrigger

@@ -6,23 +6,19 @@ import { BoardNotFound } from '@/components/kanban/board-not-found'
 import { KanbanBoard } from '@/components/kanban/kanban-board'
 import { Sidebar } from '@/components/sidebar'
 import { TitleInput } from '@/components/title-input'
-import { useBoard } from '@/hooks/boards'
-import { updateBoard } from '@/lib/actions'
+import { boardsQuery, useBoard, useUpdateBoard } from '@/hooks/boards'
+import { columnsQuery } from '@/hooks/columns'
+import { tasksQuery } from '@/hooks/tasks'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import type { BoardEntity } from '@/lib/schemas'
-import {
-	boardsCollection,
-	columnsCollection,
-	tasksCollection,
-} from '@/lib/collections'
 
 export const Route = createFileRoute('/boards/$boardId')({
 	component: RouteComponent,
-	loader: async () =>
+	loader: async ({ context }) =>
 		Promise.all([
-			boardsCollection.preload(),
-			columnsCollection.preload(),
-			tasksCollection.preload,
+			context.queryClient.ensureQueryData(boardsQuery),
+			context.queryClient.ensureQueryData(columnsQuery),
+			context.queryClient.ensureQueryData(tasksQuery),
 		]),
 })
 
@@ -48,6 +44,7 @@ function RouteComponent() {
 const BoardTitle = ({ board }: { board: BoardEntity }) => {
 	const [isEditing, setIsEditing] = useState(false)
 	const [title, setTitle] = useState(board.title)
+	const updateBoard = useUpdateBoard()
 
 	const startEditing = () => setIsEditing(true)
 

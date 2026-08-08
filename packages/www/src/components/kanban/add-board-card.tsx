@@ -3,11 +3,12 @@ import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { BoardContainer } from '@/components/kanban/board-container'
 import { TitleInput } from '@/components/title-input'
-import { createBoard } from '@/lib/actions'
+import { useCreateBoard } from '@/hooks/boards'
 import { ICON_SIZE_MD } from '@/lib/constants'
 
 export const AddBoardCard = () => {
 	const navigate = useNavigate()
+	const createBoard = useCreateBoard()
 	const [isEditing, setIsEditing] = useState(false)
 	const [title, setTitle] = useState('')
 

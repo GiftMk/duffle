@@ -12,7 +12,7 @@ import {
 } from '@/components/alert-dialog'
 import { IconButton } from '@/components/icon-button'
 import { TitleInput } from '@/components/title-input'
-import { deleteColumn, updateColumn } from '@/lib/actions'
+import { useDeleteColumn, useUpdateColumn } from '@/hooks/columns'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
@@ -24,6 +24,7 @@ type ColumnTitleProps = {
 export const ColumnTitle = ({ id, value }: ColumnTitleProps) => {
 	const [isEditing, setIsEditing] = useState(false)
 	const [title, setTitle] = useState(value)
+	const updateColumn = useUpdateColumn()
 
 	const startEditing = () => {
 		setIsEditing(true)
@@ -77,6 +78,8 @@ const DeleteColumnDialog = ({
 	title: string
 	disabled?: boolean
 }) => {
+	const deleteColumn = useDeleteColumn()
+
 	return (
 		<AlertDialogRoot>
 			<AlertDialogTrigger
