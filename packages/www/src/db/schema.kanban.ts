@@ -1,12 +1,12 @@
-import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { integer, snakeCase, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { user } from './schema.auth'
 
-const userReference = () =>
+export const userReference = () =>
 	text()
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' })
 
-export const boardsTable = pgTable('boards', {
+export const boardsTable = snakeCase.table('boards', {
 	id: uuid().primaryKey(),
 	userId: userReference(),
 	title: text().notNull(),
@@ -14,7 +14,7 @@ export const boardsTable = pgTable('boards', {
 	updatedAt: timestamp({ mode: 'string' }).notNull(),
 })
 
-export const columnsTable = pgTable('columns', {
+export const columnsTable = snakeCase.table('columns', {
 	id: uuid().primaryKey(),
 	userId: userReference(),
 	boardId: uuid()
@@ -26,7 +26,7 @@ export const columnsTable = pgTable('columns', {
 	position: integer().notNull(),
 })
 
-export const tasksTable = pgTable('tasks', {
+export const tasksTable = snakeCase.table('tasks', {
 	id: uuid().primaryKey(),
 	userId: userReference(),
 	columnId: uuid()

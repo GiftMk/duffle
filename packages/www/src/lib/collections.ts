@@ -1,6 +1,7 @@
 import { queryCollectionOptions } from '@tanstack/query-db-collection'
 import { createCollection } from '@tanstack/react-db'
 import { QueryClient } from '@tanstack/react-query'
+import { boardSchema, columnSchema, taskSchema } from '@/lib/schemas'
 import {
 	createBoard,
 	deleteBoard,
@@ -14,7 +15,6 @@ import {
 	updateColumn,
 } from '@/server/columns'
 import { createTask, deleteTask, getTasks, updateTask } from '@/server/tasks'
-import { boardSchema, columnSchema, taskSchema } from '@/lib/schemas'
 
 export const queryClient = new QueryClient()
 

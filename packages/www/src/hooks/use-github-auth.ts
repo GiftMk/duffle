@@ -1,6 +1,6 @@
+import type { LinkProps } from '@tanstack/react-router'
 import { useState } from 'react'
 import { signIn } from '@/lib/auth'
-import type { LinkProps } from '@tanstack/react-router'
 
 const safePath = (path: LinkProps['to']) => {
 	return `${window.location.origin}/${path}`

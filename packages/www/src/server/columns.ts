@@ -1,16 +1,17 @@
 import { createServerFn } from '@tanstack/react-start'
 import { and, eq } from 'drizzle-orm'
-import { db } from '@/db'
 import { columnsTable } from '@/db/schema.kanban'
 import { columnSchema } from '@/lib/schemas'
 import { withIsoTimestamps } from '@/lib/utils'
+import { withDb } from '@/server/middleware'
 import { requireSession } from '@/server/session.server'
 
-export const getColumns = createServerFn({ method: 'GET' }).handler(
-	async () => {
+export const getColumns = createServerFn({ method: 'GET' })
+	.middleware([withDb])
+	.handler(async ({ context }) => {
 		const { user } = await requireSession()
 
-		const rows = await db
+		const rows = await context.db
 			.select({
 				id: columnsTable.id,
 				title: columnsTable.title,
@@ -23,23 +24,24 @@ export const getColumns = createServerFn({ method: 'GET' }).handler(
 			.where(eq(columnsTable.userId, user.id))
 
 		return rows.map(withIsoTimestamps)
-	},
-)
+	})
 
 export const createColumn = createServerFn({ method: 'POST' })
+	.middleware([withDb])
 	.validator(columnSchema)
-	.handler(async ({ data }) => {
+	.handler(async ({ data, context }) => {
 		const { user } = await requireSession()
-		await db.insert(columnsTable).values({ userId: user.id, ...data })
+		await context.db.insert(columnsTable).values({ userId: user.id, ...data })
 		return data
 	})
 
 export const updateColumn = createServerFn({ method: 'POST' })
+	.middleware([withDb])
 	.validator(columnSchema)
-	.handler(async ({ data }) => {
+	.handler(async ({ data, context }) => {
 		const { user } = await requireSession()
 
-		await db
+		await context.db
 			.update(columnsTable)
 			.set(data)
 			.where(
@@ -50,11 +52,12 @@ export const updateColumn = createServerFn({ method: 'POST' })
 	})
 
 export const deleteColumn = createServerFn({ method: 'POST' })
+	.middleware([withDb])
 	.validator(columnSchema.pick({ id: true }))
-	.handler(async ({ data }) => {
+	.handler(async ({ data, context }) => {
 		const { user } = await requireSession()
 
-		await db
+		await context.db
 			.delete(columnsTable)
 			.where(
 				and(eq(columnsTable.userId, user.id), eq(columnsTable.id, data.id)),

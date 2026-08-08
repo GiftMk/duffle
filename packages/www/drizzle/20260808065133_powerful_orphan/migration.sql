@@ -46,30 +46,30 @@ CREATE TABLE "verification" (
 --> statement-breakpoint
 CREATE TABLE "boards" (
 	"id" uuid PRIMARY KEY,
-	"userId" text NOT NULL,
+	"user_id" text NOT NULL,
 	"title" text NOT NULL,
-	"createdAt" timestamp NOT NULL,
-	"updatedAt" timestamp NOT NULL
+	"created_at" timestamp NOT NULL,
+	"updated_at" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "columns" (
 	"id" uuid PRIMARY KEY,
-	"userId" text NOT NULL,
-	"boardId" uuid NOT NULL,
+	"user_id" text NOT NULL,
+	"board_id" uuid NOT NULL,
 	"title" text NOT NULL,
-	"createdAt" timestamp NOT NULL,
-	"updatedAt" timestamp NOT NULL,
+	"created_at" timestamp NOT NULL,
+	"updated_at" timestamp NOT NULL,
 	"position" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "tasks" (
 	"id" uuid PRIMARY KEY,
-	"userId" text NOT NULL,
-	"columnId" uuid NOT NULL,
+	"user_id" text NOT NULL,
+	"column_id" uuid NOT NULL,
 	"title" text NOT NULL,
 	"description" text,
-	"createdAt" timestamp NOT NULL,
-	"updatedAt" timestamp NOT NULL,
+	"created_at" timestamp NOT NULL,
+	"updated_at" timestamp NOT NULL,
 	"position" integer NOT NULL
 );
 --> statement-breakpoint
@@ -78,8 +78,8 @@ CREATE INDEX "session_userId_idx" ON "sessions" ("user_id");--> statement-breakp
 CREATE INDEX "verification_identifier_idx" ON "verification" ("identifier");--> statement-breakpoint
 ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_users_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;--> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_users_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;--> statement-breakpoint
-ALTER TABLE "boards" ADD CONSTRAINT "boards_userId_users_id_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE;--> statement-breakpoint
-ALTER TABLE "columns" ADD CONSTRAINT "columns_userId_users_id_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE;--> statement-breakpoint
-ALTER TABLE "columns" ADD CONSTRAINT "columns_boardId_boards_id_fkey" FOREIGN KEY ("boardId") REFERENCES "boards"("id") ON DELETE CASCADE;--> statement-breakpoint
-ALTER TABLE "tasks" ADD CONSTRAINT "tasks_userId_users_id_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE;--> statement-breakpoint
-ALTER TABLE "tasks" ADD CONSTRAINT "tasks_columnId_columns_id_fkey" FOREIGN KEY ("columnId") REFERENCES "columns"("id") ON DELETE CASCADE;
+ALTER TABLE "boards" ADD CONSTRAINT "boards_user_id_users_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;--> statement-breakpoint
+ALTER TABLE "columns" ADD CONSTRAINT "columns_user_id_users_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;--> statement-breakpoint
+ALTER TABLE "columns" ADD CONSTRAINT "columns_board_id_boards_id_fkey" FOREIGN KEY ("board_id") REFERENCES "boards"("id") ON DELETE CASCADE;--> statement-breakpoint
+ALTER TABLE "tasks" ADD CONSTRAINT "tasks_user_id_users_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;--> statement-breakpoint
+ALTER TABLE "tasks" ADD CONSTRAINT "tasks_column_id_columns_id_fkey" FOREIGN KEY ("column_id") REFERENCES "columns"("id") ON DELETE CASCADE;

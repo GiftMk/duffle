@@ -1,49 +1,53 @@
 import { createServerFn } from '@tanstack/react-start'
 import { and, eq } from 'drizzle-orm'
-import { db } from '@/db'
 import { tasksTable } from '@/db/schema.kanban'
 import { taskSchema } from '@/lib/schemas'
 import { withIsoTimestamps } from '@/lib/utils'
+import { withDb } from '@/server/middleware'
 import { requireSession } from '@/server/session.server'
 
-export const getTasks = createServerFn({ method: 'GET' }).handler(async () => {
-	const { user } = await requireSession()
+export const getTasks = createServerFn({ method: 'GET' })
+	.middleware([withDb])
+	.handler(async ({ context }) => {
+		const { user } = await requireSession()
 
-	const rows = await db
-		.select({
-			id: tasksTable.id,
-			title: tasksTable.title,
-			columnId: tasksTable.columnId,
-			description: tasksTable.description,
-			createdAt: tasksTable.createdAt,
-			updatedAt: tasksTable.updatedAt,
-			position: tasksTable.position,
-		})
-		.from(tasksTable)
-		.where(eq(tasksTable.userId, user.id))
+		const rows = await context.db
+			.select({
+				id: tasksTable.id,
+				title: tasksTable.title,
+				columnId: tasksTable.columnId,
+				description: tasksTable.description,
+				createdAt: tasksTable.createdAt,
+				updatedAt: tasksTable.updatedAt,
+				position: tasksTable.position,
+			})
+			.from(tasksTable)
+			.where(eq(tasksTable.userId, user.id))
 
-	return rows.map((row) =>
-		withIsoTimestamps({
-			...row,
-			description: row.description ?? undefined,
-		}),
-	)
-})
+		return rows.map((row) =>
+			withIsoTimestamps({
+				...row,
+				description: row.description ?? undefined,
+			}),
+		)
+	})
 
 export const createTask = createServerFn({ method: 'POST' })
+	.middleware([withDb])
 	.validator(taskSchema)
-	.handler(async ({ data }) => {
+	.handler(async ({ data, context }) => {
 		const { user } = await requireSession()
-		await db.insert(tasksTable).values({ userId: user.id, ...data })
+		await context.db.insert(tasksTable).values({ userId: user.id, ...data })
 		return data
 	})
 
 export const updateTask = createServerFn({ method: 'POST' })
+	.middleware([withDb])
 	.validator(taskSchema)
-	.handler(async ({ data }) => {
+	.handler(async ({ data, context }) => {
 		const { user } = await requireSession()
 
-		await db
+		await context.db
 			.update(tasksTable)
 			.set(data)
 			.where(and(eq(tasksTable.userId, user.id), eq(tasksTable.id, data.id)))
@@ -52,11 +56,12 @@ export const updateTask = createServerFn({ method: 'POST' })
 	})
 
 export const deleteTask = createServerFn({ method: 'POST' })
+	.middleware([withDb])
 	.validator(taskSchema.pick({ id: true }))
-	.handler(async ({ data }) => {
+	.handler(async ({ data, context }) => {
 		const { user } = await requireSession()
 
-		await db
+		await context.db
 			.delete(tasksTable)
 			.where(and(eq(tasksTable.userId, user.id), eq(tasksTable.id, data.id)))
 

@@ -19,7 +19,9 @@ const createBoardAction = createOptimisticAction<CreateBoardVars>({
 	},
 	mutationFn: async ({ board, columns }) => {
 		await createBoardServerFn({ data: board })
-		await Promise.all(columns.map((column) => createColumnServerFn({ data: column })))
+		await Promise.all(
+			columns.map((column) => createColumnServerFn({ data: column })),
+		)
 
 		await Promise.all([
 			boardsCollection.utils.refetch(),

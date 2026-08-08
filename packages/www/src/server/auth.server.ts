@@ -1,9 +1,11 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { tanstackStartCookies } from 'better-auth/tanstack-start'
-import { db } from '@/db'
+import { getDb } from '@/db'
 import * as schema from '@/db/schema.auth'
 import { env } from '@/env'
+
+const db = await getDb()
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {

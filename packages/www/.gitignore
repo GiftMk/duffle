@@ -13,6 +13,7 @@ dist-ssr
 *.local
 .tanstack
 .output
+.pglite
 
 # Editor directories and files
 .vscode/*

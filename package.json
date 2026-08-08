@@ -7,9 +7,9 @@
 	},
 	"scripts": {
 		"dev": "pnpm --filter @duffle/www dev",
-		"db:up": "docker desktop start && docker compose up -d --wait && pnpm --filter @duffle/www db:push",
 		"tidy": "pnpm -r --if-present run tidy",
-		"tsc": "pnpm -r --if-present run tsc"
+		"tsc": "pnpm -r --if-present run tsc",
+		"test": "pnpm -r --if-present run test"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.4"
