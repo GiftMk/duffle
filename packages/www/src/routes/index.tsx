@@ -3,10 +3,11 @@ import { useEffect } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { FadeIn, SpringPopIn } from '@/components/animations'
 import { GithubLoginButton } from '@/components/github-login-button'
-import { LoadingPage } from '@/components/loading-page'
 import { useGithubAuth } from '@/hooks/use-github-auth'
-import { createBoard, getLastUpdatedBoard } from '@/lib/actions'
+import { createBoard } from '@/lib/actions'
 import { useSession } from '@/lib/auth'
+import { LoadingPage } from '@/components/loading-page'
+import { useBoards } from '@/hooks/boards'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,
@@ -27,27 +28,37 @@ const SubHeading = () => (
 )
 
 function RouteComponent() {
-	const { loading, signIn } = useGithubAuth()
+	const { loading, signIn, error } = useGithubAuth()
 	const { data: session, isPending } = useSession()
+	const boards = useBoards()
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		if (session) {
-			const board = getLastUpdatedBoard() ?? createBoard('Getting Started')
+		if (session && !isPending) {
+			const board = boards[0] ?? createBoard('Getting Started')
 			navigate({ to: '/boards/$boardId', params: { boardId: board.id } })
 		}
-	}, [session, navigate])
+	}, [session, navigate, isPending, boards])
 
-	if (isPending || session) {
-		return <LoadingPage />
+	const handleClick = async () => {
+		await signIn({ successRoute: '/', errorRoute: '/' })
+	}
+
+	if (session) {
+		return <LoadingPage message='Signing you in...' />
+	}
+
+	if (isPending) {
+		return <LoadingPage message='Hitting up GitHub...' />
 	}
 
 	return (
 		<main className='flex h-full w-full flex-col items-center justify-center gap-12 text-center'>
 			<Heading />
 			<SubHeading />
-			<SpringPopIn className='flex gap-3' initial={{ y: -300 }}>
-				<GithubLoginButton loading={loading} onClick={signIn} />
+			<SpringPopIn className='flex flex-col gap-3' initial={{ y: -300 }}>
+				<GithubLoginButton loading={loading} onClick={handleClick} />
+				{error && <p className='text-red-600 text-sm'>{error}</p>}
 			</SpringPopIn>
 		</main>
 	)

@@ -2,28 +2,22 @@ import type { LinkProps } from '@tanstack/react-router'
 import { useState } from 'react'
 import { signIn } from '@/lib/auth'
 
-const safePath = (path: LinkProps['to']) => {
-	return `${window.location.origin}/${path}`
-}
-
-const getCallbackUrl = (): string => {
-	return document.referrer?.startsWith(window.location.origin)
-		? document.referrer
-		: safePath('/boards')
+const safeCallback = (path: LinkProps['to']) => {
+	return `${window.location.origin}${path}`
 }
 
 export const useGithubAuth = () => {
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 
-	const handleSignIn = async () => {
+	const handleSignIn = async ({ successRoute, errorRoute }: { successRoute: LinkProps['to'], errorRoute: LinkProps['to'] }) => {
 		setLoading(true)
 		setError(null)
 
 		const { error: signInError } = await signIn.social({
 			provider: 'github',
-			callbackURL: getCallbackUrl(),
-			errorCallbackURL: safePath('/login'),
+			callbackURL: safeCallback(successRoute),
+			errorCallbackURL: safeCallback(errorRoute),
 		})
 
 		if (signInError) {

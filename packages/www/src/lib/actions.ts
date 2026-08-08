@@ -3,10 +3,16 @@ import { uuidv7 } from 'uuidv7'
 import {
 	boardsCollection,
 	columnsCollection,
+	notesCollection,
 	tasksCollection,
 } from '@/lib/collections'
-import type { BoardEntity, ColumnEntity, TaskEntity } from '@/lib/schemas'
-import { utcNow } from '@/lib/utils'
+import type {
+	BoardEntity,
+	ColumnEntity,
+	NoteEntity,
+	TaskEntity,
+} from '@/lib/schemas'
+import { splitMarkdown, utcNow } from '@/lib/utils'
 import { createBoard as createBoardServerFn } from '@/server/boards'
 import { createColumn as createColumnServerFn } from '@/server/columns'
 
@@ -64,15 +70,6 @@ export const updateBoard = (
 		recipe(draft)
 		draft.updatedAt = utcNow()
 	})
-}
-
-export const getLastUpdatedBoard = () => {
-	return boardsCollection.toArray
-		.toSorted(
-			(a, b) =>
-				new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
-		)
-		.at(0)
 }
 
 export const deleteBoard = (id: string) => {
@@ -139,6 +136,34 @@ export const addTask = (
 	}
 
 	tasksCollection.insert(task)
+}
+
+export const createNote = () => {
+	const timestamp = utcNow()
+
+	const note: NoteEntity = {
+		id: uuidv7(),
+		title: '',
+		body: '',
+		markdown: '',
+		createdAt: timestamp,
+		updatedAt: timestamp,
+	}
+
+	notesCollection.insert(note)
+
+	return note
+}
+
+export const updateNote = (id: string, markdown: string) => {
+	const { title, description: body } = splitMarkdown(markdown)
+
+	notesCollection.update(id, (draft) => {
+		draft.markdown = markdown
+		draft.title = title ?? ''
+		draft.body = body ?? ''
+		draft.updatedAt = utcNow()
+	})
 }
 
 const updateTaskPositions = (columnId: string, tasks: TaskEntity[]) => {

@@ -1,7 +1,12 @@
 import { queryCollectionOptions } from '@tanstack/query-db-collection'
 import { createCollection } from '@tanstack/react-db'
 import { QueryClient } from '@tanstack/react-query'
-import { boardSchema, columnSchema, taskSchema } from '@/lib/schemas'
+import {
+	boardSchema,
+	columnSchema,
+	noteSchema,
+	taskSchema,
+} from '@/lib/schemas'
 import {
 	createBoard,
 	deleteBoard,
@@ -14,6 +19,7 @@ import {
 	getColumns,
 	updateColumn,
 } from '@/server/columns'
+import { createNote, getNotes, updateNote } from '@/server/notes'
 import { createTask, deleteTask, getTasks, updateTask } from '@/server/tasks'
 
 export const queryClient = new QueryClient()
@@ -83,6 +89,25 @@ export const tasksCollection = createCollection(
 		onDelete: async ({ transaction }) => {
 			const { key: id } = transaction.mutations[0]
 			await deleteTask({ data: { id } })
+		},
+	}),
+)
+
+export const notesCollection = createCollection(
+	queryCollectionOptions({
+		id: 'notes',
+		queryClient,
+		queryKey: ['notes'],
+		getKey: (note) => note.id,
+		schema: noteSchema,
+		queryFn: () => getNotes(),
+		onInsert: async ({ transaction }) => {
+			const { modified } = transaction.mutations[0]
+			await createNote({ data: modified })
+		},
+		onUpdate: async ({ transaction }) => {
+			const { modified } = transaction.mutations[0]
+			await updateNote({ data: modified })
 		},
 	}),
 )

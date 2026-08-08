@@ -29,6 +29,10 @@ function RouteComponent() {
 		return <LoadingPage />
 	}
 
+	const handleSignIn = () => {
+		signIn({ successRoute: '/login', errorRoute: '/login' })
+	}
+
 	return (
 		<main className='flex h-full w-full'>
 			<Sidebar />
@@ -41,7 +45,7 @@ function RouteComponent() {
 					</p>
 				</FadeIn>
 				<SpringPopIn className='flex flex-col items-center gap-3'>
-					<GithubLoginButton loading={loading} onClick={signIn} />
+					<GithubLoginButton loading={loading} onClick={handleSignIn} />
 					{error && <p className='text-red-600 text-sm'>{error}</p>}
 				</SpringPopIn>
 			</div>

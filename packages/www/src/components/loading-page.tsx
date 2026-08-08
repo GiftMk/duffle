@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Kanmoji } from './kanmoji'
 
-export const LoadingPage = () => {
+export const LoadingPage = ({ message }: { message?: string }) => {
 	return (
 		<div className='relative h-full w-full animate-pulse'>
 			<motion.div
@@ -13,7 +13,7 @@ export const LoadingPage = () => {
 				<Kanmoji className='font-bold text-4xl [animation-speed:3s]'>
 					(„• ֊ •„)੭
 				</Kanmoji>
-				<p className='text-lg'>Almost there...</p>
+				<p className='text-lg'>{message ? message : 'Almost there...'}</p>
 			</motion.div>
 		</div>
 	)

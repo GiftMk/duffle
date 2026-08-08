@@ -10,9 +10,20 @@ import { useBoard } from '@/hooks/boards'
 import { updateBoard } from '@/lib/actions'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import type { BoardEntity } from '@/lib/schemas'
+import {
+	boardsCollection,
+	columnsCollection,
+	tasksCollection,
+} from '@/lib/collections'
 
 export const Route = createFileRoute('/boards/$boardId')({
 	component: RouteComponent,
+	loader: async () =>
+		Promise.all([
+			boardsCollection.preload(),
+			columnsCollection.preload(),
+			tasksCollection.preload,
+		]),
 })
 
 function RouteComponent() {

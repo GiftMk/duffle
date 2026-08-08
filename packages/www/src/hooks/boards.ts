@@ -14,6 +14,10 @@ export const useBoard = (id: string) => {
 }
 
 export const useBoards = () => {
-	const { data } = useLiveQuery((q) => q.from({ board: boardsCollection }))
+	const { data } = useLiveQuery((q) =>
+		q
+			.from({ board: boardsCollection })
+			.orderBy(({ board }) => board.updatedAt, 'desc'),
+	)
 	return data
 }
