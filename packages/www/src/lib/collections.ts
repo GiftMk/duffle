@@ -1,12 +1,20 @@
 import { queryCollectionOptions } from '@tanstack/query-db-collection'
 import { createCollection } from '@tanstack/react-db'
 import { QueryClient } from '@tanstack/react-query'
-import { boardSchema, columnSchema, taskSchema } from '@/lib/schemas'
 import {
-	boardRepository,
-	columnRepository,
-	taskRepository,
-} from './repositories'
+	createBoard,
+	deleteBoard,
+	getBoards,
+	updateBoard,
+} from '@/server/boards'
+import {
+	createColumn,
+	deleteColumn,
+	getColumns,
+	updateColumn,
+} from '@/server/columns'
+import { createTask, deleteTask, getTasks, updateTask } from '@/server/tasks'
+import { boardSchema, columnSchema, taskSchema } from '@/lib/schemas'
 
 export const queryClient = new QueryClient()
 
@@ -17,18 +25,18 @@ export const boardsCollection = createCollection(
 		queryKey: ['boards'],
 		getKey: (board) => board.id,
 		schema: boardSchema,
-		queryFn: () => boardRepository.getAll(),
+		queryFn: () => getBoards(),
 		onInsert: async ({ transaction }) => {
 			const { modified } = transaction.mutations[0]
-			await boardRepository.add(modified)
+			await createBoard({ data: modified })
 		},
 		onUpdate: async ({ transaction }) => {
 			const { modified } = transaction.mutations[0]
-			await boardRepository.update(modified)
+			await updateBoard({ data: modified })
 		},
 		onDelete: async ({ transaction }) => {
 			const { key: id } = transaction.mutations[0]
-			await boardRepository.delete(id)
+			await deleteBoard({ data: { id } })
 		},
 	}),
 )
@@ -40,18 +48,18 @@ export const columnsCollection = createCollection(
 		queryKey: ['columns'],
 		getKey: (column) => column.id,
 		schema: columnSchema,
-		queryFn: () => columnRepository.getAll(),
+		queryFn: () => getColumns(),
 		onInsert: async ({ transaction }) => {
 			const { modified } = transaction.mutations[0]
-			await columnRepository.add(modified)
+			await createColumn({ data: modified })
 		},
 		onUpdate: async ({ transaction }) => {
 			const { modified } = transaction.mutations[0]
-			await columnRepository.update(modified)
+			await updateColumn({ data: modified })
 		},
 		onDelete: async ({ transaction }) => {
 			const { key: id } = transaction.mutations[0]
-			await columnRepository.delete(id)
+			await deleteColumn({ data: { id } })
 		},
 	}),
 )
@@ -63,18 +71,18 @@ export const tasksCollection = createCollection(
 		queryKey: ['tasks'],
 		getKey: (task) => task.id,
 		schema: taskSchema,
-		queryFn: () => taskRepository.getAll(),
+		queryFn: () => getTasks(),
 		onInsert: async ({ transaction }) => {
 			const { modified } = transaction.mutations[0]
-			await taskRepository.add(modified)
+			await createTask({ data: modified })
 		},
 		onUpdate: async ({ transaction }) => {
 			const { modified } = transaction.mutations[0]
-			await taskRepository.update(modified)
+			await updateTask({ data: modified })
 		},
 		onDelete: async ({ transaction }) => {
 			const { key: id } = transaction.mutations[0]
-			await taskRepository.delete(id)
+			await deleteTask({ data: { id } })
 		},
 	}),
 )

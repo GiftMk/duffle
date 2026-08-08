@@ -7,7 +7,8 @@ import {
 } from '@/lib/collections'
 import type { BoardEntity, ColumnEntity, TaskEntity } from '@/lib/schemas'
 import { utcNow } from '@/lib/utils'
-import { boardRepository, columnRepository } from './repositories'
+import { createBoard as createBoardServerFn } from '@/server/boards'
+import { createColumn as createColumnServerFn } from '@/server/columns'
 
 type CreateBoardVars = { board: BoardEntity; columns: ColumnEntity[] }
 
@@ -17,8 +18,8 @@ const createBoardAction = createOptimisticAction<CreateBoardVars>({
 		columnsCollection.insert(columns)
 	},
 	mutationFn: async ({ board, columns }) => {
-		await boardRepository.add(board)
-		await Promise.all(columns.map((column) => columnRepository.add(column)))
+		await createBoardServerFn({ data: board })
+		await Promise.all(columns.map((column) => createColumnServerFn({ data: column })))
 
 		await Promise.all([
 			boardsCollection.utils.refetch(),
