@@ -1,0 +1,29 @@
+import { createFileRoute } from '@tanstack/react-router'
+import { AddNoteCard } from '@/components/notes/add-note-card'
+import { NoteCard } from '@/components/notes/note-card'
+import { Sidebar } from '@/components/sidebar'
+import { notesQuery, useNotes } from '@/hooks/notes'
+
+export const Route = createFileRoute('/notes/')({
+	component: RouteComponent,
+	loader: ({ context }) => context.queryClient.ensureQueryData(notesQuery),
+})
+
+function RouteComponent() {
+	const notes = useNotes()
+
+	return (
+		<main className='flex h-full w-full bg-surface-100'>
+			<Sidebar />
+			<div className='h-full w-full overflow-y-auto px-8 py-4'>
+				<h1 className='font-bold text-3xl tracking-tight'>Notes</h1>
+				<div className='mt-8 flex flex-wrap gap-6'>
+					<AddNoteCard />
+					{notes.map((note) => (
+						<NoteCard key={note.id} note={note} />
+					))}
+				</div>
+			</div>
+		</main>
+	)
+}

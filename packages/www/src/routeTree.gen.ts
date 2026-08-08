@@ -15,6 +15,7 @@ import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as ThemeRouteImport } from './routes/theme'
 import { Route as BoardsIndexRouteImport } from './routes/boards.index'
 import { Route as BoardsBoardIdRouteImport } from './routes/boards.$boardId'
+import { Route as NotesIndexRouteImport } from './routes/notes.index'
 import { Route as NotesNoteIdRouteImport } from './routes/notes.$noteId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
 
@@ -48,6 +49,11 @@ const BoardsBoardIdRoute = BoardsBoardIdRouteImport.update({
   path: '/boards/$boardId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NotesIndexRoute = NotesIndexRouteImport.update({
+  id: '/notes/',
+  path: '/notes/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NotesNoteIdRoute = NotesNoteIdRouteImport.update({
   id: '/notes/$noteId',
   path: '/notes/$noteId',
@@ -67,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/boards/$boardId': typeof BoardsBoardIdRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/boards/': typeof BoardsIndexRoute
+  '/notes/': typeof NotesIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
@@ -77,6 +84,7 @@ export interface FileRoutesByTo {
   '/boards/$boardId': typeof BoardsBoardIdRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/boards': typeof BoardsIndexRoute
+  '/notes': typeof NotesIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
@@ -88,6 +96,7 @@ export interface FileRoutesById {
   '/boards/$boardId': typeof BoardsBoardIdRoute
   '/notes/$noteId': typeof NotesNoteIdRoute
   '/boards/': typeof BoardsIndexRoute
+  '/notes/': typeof NotesIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
@@ -100,6 +109,7 @@ export interface FileRouteTypes {
     | '/boards/$boardId'
     | '/notes/$noteId'
     | '/boards/'
+    | '/notes/'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/boards/$boardId'
     | '/notes/$noteId'
     | '/boards'
+    | '/notes'
     | '/api/auth/$'
   id:
     | '__root__'
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
     | '/boards/$boardId'
     | '/notes/$noteId'
     | '/boards/'
+    | '/notes/'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
@@ -131,6 +143,7 @@ export interface RootRouteChildren {
   BoardsBoardIdRoute: typeof BoardsBoardIdRoute
   NotesNoteIdRoute: typeof NotesNoteIdRoute
   BoardsIndexRoute: typeof BoardsIndexRoute
+  NotesIndexRoute: typeof NotesIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BoardsBoardIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/notes/': {
+      id: '/notes/'
+      path: '/notes'
+      fullPath: '/notes/'
+      preLoaderRoute: typeof NotesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/notes/$noteId': {
       id: '/notes/$noteId'
       path: '/notes/$noteId'
@@ -203,6 +223,7 @@ const rootRouteChildren: RootRouteChildren = {
   BoardsBoardIdRoute: BoardsBoardIdRoute,
   NotesNoteIdRoute: NotesNoteIdRoute,
   BoardsIndexRoute: BoardsIndexRoute,
+  NotesIndexRoute: NotesIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

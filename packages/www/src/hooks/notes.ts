@@ -6,24 +6,30 @@ import {
 } from '@tanstack/react-query'
 import { produce } from 'immer'
 import { uuidv7 } from 'uuidv7'
-import { upsertItem } from '@/lib/query-list'
+import { removeItem, upsertItem } from '@/lib/query-list'
 import { type NoteEntity, noteSchema } from '@/lib/schemas'
 import { splitMarkdown, utcNow } from '@/lib/utils'
 import {
-	createNote as createNoteFn,
-	getNotes,
-	updateNote as updateNoteFn,
+	createNoteFn,
+	deleteNoteFn,
+	getNotesFn,
+	updateNoteFn,
 } from '@/server/notes'
 
 export const notesQuery = queryOptions({
 	queryKey: ['notes'],
-	queryFn: async () => noteSchema.array().parse(await getNotes()),
+	queryFn: async () => noteSchema.array().parse(await getNotesFn()),
 	staleTime: Infinity,
 })
 
-export const useNote = (id: string) => {
+export const useNotes = () => {
 	const { data } = useSuspenseQuery(notesQuery)
-	return data.find((note) => note.id === id)
+	return [...data].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+}
+
+export const useNote = (id: string) => {
+	const notes = useNotes()
+	return notes.find((note) => note.id === id)
 }
 
 export const useCreateNote = () => {
@@ -99,4 +105,30 @@ export const useUpdateNote = () => {
 			}),
 		)
 	}
+}
+
+export const useDeleteNote = () => {
+	const queryClient = useQueryClient()
+
+	const { mutate } = useMutation({
+		mutationFn: (id: string) => deleteNoteFn({ data: { id } }),
+		onMutate: async (id) => {
+			await queryClient.cancelQueries({ queryKey: notesQuery.queryKey })
+			const previous = queryClient.getQueryData<NoteEntity[]>(
+				notesQuery.queryKey,
+			)
+			queryClient.setQueryData<NoteEntity[]>(notesQuery.queryKey, (old) =>
+				removeItem(old, id),
+			)
+			return { previous }
+		},
+		onError: (_err, _id, context) => {
+			queryClient.setQueryData(notesQuery.queryKey, context?.previous)
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: notesQuery.queryKey })
+		},
+	})
+
+	return mutate
 }

@@ -10,15 +10,15 @@ import { removeItem, upsertItem, upsertItems } from '@/lib/query-list'
 import { type TaskEntity, taskSchema } from '@/lib/schemas'
 import { utcNow } from '@/lib/utils'
 import {
-	createTask as createTaskFn,
-	deleteTask as deleteTaskFn,
-	getTasks,
-	updateTask as updateTaskFn,
+	createTaskFn,
+	deleteTaskFn,
+	getTasksFn,
+	updateTaskFn,
 } from '@/server/tasks'
 
 export const tasksQuery = queryOptions({
 	queryKey: ['tasks'],
-	queryFn: async () => taskSchema.array().parse(await getTasks()),
+	queryFn: async () => taskSchema.array().parse(await getTasksFn()),
 	staleTime: Infinity,
 })
 

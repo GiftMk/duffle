@@ -6,7 +6,7 @@ import { withIsoTimestamps } from '@/lib/utils'
 import { withDb } from '@/server/middleware'
 import { requireSession } from '@/server/session.server'
 
-export const getColumns = createServerFn({ method: 'GET' })
+export const getColumnsFn = createServerFn({ method: 'GET' })
 	.middleware([withDb])
 	.handler(async ({ context }) => {
 		const { user } = await requireSession()
@@ -26,7 +26,7 @@ export const getColumns = createServerFn({ method: 'GET' })
 		return rows.map(withIsoTimestamps)
 	})
 
-export const createColumn = createServerFn({ method: 'POST' })
+export const createColumnFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
 	.validator(columnSchema)
 	.handler(async ({ data, context }) => {
@@ -35,7 +35,7 @@ export const createColumn = createServerFn({ method: 'POST' })
 		return data
 	})
 
-export const updateColumn = createServerFn({ method: 'POST' })
+export const updateColumnFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
 	.validator(columnSchema)
 	.handler(async ({ data, context }) => {
@@ -51,7 +51,7 @@ export const updateColumn = createServerFn({ method: 'POST' })
 		return data
 	})
 
-export const deleteColumn = createServerFn({ method: 'POST' })
+export const deleteColumnFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
 	.validator(columnSchema.pick({ id: true }))
 	.handler(async ({ data, context }) => {

@@ -6,7 +6,7 @@ import { withIsoTimestamps } from '@/lib/utils'
 import { withDb } from '@/server/middleware'
 import { requireSession } from '@/server/session.server'
 
-export const getTasks = createServerFn({ method: 'GET' })
+export const getTasksFn = createServerFn({ method: 'GET' })
 	.middleware([withDb])
 	.handler(async ({ context }) => {
 		const { user } = await requireSession()
@@ -32,7 +32,7 @@ export const getTasks = createServerFn({ method: 'GET' })
 		)
 	})
 
-export const createTask = createServerFn({ method: 'POST' })
+export const createTaskFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
 	.validator(taskSchema)
 	.handler(async ({ data, context }) => {
@@ -41,7 +41,7 @@ export const createTask = createServerFn({ method: 'POST' })
 		return data
 	})
 
-export const updateTask = createServerFn({ method: 'POST' })
+export const updateTaskFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
 	.validator(taskSchema)
 	.handler(async ({ data, context }) => {
@@ -55,7 +55,7 @@ export const updateTask = createServerFn({ method: 'POST' })
 		return data
 	})
 
-export const deleteTask = createServerFn({ method: 'POST' })
+export const deleteTaskFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
 	.validator(taskSchema.pick({ id: true }))
 	.handler(async ({ data, context }) => {

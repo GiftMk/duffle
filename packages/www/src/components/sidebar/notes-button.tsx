@@ -1,20 +1,17 @@
 import { BooksIcon } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
 import { Tooltip } from '@/components/tooltip'
-import { useCreateNote } from '@/hooks/notes'
 import { ICON_SIZE_MD } from '@/lib/constants'
 
-export const NewNoteButton = () => {
+export const NotesButton = () => {
 	const navigate = useNavigate()
-	const createNote = useCreateNote()
 
 	const handleClick = () => {
-		const note = createNote()
-		navigate({ to: '/notes/$noteId', params: { noteId: note.id } })
+		navigate({ to: '/notes' })
 	}
 
 	return (
-		<Tooltip content='Create note'>
+		<Tooltip content='Notes'>
 			<button
 				onClick={handleClick}
 				type='button'

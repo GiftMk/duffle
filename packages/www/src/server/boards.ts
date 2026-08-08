@@ -6,7 +6,7 @@ import { withIsoTimestamps } from '@/lib/utils'
 import { withDb } from '@/server/middleware'
 import { requireSession } from '@/server/session.server'
 
-export const getBoards = createServerFn({ method: 'GET' })
+export const getBoardsFn = createServerFn({ method: 'GET' })
 	.middleware([withDb])
 	.handler(async ({ context }) => {
 		const { user } = await requireSession()
@@ -24,7 +24,7 @@ export const getBoards = createServerFn({ method: 'GET' })
 		return rows.map(withIsoTimestamps)
 	})
 
-export const createBoard = createServerFn({ method: 'POST' })
+export const createBoardFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
 	.validator(boardSchema)
 	.handler(async ({ data, context }) => {
@@ -33,7 +33,7 @@ export const createBoard = createServerFn({ method: 'POST' })
 		return data
 	})
 
-export const updateBoard = createServerFn({ method: 'POST' })
+export const updateBoardFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
 	.validator(boardSchema)
 	.handler(async ({ data, context }) => {
@@ -47,7 +47,7 @@ export const updateBoard = createServerFn({ method: 'POST' })
 		return data
 	})
 
-export const deleteBoard = createServerFn({ method: 'POST' })
+export const deleteBoardFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
 	.validator(boardSchema.pick({ id: true }))
 	.handler(async ({ data, context }) => {

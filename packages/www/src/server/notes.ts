@@ -6,7 +6,7 @@ import { withIsoTimestamps } from '@/lib/utils'
 import { withDb } from '@/server/middleware'
 import { requireSession } from '@/server/session.server'
 
-export const getNotes = createServerFn({ method: 'GET' })
+export const getNotesFn = createServerFn({ method: 'GET' })
 	.middleware([withDb])
 	.handler(async ({ context }) => {
 		const { user } = await requireSession()
@@ -26,7 +26,7 @@ export const getNotes = createServerFn({ method: 'GET' })
 		return rows.map(withIsoTimestamps)
 	})
 
-export const createNote = createServerFn({ method: 'POST' })
+export const createNoteFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
 	.validator(noteSchema)
 	.handler(async ({ data, context }) => {
@@ -35,7 +35,7 @@ export const createNote = createServerFn({ method: 'POST' })
 		return data
 	})
 
-export const updateNote = createServerFn({ method: 'POST' })
+export const updateNoteFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
 	.validator(noteSchema)
 	.handler(async ({ data, context }) => {
@@ -47,4 +47,17 @@ export const updateNote = createServerFn({ method: 'POST' })
 			.where(and(eq(notesTable.userId, user.id), eq(notesTable.id, data.id)))
 
 		return data
+	})
+
+export const deleteNoteFn = createServerFn({ method: 'POST' })
+	.middleware([withDb])
+	.validator(noteSchema.pick({ id: true }))
+	.handler(async ({ data, context }) => {
+		const { user } = await requireSession()
+
+		await context.db
+			.delete(notesTable)
+			.where(and(eq(notesTable.userId, user.id), eq(notesTable.id, data.id)))
+
+		return { id: data.id }
 	})

@@ -8,15 +8,11 @@ import { type Draft, produce } from 'immer'
 import { removeItem, upsertItem } from '@/lib/query-list'
 import { type ColumnEntity, columnSchema } from '@/lib/schemas'
 import { utcNow } from '@/lib/utils'
-import {
-	deleteColumn as deleteColumnFn,
-	getColumns,
-	updateColumn as updateColumnFn,
-} from '@/server/columns'
+import { deleteColumnFn, getColumnsFn, updateColumnFn } from '@/server/columns'
 
 export const columnsQuery = queryOptions({
 	queryKey: ['columns'],
-	queryFn: async () => columnSchema.array().parse(await getColumns()),
+	queryFn: async () => columnSchema.array().parse(await getColumnsFn()),
 	staleTime: Infinity,
 })
 

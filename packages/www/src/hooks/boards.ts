@@ -11,16 +11,16 @@ import { removeItem, upsertItem, upsertItems } from '@/lib/query-list'
 import { type BoardEntity, boardSchema, type ColumnEntity } from '@/lib/schemas'
 import { utcNow } from '@/lib/utils'
 import {
-	createBoard as createBoardFn,
-	deleteBoard as deleteBoardFn,
-	getBoards,
-	updateBoard as updateBoardFn,
+	createBoardFn,
+	deleteBoardFn,
+	getBoardsFn,
+	updateBoardFn,
 } from '@/server/boards'
-import { createColumn as createColumnFn } from '@/server/columns'
+import { createColumnFn } from '@/server/columns'
 
 export const boardsQuery = queryOptions({
 	queryKey: ['boards'],
-	queryFn: async () => boardSchema.array().parse(await getBoards()),
+	queryFn: async () => boardSchema.array().parse(await getBoardsFn()),
 	staleTime: Infinity,
 })
 

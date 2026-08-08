@@ -5,7 +5,7 @@ import { useRoughSvg } from '@/hooks/use-rough-svg'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { Tooltip } from '../tooltip'
 import { AccountButton } from './account-button'
-import { NewNoteButton } from './new-note-button'
+import { NotesButton } from './notes-button'
 import { SearchDialog } from './search-dialog'
 import { ThemeToggle } from './theme-toggle'
 
@@ -37,7 +37,7 @@ export const Sidebar = () => {
 			/>
 			<section className='relative flex flex-col items-center gap-4'>
 				<SearchDialog />
-				<NewNoteButton />
+				<NotesButton />
 				<Tooltip content='Boards'>
 					<button
 						onClick={handleBoardsClick}
