@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-query'
 import { type Draft, produce } from 'immer'
 import { removeItem, upsertItem } from '@/lib/query-list'
-import { columnSchema, type ColumnEntity } from '@/lib/schemas'
+import { type ColumnEntity, columnSchema } from '@/lib/schemas'
 import { utcNow } from '@/lib/utils'
 import {
 	deleteColumn as deleteColumnFn,

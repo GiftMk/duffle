@@ -7,7 +7,7 @@ import {
 import { produce } from 'immer'
 import { uuidv7 } from 'uuidv7'
 import { upsertItem } from '@/lib/query-list'
-import { noteSchema, type NoteEntity } from '@/lib/schemas'
+import { type NoteEntity, noteSchema } from '@/lib/schemas'
 import { splitMarkdown, utcNow } from '@/lib/utils'
 import {
 	createNote as createNoteFn,

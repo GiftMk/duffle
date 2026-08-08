@@ -9,10 +9,12 @@ import { LoadingPage } from '@/components/loading-page'
 import { ThemeProvider } from '@/components/sidebar/theme-provider'
 import { TooltipProvider } from '@/components/tooltip'
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-	pendingComponent: LoadingPage,
-	shellComponent: RootDocument,
-})
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
+	{
+		pendingComponent: LoadingPage,
+		shellComponent: RootDocument,
+	},
+)
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (

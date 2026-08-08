@@ -7,7 +7,7 @@ import {
 import { type Draft, produce } from 'immer'
 import { uuidv7 } from 'uuidv7'
 import { removeItem, upsertItem, upsertItems } from '@/lib/query-list'
-import { taskSchema, type TaskEntity } from '@/lib/schemas'
+import { type TaskEntity, taskSchema } from '@/lib/schemas'
 import { utcNow } from '@/lib/utils'
 import {
 	createTask as createTaskFn,

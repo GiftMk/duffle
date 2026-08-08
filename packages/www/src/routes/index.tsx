@@ -3,10 +3,10 @@ import { Suspense, useEffect } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { FadeIn, SpringPopIn } from '@/components/animations'
 import { GithubLoginButton } from '@/components/github-login-button'
-import { useGithubAuth } from '@/hooks/use-github-auth'
-import { useSession } from '@/lib/auth'
 import { LoadingPage } from '@/components/loading-page'
 import { useBoards, useCreateBoard } from '@/hooks/boards'
+import { useGithubAuth } from '@/hooks/use-github-auth'
+import { useSession } from '@/lib/auth'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,

@@ -10,7 +10,13 @@ export const useGithubAuth = () => {
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 
-	const handleSignIn = async ({ successRoute, errorRoute }: { successRoute: LinkProps['to'], errorRoute: LinkProps['to'] }) => {
+	const handleSignIn = async ({
+		successRoute,
+		errorRoute,
+	}: {
+		successRoute: LinkProps['to']
+		errorRoute: LinkProps['to']
+	}) => {
 		setLoading(true)
 		setError(null)
 

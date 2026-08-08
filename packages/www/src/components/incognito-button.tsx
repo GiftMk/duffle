@@ -1,7 +1,7 @@
 import { DetectiveIcon } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
-import { ICON_SIZE_LG } from '@/lib/constants'
 import { useBoards, useCreateBoard } from '@/hooks/boards'
+import { ICON_SIZE_LG } from '@/lib/constants'
 
 export const IncognitoButton = () => {
 	const navigate = useNavigate()

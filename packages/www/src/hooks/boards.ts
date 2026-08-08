@@ -8,7 +8,7 @@ import { type Draft, produce } from 'immer'
 import { uuidv7 } from 'uuidv7'
 import { columnsQuery } from '@/hooks/columns'
 import { removeItem, upsertItem, upsertItems } from '@/lib/query-list'
-import { boardSchema, type BoardEntity, type ColumnEntity } from '@/lib/schemas'
+import { type BoardEntity, boardSchema, type ColumnEntity } from '@/lib/schemas'
 import { utcNow } from '@/lib/utils'
 import {
 	createBoard as createBoardFn,
