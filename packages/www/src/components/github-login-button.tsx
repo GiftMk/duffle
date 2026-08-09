@@ -6,15 +6,18 @@ import { cn } from '@/lib/utils'
 type GithubLoginButtonProps = {
 	loading: boolean
 	compact?: boolean
+	message?: string
 } & Omit<ComponentProps<'button'>, 'children'>
 
 export const GithubLoginButton = ({
 	loading,
 	compact = false,
+	message: messageOverride,
 	className,
 	...props
 }: GithubLoginButtonProps) => {
-	const message = loading ? 'Redirecting…' : 'Continue with GitHub'
+	const message =
+		messageOverride ?? (loading ? 'Redirecting…' : 'Continue with GitHub')
 	return (
 		<button
 			type='button'
