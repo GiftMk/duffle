@@ -34,6 +34,14 @@ function RouteComponent() {
 		await signIn({ successRoute: '/', errorRoute: '/' })
 	}
 
+	if (session) {
+		return (
+			<Suspense fallback={<LoadingPage message='Signing you in...' />}>
+				<RedirectToBoard />
+			</Suspense>
+		)
+	}
+
 	if (isPending) {
 		return <LoadingPage message='Hitting up GitHub...' />
 	}
@@ -43,24 +51,13 @@ function RouteComponent() {
 			<Heading />
 			<SubHeading />
 			<SpringPopIn className='flex flex-col gap-3' initial={{ y: -300 }}>
-				<GithubLoginButton
-					loading={loading || !!session}
-					message={session ? 'Signing you in...' : undefined}
-					onClick={handleClick}
-				/>
+				<GithubLoginButton loading={loading} onClick={handleClick} />
 				{error && <p className='text-red-600 text-sm'>{error}</p>}
 			</SpringPopIn>
-			{session && (
-				<Suspense fallback={null}>
-					<RedirectToBoard />
-				</Suspense>
-			)}
 		</main>
 	)
 }
 
-// Only mounted once a session is confirmed present, so useBoards() (which
-// suspends/throws via useSuspenseQuery) never runs while signed out.
 const RedirectToBoard = () => {
 	const boards = useBoards()
 	const createBoard = useCreateBoard()
@@ -71,5 +68,5 @@ const RedirectToBoard = () => {
 		navigate({ to: '/boards/$boardId', params: { boardId: board.id } })
 	}, [boards, navigate, createBoard])
 
-	return null
+	return <LoadingPage message='Signing you in...' />
 }

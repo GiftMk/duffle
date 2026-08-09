@@ -1,7 +1,7 @@
 import { type HTMLMotionProps, motion } from 'framer-motion'
 import type { ReactNode } from 'react'
 
-type MotionTarget = Record<string, number | string>
+export type MotionTarget = Record<string, number | string>
 
 type AnimationProps = {
 	children: ReactNode
