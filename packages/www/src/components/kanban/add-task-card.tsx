@@ -52,7 +52,7 @@ export const AddTaskCard = ({ columnId }: AddTaskCardProps) => {
 				onCancel={resetInput}
 				onBlur={handleInputBlur}
 				placeholder='Task title'
-				className='mx-2 w-full'
+				className='mx-2 min-w-0 flex-1'
 			/>
 			<TaskDialog
 				trigger={
