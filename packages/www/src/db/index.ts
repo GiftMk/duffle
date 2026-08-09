@@ -35,10 +35,9 @@ const createPgliteDb = async (dataDir?: string): Promise<Database> => {
 }
 
 export const createDb = async (): Promise<Database> => {
+	if (env.NODE_ENV === 'production' || env.CI) return createPostgresDb()
 	if (env.NODE_ENV === 'test') return createPgliteDb()
-	if (env.NODE_ENV === 'development') return createPgliteDb(devDataDir)
-
-	return createPostgresDb()
+	return createPgliteDb(devDataDir)
 }
 
 let dbPromise: Promise<Database> | undefined
