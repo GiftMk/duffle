@@ -1,11 +1,11 @@
 import { PlusIcon } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { uuidv7 } from 'uuidv7'
 import { BoardContainer } from '@/components/kanban/board-container'
 import { TitleInput } from '@/components/title-input'
 import { useCreateBoard } from '@/hooks/boards'
 import { ICON_SIZE_MD } from '@/lib/constants'
-import { uuidv7 } from 'uuidv7'
 import { onNextTick } from '@/lib/utils'
 
 export const AddBoardCard = () => {
