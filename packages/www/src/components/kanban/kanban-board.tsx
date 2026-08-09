@@ -16,10 +16,10 @@ export const KanbanBoard = ({ board }: KanbanBoardProps) => {
 		if (!result.destination) return
 
 		moveTask(
-			{ columnId: result.source.droppableId, position: result.source.index },
+			{ columnId: result.source.droppableId, index: result.source.index },
 			{
 				columnId: result.destination.droppableId,
-				position: result.destination.index,
+				index: result.destination.index,
 			},
 		)
 	}

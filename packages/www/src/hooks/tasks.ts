@@ -1,3 +1,4 @@
+import { generateKeyBetween } from 'fractional-indexing'
 import {
 	queryOptions,
 	useMutation,
@@ -22,10 +23,14 @@ export const tasksQuery = queryOptions({
 	staleTime: Infinity,
 })
 
+const getPositionBetween = (prev?: string | null, next?: string | null): string => {
+	return generateKeyBetween(prev ?? null, next ?? null)
+}
+
 const getSortedTasks = (columnId: string, tasks: TaskEntity[]) =>
 	tasks
 		.filter((task) => task.columnId === columnId)
-		.sort((a, b) => a.position - b.position)
+		.sort((a, b) => (a.position < b.position ? -1 : a.position > b.position ? 1 : 0))
 
 export const useTasks = (columnId: string) => {
 	const { data } = useSuspenseQuery(tasksQuery)
@@ -116,7 +121,7 @@ export const useAddTask = () => {
 		const tasks =
 			queryClient.getQueryData<TaskEntity[]>(tasksQuery.queryKey) ?? []
 		const lastTask = getSortedTasks(columnId, tasks).at(-1)
-		const position = lastTask === undefined ? 0 : lastTask.position + 1
+		const position = getPositionBetween(lastTask?.position, null)
 
 		const task: TaskEntity = {
 			id: uuidv7(),
@@ -132,7 +137,7 @@ export const useAddTask = () => {
 	}
 }
 
-type DndTarget = Pick<TaskEntity, 'position' | 'columnId'>
+type DndTarget = { columnId: string; index: number }
 
 export const useMoveTask = () => {
 	const queryClient = useQueryClient()
@@ -161,34 +166,41 @@ export const useMoveTask = () => {
 	return (source: DndTarget, destination: DndTarget) => {
 		const tasks =
 			queryClient.getQueryData<TaskEntity[]>(tasksQuery.queryKey) ?? []
+
+		// Load and sort source and destination columns
 		const sourceTasks = getSortedTasks(source.columnId, tasks)
-		const sourceTask = sourceTasks[source.position]
+		const sourceTask = sourceTasks[source.index]
 
 		if (!sourceTask) {
 			throw new Error('Failed to move task, could not find source task.')
 		}
 
 		const timestamp = utcNow()
-		const toPersist: TaskEntity[] = []
 
-		const reposition = (columnId: string, list: TaskEntity[]) => {
-			for (const [i, task] of list.entries()) {
-				toPersist.push({ ...task, columnId, position: i, updatedAt: timestamp })
-			}
-		}
+		// Filter out source task from destination to match drop-index semantics
+		const destinationTasks =
+			source.columnId === destination.columnId
+				? sourceTasks.filter((t) => t.id !== sourceTask.id)
+				: getSortedTasks(destination.columnId, tasks)
 
-		if (source.columnId === destination.columnId) {
-			sourceTasks.splice(source.position, 1)
-			sourceTasks.splice(destination.position, 0, sourceTask)
-			reposition(source.columnId, sourceTasks)
-		} else {
-			sourceTasks.splice(source.position, 1)
-			reposition(source.columnId, sourceTasks)
+		const prevTask = destinationTasks[destination.index - 1]
+		const nextTask = destinationTasks[destination.index]
 
-			const destinationTasks = getSortedTasks(destination.columnId, tasks)
-			destinationTasks.splice(destination.position, 0, sourceTask)
-			reposition(destination.columnId, destinationTasks)
-		}
+		// Compute new position as a string rank between neighbors
+		const newPosition = getPositionBetween(
+			prevTask?.position ?? null,
+			nextTask?.position ?? null,
+		)
+
+		// Single task to persist: the moved task with its new position
+		const toPersist: TaskEntity[] = [
+			{
+				...sourceTask,
+				columnId: destination.columnId,
+				position: newPosition,
+				updatedAt: timestamp,
+			},
+		]
 
 		mutate(toPersist)
 	}

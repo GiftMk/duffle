@@ -49,6 +49,7 @@
 		"codemirror": "^6.0.2",
 		"comlink": "^4.4.2",
 		"drizzle-orm": "^1.0.0-rc.4",
+		"fractional-indexing": "^4.0.0",
 		"framer-motion": "^12.38.0",
 		"immer": "^11.1.15",
 		"minisearch": "^7.2.0",

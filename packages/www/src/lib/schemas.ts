@@ -27,7 +27,7 @@ export const taskSchema = z.object({
 	description: z.string().optional(),
 	createdAt: z.iso.datetime(),
 	updatedAt: z.iso.datetime(),
-	position: z.number(),
+	position: z.string(),
 })
 
 export type TaskEntity = z.infer<typeof taskSchema>

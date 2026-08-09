@@ -20,10 +20,11 @@ import { TaskDialog } from './task-dialog'
 
 type TaskCardProps = {
 	task: TaskEntity
+	index: number
 	className?: string
 }
 
-export const TaskCard = ({ task, className }: TaskCardProps) => {
+export const TaskCard = ({ task, index, className }: TaskCardProps) => {
 	const preview = task.description ? stripMarkdown(task.description).trim() : ''
 	const [dialogOpen, setDialogOpen] = useState(false)
 	const updateTask = useUpdateTask()
@@ -47,7 +48,7 @@ export const TaskCard = ({ task, className }: TaskCardProps) => {
 								type='button'
 								className='select-none text-start focus:outline-none'
 							>
-								<Draggable draggableId={task.id} index={task.position}>
+								<Draggable draggableId={task.id} index={index}>
 									{(provided) => (
 										<div
 											ref={provided.innerRef}

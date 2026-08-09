@@ -36,5 +36,5 @@ export const tasksTable = snakeCase.table('tasks', {
 	description: text(),
 	createdAt: timestamp({ mode: 'string' }).notNull(),
 	updatedAt: timestamp({ mode: 'string' }).notNull(),
-	position: integer().notNull(),
+	position: text().notNull(),
 })

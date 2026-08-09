@@ -26,8 +26,8 @@ export const Column = ({ column }: ColumnProps) => {
 							{ 'bg-surface-200': snapshot.isDraggingOver },
 						)}
 					>
-						{tasks.map((task) => (
-							<TaskCard key={task.id} task={task} className='mb-3' />
+						{tasks.map((task, index) => (
+							<TaskCard key={task.id} task={task} index={index} className='mb-3' />
 						))}
 						{provided.placeholder}
 					</div>
