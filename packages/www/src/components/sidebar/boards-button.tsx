@@ -1,4 +1,4 @@
-import { CheckSquareIcon } from '@phosphor-icons/react'
+import { KanbanIcon } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { Tooltip } from '../tooltip'
@@ -21,7 +21,7 @@ export const BoardsButton = ({ active }: BoardsButtonProps) => {
 				type='button'
 				className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
 			>
-				<CheckSquareIcon
+				<KanbanIcon
 					weight={active ? 'duotone' : 'regular'}
 					size={ICON_SIZE_MD}
 				/>

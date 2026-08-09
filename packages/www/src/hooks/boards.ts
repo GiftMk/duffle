@@ -40,11 +40,11 @@ const createBoardAction = createOptimisticAction<CreateBoardVars>({
 })
 
 export const useCreateBoard = () => {
-	return (title: string) => {
+	return (id: string, title: string) => {
 		const timestamp = utcNow()
 
 		const board: BoardEntity = {
-			id: uuidv7(),
+			id,
 			title,
 			createdAt: timestamp,
 			updatedAt: timestamp,

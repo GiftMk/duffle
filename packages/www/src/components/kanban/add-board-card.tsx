@@ -5,6 +5,8 @@ import { BoardContainer } from '@/components/kanban/board-container'
 import { TitleInput } from '@/components/title-input'
 import { useCreateBoard } from '@/hooks/boards'
 import { ICON_SIZE_MD } from '@/lib/constants'
+import { uuidv7 } from 'uuidv7'
+import { onNextTick } from '@/lib/utils'
 
 export const AddBoardCard = () => {
 	const navigate = useNavigate()
@@ -14,8 +16,9 @@ export const AddBoardCard = () => {
 
 	const handleSubmit = (title: string) => {
 		setIsEditing(false)
-		const board = createBoard(title)
-		navigate({ to: '/boards/$boardId', params: { boardId: board.id } })
+		const id = uuidv7()
+		onNextTick(() => createBoard(id, title))
+		navigate({ to: '/boards/$boardId', params: { boardId: id } })
 	}
 
 	const handleCancel = () => {
