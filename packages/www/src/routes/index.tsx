@@ -1,12 +1,13 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { FadeIn, SpringPopIn } from '@/components/animations'
 import { GithubLoginButton } from '@/components/github-login-button'
 import { LoadingPage } from '@/components/loading-page'
-import { useBoards, useCreateBoard } from '@/hooks/boards'
+import { useCreateBoard } from '@/hooks/boards'
 import { useGithubAuth } from '@/hooks/use-github-auth'
 import { useSession } from '@/lib/auth'
+import { boardsCollection } from '@/lib/collections'
 
 export const Route = createFileRoute('/')({
 	ssr: true,
@@ -59,15 +60,30 @@ function RouteComponent() {
 	)
 }
 
+const getMostRecentlyUpdatedBoard = async () => {
+	const boards = await boardsCollection.toArrayWhenReady()
+	return boards.sort(
+		(a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+	)[0]
+}
+
 const RedirectToBoard = () => {
-	const boards = useBoards()
 	const createBoard = useCreateBoard()
 	const navigate = useNavigate()
+	const hasRedirected = useRef(false)
 
 	useEffect(() => {
-		const board = boards[0] ?? createBoard('Getting Started')
-		navigate({ to: '/boards/$boardId', params: { boardId: board.id } })
-	}, [boards, navigate, createBoard])
+		if (hasRedirected.current) return
+		hasRedirected.current = true
+
+		const goToBoard = async () => {
+			const recentlyUpdated = await getMostRecentlyUpdatedBoard()
+			const board = recentlyUpdated ?? createBoard('Getting Started')
+			navigate({ to: '/boards/$boardId', params: { boardId: board.id } })
+		}
+
+		goToBoard()
+	}, [navigate, createBoard])
 
 	return <LoadingPage message='Signing you in...' />
 }

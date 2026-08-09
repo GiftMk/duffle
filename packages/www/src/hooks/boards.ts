@@ -28,7 +28,6 @@ const createBoardAction = createOptimisticAction<CreateBoardVars>({
 		columnsCollection.insert(columns)
 	},
 	mutationFn: async ({ board, columns }) => {
-		// The board row must exist before any column row is inserted (FK constraint).
 		await createBoardFn({ data: board })
 		await Promise.all(columns.map((column) => createColumnFn({ data: column })))
 

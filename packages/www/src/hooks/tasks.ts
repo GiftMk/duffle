@@ -13,7 +13,6 @@ const getPositionBetween = (
 	return generateKeyBetween(prev ?? null, next ?? null)
 }
 
-// Only used for imperative reads outside of a live query (useAddTask, useMoveTask)
 const getSortedTasks = (columnId: string, tasks: TaskEntity[]) =>
 	tasks
 		.filter((task) => task.columnId === columnId)
@@ -25,10 +24,9 @@ export const useTasks = (columnId: string) => {
 	const { data } = useLiveQuery((q) =>
 		q
 			.from({ task: tasksCollection })
-			.where(({ task }) => eq(task.columnId, columnId))
-			.orderBy(({ task }) => task.position, 'asc'),
+			.where(({ task }) => eq(task.columnId, columnId)),
 	)
-	return data
+	return getSortedTasks(columnId, data)
 }
 
 export const useUpdateTask = () => {
