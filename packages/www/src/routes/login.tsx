@@ -9,6 +9,9 @@ import { useGithubAuth } from '@/hooks/use-github-auth'
 import { useSession } from '@/lib/auth'
 
 export const Route = createFileRoute('/login')({
+	validateSearch: (search: Record<string, unknown>) => ({
+		redirect: typeof search.redirect === 'string' ? search.redirect : undefined,
+	}),
 	component: RouteComponent,
 })
 
@@ -16,14 +19,15 @@ const AVATAR_SEED = 'xlelgneb'
 
 function RouteComponent() {
 	const navigate = useNavigate()
+	const { redirect } = Route.useSearch()
 	const { data: session, isPending } = useSession()
 	const { loading, error, signIn } = useGithubAuth()
 
 	useEffect(() => {
 		if (session) {
-			navigate({ to: '/boards' })
+			navigate({ to: redirect ?? '/boards' })
 		}
-	}, [session, navigate])
+	}, [session, navigate, redirect])
 
 	if (isPending || session) {
 		return <LoadingPage />

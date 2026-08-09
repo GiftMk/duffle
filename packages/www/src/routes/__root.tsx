@@ -2,15 +2,36 @@ import type { QueryClient } from '@tanstack/react-query'
 import {
 	createRootRouteWithContext,
 	HeadContent,
+	redirect,
 	Scripts,
 } from '@tanstack/react-router'
 import '@/index.css'
 import { LoadingPage } from '@/components/loading-page'
 import { ThemeProvider } from '@/components/sidebar/theme-provider'
 import { TooltipProvider } from '@/components/tooltip'
+import { getSessionFn } from '@/server/session.server'
+
+const PUBLIC_PATHS = ['/', '/login']
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 	{
+		beforeLoad: async ({ location }) => {
+			if (
+				PUBLIC_PATHS.includes(location.pathname) ||
+				location.pathname.startsWith('/api/auth')
+			) {
+				return
+			}
+
+			const session = await getSessionFn()
+
+			if (!session) {
+				throw redirect({
+					to: '/login',
+					search: { redirect: location.href },
+				})
+			}
+		},
 		pendingComponent: LoadingPage,
 		shellComponent: RootDocument,
 	},
