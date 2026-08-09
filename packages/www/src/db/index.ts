@@ -15,7 +15,7 @@ import { env } from '@/env'
 
 export type Database = NodePgDatabase | PgliteDatabase
 
-const createProductionDb = (): Database => {
+const createPostgresDb = (): Database => {
 	if (!env.DATABASE_URL) {
 		throw new Error('DATABASE_URL is required when NODE_ENV=production.')
 	}
@@ -35,9 +35,10 @@ const createPgliteDb = async (dataDir?: string): Promise<Database> => {
 }
 
 export const createDb = async (): Promise<Database> => {
-	if (env.NODE_ENV === 'production') return createProductionDb()
 	if (env.NODE_ENV === 'test') return createPgliteDb()
-	return createPgliteDb(devDataDir)
+	if (env.NODE_ENV === 'development') return createPgliteDb(devDataDir)
+
+	return createPostgresDb()
 }
 
 let dbPromise: Promise<Database> | undefined
