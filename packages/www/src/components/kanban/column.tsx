@@ -27,7 +27,12 @@ export const Column = ({ column }: ColumnProps) => {
 						)}
 					>
 						{tasks.map((task, index) => (
-							<TaskCard key={task.id} task={task} index={index} className='mb-3' />
+							<TaskCard
+								key={task.id}
+								task={task}
+								index={index}
+								className='mb-3'
+							/>
 						))}
 						{provided.placeholder}
 					</div>

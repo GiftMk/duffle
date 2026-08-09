@@ -5,6 +5,6 @@ const csrfMiddleware = createCsrfMiddleware({
 })
 
 export const startInstance = createStart(() => ({
-	defaultSsr: true,
+	defaultSsr: false,
 	requestMiddleware: [csrfMiddleware],
 }))

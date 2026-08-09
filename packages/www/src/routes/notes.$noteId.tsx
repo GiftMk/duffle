@@ -2,11 +2,12 @@ import { createFileRoute } from '@tanstack/react-router'
 import { MarkdownEditor } from '@/components/markdown/editor'
 import { NoteNotFound } from '@/components/notes/note-not-found'
 import { Sidebar } from '@/components/sidebar'
-import { notesQuery, useNote, useUpdateNote } from '@/hooks/notes'
+import { useNote, useUpdateNote } from '@/hooks/notes'
+import { notesCollection } from '@/lib/collections'
 
 export const Route = createFileRoute('/notes/$noteId')({
 	component: RouteComponent,
-	loader: ({ context }) => context.queryClient.ensureQueryData(notesQuery),
+	loader: () => notesCollection.preload(),
 })
 
 function RouteComponent() {

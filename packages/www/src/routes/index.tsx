@@ -9,6 +9,7 @@ import { useGithubAuth } from '@/hooks/use-github-auth'
 import { useSession } from '@/lib/auth'
 
 export const Route = createFileRoute('/')({
+	ssr: true,
 	component: RouteComponent,
 })
 

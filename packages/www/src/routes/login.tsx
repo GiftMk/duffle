@@ -9,6 +9,7 @@ import { useGithubAuth } from '@/hooks/use-github-auth'
 import { useSession } from '@/lib/auth'
 
 export const Route = createFileRoute('/login')({
+	ssr: true,
 	validateSearch: (search: Record<string, unknown>) => ({
 		redirect: typeof search.redirect === 'string' ? search.redirect : undefined,
 	}),

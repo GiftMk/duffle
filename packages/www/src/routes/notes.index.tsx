@@ -2,11 +2,12 @@ import { createFileRoute } from '@tanstack/react-router'
 import { AddNoteCard } from '@/components/notes/add-note-card'
 import { NoteCard } from '@/components/notes/note-card'
 import { Sidebar } from '@/components/sidebar'
-import { notesQuery, useNotes } from '@/hooks/notes'
+import { useNotes } from '@/hooks/notes'
+import { notesCollection } from '@/lib/collections'
 
 export const Route = createFileRoute('/notes/')({
 	component: RouteComponent,
-	loader: ({ context }) => context.queryClient.ensureQueryData(notesQuery),
+	loader: () => notesCollection.preload(),
 })
 
 function RouteComponent() {

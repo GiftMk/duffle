@@ -1,30 +1,16 @@
-import {
-	queryOptions,
-	useMutation,
-	useQueryClient,
-	useSuspenseQuery,
-} from '@tanstack/react-query'
-import { produce } from 'immer'
+import { useLiveQuery } from '@tanstack/react-db'
 import { uuidv7 } from 'uuidv7'
-import { removeItem, upsertItem } from '@/lib/query-list'
-import { type NoteEntity, noteSchema } from '@/lib/schemas'
+import { notesCollection } from '@/lib/collections'
+import type { NoteEntity } from '@/lib/schemas'
 import { splitMarkdown, utcNow } from '@/lib/utils'
-import {
-	createNoteFn,
-	deleteNoteFn,
-	getNotesFn,
-	updateNoteFn,
-} from '@/server/notes'
-
-export const notesQuery = queryOptions({
-	queryKey: ['notes'],
-	queryFn: async () => noteSchema.array().parse(await getNotesFn()),
-	staleTime: Infinity,
-})
 
 export const useNotes = () => {
-	const { data } = useSuspenseQuery(notesQuery)
-	return [...data].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+	const { data } = useLiveQuery((q) =>
+		q
+			.from({ note: notesCollection })
+			.orderBy(({ note }) => note.updatedAt, 'desc'),
+	)
+	return data
 }
 
 export const useNote = (id: string) => {
@@ -33,20 +19,6 @@ export const useNote = (id: string) => {
 }
 
 export const useCreateNote = () => {
-	const queryClient = useQueryClient()
-
-	const { mutate } = useMutation({
-		mutationFn: (note: NoteEntity) => createNoteFn({ data: note }),
-		onMutate: (note) => {
-			queryClient.setQueryData<NoteEntity[]>(notesQuery.queryKey, (old) =>
-				upsertItem(old, note),
-			)
-		},
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: notesQuery.queryKey })
-		},
-	})
-
 	return () => {
 		const timestamp = utcNow()
 
@@ -59,76 +31,33 @@ export const useCreateNote = () => {
 			updatedAt: timestamp,
 		}
 
-		mutate(note)
+		notesCollection.insert(note)
 
 		return note
 	}
 }
 
 export const useUpdateNote = () => {
-	const queryClient = useQueryClient()
-
-	const { mutate } = useMutation({
-		mutationFn: (note: NoteEntity) => updateNoteFn({ data: note }),
-		onMutate: async (note) => {
-			await queryClient.cancelQueries({ queryKey: notesQuery.queryKey })
-			const previous = queryClient.getQueryData<NoteEntity[]>(
-				notesQuery.queryKey,
-			)
-			queryClient.setQueryData<NoteEntity[]>(notesQuery.queryKey, (old) =>
-				upsertItem(old, note),
-			)
-			return { previous }
-		},
-		onError: (_err, _note, context) => {
-			queryClient.setQueryData(notesQuery.queryKey, context?.previous)
-		},
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: notesQuery.queryKey })
-		},
-	})
-
 	return (id: string, markdown: string) => {
-		const notes =
-			queryClient.getQueryData<NoteEntity[]>(notesQuery.queryKey) ?? []
-		const note = notes.find((n) => n.id === id)
+		const note = notesCollection.get(id)
 		if (!note) throw new Error(`Note with id '${id}' not found`)
 
 		const { title, description: body } = splitMarkdown(markdown)
 
-		mutate(
-			produce(note, (draft) => {
-				draft.markdown = markdown
-				draft.title = title ?? ''
-				draft.body = body ?? ''
-				draft.updatedAt = utcNow()
-			}),
-		)
+		notesCollection.update(id, (draft) => {
+			draft.markdown = markdown
+			draft.title = title ?? ''
+			draft.body = body ?? ''
+			draft.updatedAt = utcNow()
+		})
 	}
 }
 
 export const useDeleteNote = () => {
-	const queryClient = useQueryClient()
+	return (id: string) => {
+		const note = notesCollection.get(id)
+		if (!note) throw new Error(`Note with id '${id}' not found`)
 
-	const { mutate } = useMutation({
-		mutationFn: (id: string) => deleteNoteFn({ data: { id } }),
-		onMutate: async (id) => {
-			await queryClient.cancelQueries({ queryKey: notesQuery.queryKey })
-			const previous = queryClient.getQueryData<NoteEntity[]>(
-				notesQuery.queryKey,
-			)
-			queryClient.setQueryData<NoteEntity[]>(notesQuery.queryKey, (old) =>
-				removeItem(old, id),
-			)
-			return { previous }
-		},
-		onError: (_err, _id, context) => {
-			queryClient.setQueryData(notesQuery.queryKey, context?.previous)
-		},
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: notesQuery.queryKey })
-		},
-	})
-
-	return mutate
+		notesCollection.delete(id)
+	}
 }

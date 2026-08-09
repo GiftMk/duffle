@@ -6,19 +6,22 @@ import { BoardNotFound } from '@/components/kanban/board-not-found'
 import { KanbanBoard } from '@/components/kanban/kanban-board'
 import { Sidebar } from '@/components/sidebar'
 import { TitleInput } from '@/components/title-input'
-import { boardsQuery, useBoard, useUpdateBoard } from '@/hooks/boards'
-import { columnsQuery } from '@/hooks/columns'
-import { tasksQuery } from '@/hooks/tasks'
+import { useBoard, useUpdateBoard } from '@/hooks/boards'
+import {
+	boardsCollection,
+	columnsCollection,
+	tasksCollection,
+} from '@/lib/collections'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import type { BoardEntity } from '@/lib/schemas'
 
 export const Route = createFileRoute('/boards/$boardId')({
 	component: RouteComponent,
-	loader: async ({ context }) =>
+	loader: () =>
 		Promise.all([
-			context.queryClient.ensureQueryData(boardsQuery),
-			context.queryClient.ensureQueryData(columnsQuery),
-			context.queryClient.ensureQueryData(tasksQuery),
+			boardsCollection.preload(),
+			columnsCollection.preload(),
+			tasksCollection.preload(),
 		]),
 })
 
