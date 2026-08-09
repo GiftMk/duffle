@@ -1,8 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
 import { and, eq } from 'drizzle-orm'
+import type { Database } from '@/db'
 import { tasksTable } from '@/db/schema.kanban'
-import { taskSchema } from '@/lib/schemas'
+import { type TaskEntity, taskSchema } from '@/lib/schemas'
 import { withIsoTimestamps } from '@/lib/utils'
+import { generateEmbedding } from '@/server/embeddings'
 import { withDb } from '@/server/middleware'
 import { requireSession } from '@/server/session.server'
 
@@ -38,6 +40,7 @@ export const createTaskFn = createServerFn({ method: 'POST' })
 	.handler(async ({ data, context }) => {
 		const { user } = await requireSession()
 		await context.db.insert(tasksTable).values({ userId: user.id, ...data })
+		await persistEmbedding(context.db, user.id, data)
 		return data
 	})
 
@@ -52,6 +55,7 @@ export const updateTaskFn = createServerFn({ method: 'POST' })
 			.set(data)
 			.where(and(eq(tasksTable.userId, user.id), eq(tasksTable.id, data.id)))
 
+		await persistEmbedding(context.db, user.id, data)
 		return data
 	})
 
@@ -67,3 +71,19 @@ export const deleteTaskFn = createServerFn({ method: 'POST' })
 
 		return { id: data.id }
 	})
+
+const persistEmbedding = async (
+	db: Database,
+	userId: string,
+	task: TaskEntity,
+) => {
+	try {
+		const embedding = await generateEmbedding(task.title, task.description)
+		await db
+			.update(tasksTable)
+			.set({ embedding })
+			.where(and(eq(tasksTable.userId, userId), eq(tasksTable.id, task.id)))
+	} catch (error) {
+		console.error(`Failed to persist embedding for task ${task.id}`, error)
+	}
+}

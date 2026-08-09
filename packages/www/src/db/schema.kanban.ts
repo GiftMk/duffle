@@ -1,5 +1,15 @@
-import { integer, snakeCase, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
+import {
+	index,
+	integer,
+	snakeCase,
+	text,
+	timestamp,
+	uuid,
+	vector,
+} from 'drizzle-orm/pg-core'
 import { user } from './schema.auth'
+import { tsvector } from './types'
 
 export const userReference = () =>
 	text()
@@ -26,15 +36,29 @@ export const columnsTable = snakeCase.table('columns', {
 	position: integer().notNull(),
 })
 
-export const tasksTable = snakeCase.table('tasks', {
-	id: uuid().primaryKey(),
-	userId: userReference(),
-	columnId: uuid()
-		.notNull()
-		.references(() => columnsTable.id, { onDelete: 'cascade' }),
-	title: text().notNull(),
-	description: text(),
-	createdAt: timestamp({ mode: 'string' }).notNull(),
-	updatedAt: timestamp({ mode: 'string' }).notNull(),
-	position: text().notNull(),
-})
+export const tasksTable = snakeCase.table(
+	'tasks',
+	{
+		id: uuid().primaryKey(),
+		userId: userReference(),
+		columnId: uuid()
+			.notNull()
+			.references(() => columnsTable.id, { onDelete: 'cascade' }),
+		title: text().notNull(),
+		description: text(),
+		searchVector: tsvector().generatedAlwaysAs(
+			sql`setweight(to_tsvector('english', coalesce(title, '')), 'A') || setweight(to_tsvector('english', coalesce(description, '')), 'B')`,
+		),
+		embedding: vector('embedding', { dimensions: 512 }),
+		createdAt: timestamp({ mode: 'string' }).notNull(),
+		updatedAt: timestamp({ mode: 'string' }).notNull(),
+		position: text().notNull(),
+	},
+	(table) => [
+		index('tasks_title_trgm_idx').using('gin', table.title.op('gin_trgm_ops')),
+		index('tasks_search_vector_idx').using('gin', table.searchVector),
+		index('tasks_embedding_hnsw_idx')
+			.using('hnsw', table.embedding.op('vector_cosine_ops'))
+			.where(sql`embedding IS NOT NULL`),
+	],
+)

@@ -1,6 +1,8 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { PGlite } from '@electric-sql/pglite'
+import { pg_trgm } from '@electric-sql/pglite/contrib/pg_trgm'
+import { vector } from '@electric-sql/pglite-pgvector'
 import {
 	drizzle as drizzleNodePostgres,
 	type NodePgDatabase,
@@ -28,7 +30,7 @@ const migrationsFolder = path.join(__dirname, '../../drizzle')
 const devDataDir = path.join(__dirname, '../../.pglite')
 
 const createPgliteDb = async (dataDir?: string): Promise<Database> => {
-	const client = new PGlite(dataDir)
+	const client = new PGlite({ dataDir, extensions: { pg_trgm, vector } })
 	const db = drizzlePglite({ client })
 	await migratePglite(db, { migrationsFolder })
 	return db

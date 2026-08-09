@@ -42,3 +42,25 @@ export const noteSchema = z.object({
 })
 
 export type NoteEntity = z.infer<typeof noteSchema>
+
+export const noteSearchResultSchema = z.object({
+	id: z.uuidv7(),
+	title: z.string(),
+	type: z.literal('note'),
+	score: z.number(),
+})
+
+export const taskSearchResultSchema = z.object({
+	id: z.uuidv7(),
+	title: z.string(),
+	type: z.literal('task'),
+	boardId: z.uuid(),
+	score: z.number(),
+})
+
+export const searchResultSchema = z.discriminatedUnion('type', [
+	noteSearchResultSchema,
+	taskSearchResultSchema,
+])
+
+export type SearchResult = z.infer<typeof searchResultSchema>

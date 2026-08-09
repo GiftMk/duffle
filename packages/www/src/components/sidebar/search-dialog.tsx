@@ -1,36 +1,41 @@
 import { Autocomplete, Dialog } from '@base-ui/react'
 import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
+import { useNavigate } from '@tanstack/react-router'
 import { Fragment, useEffect, useState } from 'react'
 import { Tooltip } from '@/components/tooltip'
+import { useSearch } from '@/hooks/search'
+import { useDebouncedValue } from '@/hooks/use-debounced-value'
 import { ICON_SIZE_MD } from '@/lib/constants'
-import { searchWorker } from '@/lib/search'
-import type { SearchItem } from '@/lib/search.worker'
+import type { SearchResult } from '@/lib/schemas'
+
+const SEARCH_DEBOUNCE_MS = 250
 
 export const SearchDialog = () => {
 	const [open, setOpen] = useState(false)
 	const [query, setQuery] = useState('')
-	const [results, setResults] = useState<SearchItem[]>([])
+	const debouncedQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_MS)
+	const { data: results = [] } = useSearch(debouncedQuery)
+	const navigate = useNavigate()
 
 	const closeDialog = () => {
 		setOpen(false)
 	}
 
-	useHotkey('Mod+K', () => setOpen(true))
-
-	useEffect(() => {
-		if (!query.length) {
+	const handleSelect = (item: SearchResult) => {
+		closeDialog()
+		if (item.type === 'note') {
+			navigate({ to: '/notes/$noteId', params: { noteId: item.id } })
 			return
 		}
+		navigate({ to: '/boards/$boardId', params: { boardId: item.boardId } })
+	}
 
-		setResults([])
-		searchWorker.query(query).then(setResults)
-	}, [query])
+	useHotkey('Mod+K', () => setOpen(true))
 
 	useEffect(() => {
 		if (!open) {
 			setQuery('')
-			setResults([])
 		}
 	}, [open])
 
@@ -57,6 +62,7 @@ export const SearchDialog = () => {
 						<XIcon size={ICON_SIZE_MD} weight='bold' />
 					</Dialog.Close>
 					<Autocomplete.Root
+						mode='none'
 						value={query}
 						onValueChange={setQuery}
 						items={results}
@@ -66,13 +72,17 @@ export const SearchDialog = () => {
 							<Autocomplete.Input
 								autoFocus
 								className='h-full w-full border-surface-400 border-b py-2 focus:outline-none'
-								placeholder={'Search cards...'}
+								placeholder={'Search notes and cards...'}
 							/>
 						</span>
 						<Autocomplete.List className='flex max-h-[min(432px,35svh)] flex-col overflow-y-auto px-4'>
-							{results.map((card) => (
-								<Fragment key={card.id}>
-									<SearchResult item={card} onClick={closeDialog} />
+							{results.map((item, index) => (
+								<Fragment key={item.id}>
+									<SearchResultItem
+										item={item}
+										index={index}
+										onClick={handleSelect}
+									/>
 									<hr className='my-2 text-surface-400' />
 								</Fragment>
 							))}
@@ -84,21 +94,27 @@ export const SearchDialog = () => {
 	)
 }
 
-type SearchResultProps = {
-	item: SearchItem
-	onClick?: () => void
+type SearchResultItemProps = {
+	item: SearchResult
+	index: number
+	onClick: (item: SearchResult) => void
 }
 
-const SearchResult = ({ item, onClick }: SearchResultProps) => {
+const SearchResultItem = ({ item, index, onClick }: SearchResultItemProps) => {
 	const handleClick = () => {
-		onClick?.()
+		onClick(item)
 	}
 
 	return (
 		<Autocomplete.Item
+			value={item.id}
+			index={index}
 			onClick={handleClick}
-			className='flex w-full flex-col rounded-md px-4 py-3 data-highlighted:bg-surface-300/70'
+			className='flex w-full items-center gap-2 rounded-md px-4 py-3 data-highlighted:bg-surface-300/70'
 		>
+			<span className='rounded-full border border-surface-400 px-2 py-0.5 text-typography-500 text-xs uppercase'>
+				{item.type}
+			</span>
 			<p className='font-bold text-lg'>{item.title}</p>
 		</Autocomplete.Item>
 	)

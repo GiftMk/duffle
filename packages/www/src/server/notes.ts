@@ -1,8 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
 import { and, eq } from 'drizzle-orm'
+import type { Database } from '@/db'
 import { notesTable } from '@/db/schema.notes'
-import { noteSchema } from '@/lib/schemas'
+import { type NoteEntity, noteSchema } from '@/lib/schemas'
 import { withIsoTimestamps } from '@/lib/utils'
+import { generateEmbedding } from '@/server/embeddings'
 import { withDb } from '@/server/middleware'
 import { requireSession } from '@/server/session.server'
 
@@ -32,6 +34,7 @@ export const createNoteFn = createServerFn({ method: 'POST' })
 	.handler(async ({ data, context }) => {
 		const { user } = await requireSession()
 		await context.db.insert(notesTable).values({ userId: user.id, ...data })
+		await persistEmbedding(context.db, user.id, data)
 		return data
 	})
 
@@ -46,6 +49,7 @@ export const updateNoteFn = createServerFn({ method: 'POST' })
 			.set(data)
 			.where(and(eq(notesTable.userId, user.id), eq(notesTable.id, data.id)))
 
+		await persistEmbedding(context.db, user.id, data)
 		return data
 	})
 
@@ -61,3 +65,19 @@ export const deleteNoteFn = createServerFn({ method: 'POST' })
 
 		return { id: data.id }
 	})
+
+const persistEmbedding = async (
+	db: Database,
+	userId: string,
+	note: NoteEntity,
+) => {
+	try {
+		const embedding = await generateEmbedding(note.title, note.body)
+		await db
+			.update(notesTable)
+			.set({ embedding })
+			.where(and(eq(notesTable.userId, userId), eq(notesTable.id, note.id)))
+	} catch (error) {
+		console.error(`Failed to persist embedding for note ${note.id}`, error)
+	}
+}

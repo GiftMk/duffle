@@ -13,6 +13,7 @@ export const env = createEnv({
 		GITHUB_CLIENT_SECRET: z.string(),
 		BETTER_AUTH_URL: z.url(),
 		BETTER_AUTH_SECRET: z.string(),
+		OPENAI_API_KEY: z.string(),
 	},
 	runtimeEnv: process.env,
 	skipValidation: process.env.CI === 'true' || process.env.NODE_ENV === 'test',
