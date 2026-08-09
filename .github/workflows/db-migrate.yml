@@ -30,3 +30,4 @@ jobs:
       - run: pnpm --filter @duffle/www db:migrate
         env:
           DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
+          CI: true
