@@ -1,4 +1,3 @@
-import type { Collection } from '@tanstack/react-db'
 import { type ClassValue, clsx } from 'clsx'
 import { remark } from 'remark'
 import strip from 'strip-markdown'
