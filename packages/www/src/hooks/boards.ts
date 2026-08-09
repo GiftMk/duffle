@@ -2,6 +2,7 @@ import { createOptimisticAction, useLiveQuery } from '@tanstack/react-db'
 import { uuidv7 } from 'uuidv7'
 import { boardsCollection, columnsCollection } from '@/lib/collections'
 import type { BoardEntity, ColumnEntity } from '@/lib/schemas'
+import { boardToSearchItem, searchWorker } from '@/lib/search'
 import { utcNow } from '@/lib/utils'
 import { createBoardFn } from '@/server/boards'
 import { createColumnFn } from '@/server/columns'
@@ -61,6 +62,7 @@ export const useCreateBoard = () => {
 		)
 
 		createBoardAction({ board, columns })
+		searchWorker.add([boardToSearchItem(board)])
 
 		return board
 	}
@@ -78,6 +80,9 @@ export const useUpdateBoard = () => {
 			recipe(draft)
 			draft.updatedAt = utcNow()
 		})
+
+		const updated = boardsCollection.get(id)
+		if (updated) searchWorker.update([boardToSearchItem(updated)])
 	}
 }
 

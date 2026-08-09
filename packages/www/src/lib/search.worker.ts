@@ -1,34 +1,54 @@
 import { expose } from 'comlink'
 import MiniSearch from 'minisearch'
-import type { TaskEntity } from '@/lib/schemas'
 
-export type SearchItem = Pick<TaskEntity, 'id' | 'title'>
+export type SearchItemType = 'note' | 'task' | 'board'
+
+export type SearchItem = {
+	id: string
+	title: string
+	body: string
+	type: SearchItemType
+	boardId?: string
+}
+
+export type SearchResult = Pick<SearchItem, 'id' | 'title' | 'type' | 'boardId'>
 
 const miniSearch = new MiniSearch<SearchItem>({
-	fields: ['title'],
-	storeFields: ['title'],
+	fields: ['title', 'body'],
+	storeFields: ['title', 'type', 'boardId'],
 	searchOptions: {
 		fuzzy: true,
+		prefix: true,
+		boost: { title: 2 },
 	},
 })
 
-const api = {
-	add(cards: SearchItem[]) {
-		miniSearch.addAll(cards)
-		return miniSearch.documentCount
-	},
-
-	update(cards: SearchItem[]) {
-		for (const card of cards) {
-			miniSearch.replace(card)
+const upsert = (items: SearchItem[]) => {
+	for (const item of items) {
+		if (miniSearch.has(item.id)) {
+			miniSearch.replace(item)
+		} else {
+			miniSearch.add(item)
 		}
-		return miniSearch.documentCount
+	}
+	return miniSearch.documentCount
+}
+
+const api = {
+	add(items: SearchItem[]) {
+		return upsert(items)
 	},
 
-	query(query: string): SearchItem[] {
+	update(items: SearchItem[]) {
+		return upsert(items)
+	},
+
+	query(query: string): SearchResult[] {
 		return miniSearch.search(query).map((result) => ({
 			id: result.id,
 			title: result.title,
+			type: result.type,
+			boardId: result.boardId,
 		}))
 	},
 

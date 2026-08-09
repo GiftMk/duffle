@@ -5,11 +5,13 @@ import {
 	redirect,
 	Scripts,
 } from '@tanstack/react-router'
+import { useEffect, useRef } from 'react'
 import '@/index.css'
 import { LoadingPage } from '@/components/loading-page'
 import { ThemeProvider } from '@/components/sidebar/theme-provider'
 import { TooltipProvider } from '@/components/tooltip'
-import { getSession } from '@/lib/auth'
+import { getSession, useSession } from '@/lib/auth'
+import { preloadSearchIndex } from '@/lib/search'
 
 const PUBLIC_PATHS = ['/', '/login']
 
@@ -39,6 +41,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 )
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+	const { data: session } = useSession()
+	const hasPreloadedSearchIndex = useRef(false)
+
+	useEffect(() => {
+		if (!session || hasPreloadedSearchIndex.current) return
+		hasPreloadedSearchIndex.current = true
+
+		preloadSearchIndex().catch(() => {})
+	}, [session])
+
 	return (
 		<html lang='en'>
 			<head>

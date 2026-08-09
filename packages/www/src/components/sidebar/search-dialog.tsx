@@ -1,41 +1,45 @@
 import { Autocomplete, Dialog } from '@base-ui/react'
-import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
+import {
+	CheckSquareOffsetIcon,
+	KanbanIcon,
+	MagnifyingGlassIcon,
+	ScrollIcon,
+	XIcon,
+} from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
-import { Fragment, useEffect, useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
+import { Fragment, useState } from 'react'
 import { Tooltip } from '@/components/tooltip'
-import { ICON_SIZE_MD } from '@/lib/constants'
-import { searchWorker } from '@/lib/search'
-import type { SearchItem } from '@/lib/search.worker'
+import { useRecentSearchResults, useSearch } from '@/hooks/search'
+import { ICON_SIZE_MD, ICON_SIZE_SM } from '@/lib/constants'
+import type { SearchResult as SearchResultItem } from '@/lib/search.worker'
+
+const RECENT_RESULTS_LIMIT = 3
 
 export const SearchDialog = () => {
 	const [open, setOpen] = useState(false)
-	const [query, setQuery] = useState('')
-	const [results, setResults] = useState<SearchItem[]>([])
+	const { query, setQuery, results, isSearching, clear } = useSearch()
+	const recentResults = useRecentSearchResults(RECENT_RESULTS_LIMIT)
+
+	const hasQuery = query.length > 0
+	const items = hasQuery ? results : recentResults
+	const showNoResults = hasQuery && !isSearching && results.length === 0
+
+	const handleOpenChange = (open: boolean) => {
+		setOpen(open)
+		if (!open) {
+			clear()
+		}
+	}
 
 	const closeDialog = () => {
-		setOpen(false)
+		handleOpenChange(false)
 	}
 
 	useHotkey('Mod+K', () => setOpen(true))
 
-	useEffect(() => {
-		if (!query.length) {
-			return
-		}
-
-		setResults([])
-		searchWorker.query(query).then(setResults)
-	}, [query])
-
-	useEffect(() => {
-		if (!open) {
-			setQuery('')
-			setResults([])
-		}
-	}, [open])
-
 	return (
-		<Dialog.Root open={open} onOpenChange={setOpen}>
+		<Dialog.Root open={open} onOpenChange={handleOpenChange}>
 			<Tooltip content='Search'>
 				<Dialog.Trigger
 					render={
@@ -59,23 +63,29 @@ export const SearchDialog = () => {
 					<Autocomplete.Root
 						value={query}
 						onValueChange={setQuery}
-						items={results}
+						items={items}
 						autoHighlight={'always'}
 					>
 						<span className='flex w-full items-center gap-3 px-4 py-4'>
 							<Autocomplete.Input
 								autoFocus
 								className='h-full w-full border-surface-400 border-b py-2 focus:outline-none'
-								placeholder={'Search cards...'}
+								placeholder={'Search boards, notes, and tasks...'}
 							/>
 						</span>
 						<Autocomplete.List className='flex max-h-[min(432px,35svh)] flex-col overflow-y-auto px-4'>
-							{results.map((card) => (
-								<Fragment key={card.id}>
-									<SearchResult item={card} onClick={closeDialog} />
-									<hr className='my-2 text-surface-400' />
-								</Fragment>
-							))}
+							{showNoResults ? (
+								<p className='px-4 py-6 text-center text-typography-600'>
+									No results found.
+								</p>
+							) : (
+								items.map((item) => (
+									<Fragment key={item.id}>
+										<SearchResult item={item} onClick={closeDialog} />
+										<hr className='my-2 text-surface-400' />
+									</Fragment>
+								))
+							)}
 						</Autocomplete.List>
 					</Autocomplete.Root>
 				</Dialog.Popup>
@@ -84,22 +94,47 @@ export const SearchDialog = () => {
 	)
 }
 
+type SearchResultIconProps = {
+	type: SearchResultItem['type']
+}
+
+const SearchResultIcon = ({ type }: SearchResultIconProps) => {
+	let Icon = KanbanIcon
+
+	if (type === 'note') {
+		Icon = ScrollIcon
+	} else if (type === 'task') {
+		Icon = CheckSquareOffsetIcon
+	}
+
+	return <Icon size={ICON_SIZE_SM} className='shrink-0 text-typography-600' />
+}
+
 type SearchResultProps = {
-	item: SearchItem
+	item: SearchResultItem
 	onClick?: () => void
 }
 
 const SearchResult = ({ item, onClick }: SearchResultProps) => {
+	const navigate = useNavigate()
+
 	const handleClick = () => {
 		onClick?.()
+
+		if (item.type === 'note') {
+			navigate({ to: '/notes/$noteId', params: { noteId: item.id } })
+		} else if (item.boardId) {
+			navigate({ to: '/boards/$boardId', params: { boardId: item.boardId } })
+		}
 	}
 
 	return (
 		<Autocomplete.Item
 			onClick={handleClick}
-			className='flex w-full flex-col rounded-md px-4 py-3 data-highlighted:bg-surface-300/70'
+			className='flex w-full items-center gap-2 rounded-md px-4 py-3 data-highlighted:bg-surface-300/70'
 		>
-			<p className='font-bold text-lg'>{item.title}</p>
+			<SearchResultIcon type={item.type} />
+			<p>{item.title}</p>
 		</Autocomplete.Item>
 	)
 }

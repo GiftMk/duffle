@@ -2,9 +2,15 @@ import { eq, useLiveQuery } from '@tanstack/react-db'
 import { generateKeyBetween } from 'fractional-indexing'
 import type { Draft } from 'immer'
 import { uuidv7 } from 'uuidv7'
-import { tasksCollection } from '@/lib/collections'
+import { columnsCollection, tasksCollection } from '@/lib/collections'
 import type { TaskEntity } from '@/lib/schemas'
+import { searchWorker, taskToSearchItem } from '@/lib/search'
 import { utcNow } from '@/lib/utils'
+
+const indexTask = (task: TaskEntity) => {
+	const boardId = columnsCollection.get(task.columnId)?.boardId
+	searchWorker.update([taskToSearchItem(task, boardId)])
+}
 
 const getPositionBetween = (
 	prev?: string | null,
@@ -29,6 +35,15 @@ export const useTasks = (columnId: string) => {
 	return getSortedTasks(columnId, data)
 }
 
+export const useAllTasks = () => {
+	const { data } = useLiveQuery((q) =>
+		q
+			.from({ task: tasksCollection })
+			.orderBy(({ task }) => task.updatedAt, 'desc'),
+	)
+	return data
+}
+
 export const useUpdateTask = () => {
 	return (id: string, recipe: (draft: Draft<TaskEntity>) => void) => {
 		const task = tasksCollection.get(id)
@@ -38,6 +53,9 @@ export const useUpdateTask = () => {
 			recipe(draft)
 			draft.updatedAt = utcNow()
 		})
+
+		const updated = tasksCollection.get(id)
+		if (updated) indexTask(updated)
 	}
 }
 
@@ -68,6 +86,7 @@ export const useAddTask = () => {
 		}
 
 		tasksCollection.insert(task)
+		indexTask(task)
 	}
 }
 
@@ -107,5 +126,8 @@ export const useMoveTask = () => {
 			draft.position = newPosition
 			draft.updatedAt = timestamp
 		})
+
+		const updated = tasksCollection.get(sourceTask.id)
+		if (updated) indexTask(updated)
 	}
 }
