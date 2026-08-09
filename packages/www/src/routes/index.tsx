@@ -8,6 +8,7 @@ import { useCreateBoard } from '@/hooks/boards'
 import { useGithubAuth } from '@/hooks/use-github-auth'
 import { useSession } from '@/lib/auth'
 import { boardsCollection } from '@/lib/collections'
+import { uuidv7 } from 'uuidv7'
 
 export const Route = createFileRoute('/')({
 	ssr: true,
@@ -78,7 +79,7 @@ const RedirectToBoard = () => {
 
 		const goToBoard = async () => {
 			const recentlyUpdated = await getMostRecentlyUpdatedBoard()
-			const board = recentlyUpdated ?? createBoard('Getting Started')
+			const board = recentlyUpdated ?? createBoard(uuidv7(), 'Getting Started')
 			navigate({ to: '/boards/$boardId', params: { boardId: board.id } })
 		}
 
