@@ -17,8 +17,8 @@ export const AddBoardCard = () => {
 	const handleSubmit = (title: string) => {
 		setIsEditing(false)
 		const id = uuidv7()
-		onNextTick(() => createBoard(id, title))
 		navigate({ to: '/boards/$boardId', params: { boardId: id } })
+		onNextTick(() => createBoard(id, title))
 	}
 
 	const handleCancel = () => {

@@ -17,7 +17,6 @@ import { Route as AppLoginRouteImport } from './routes/_app/login'
 import { Route as AppLogoutRouteImport } from './routes/_app/logout'
 import { Route as AppBoardsIndexRouteImport } from './routes/_app/boards.index'
 import { Route as AppBoardsBoardIdRouteImport } from './routes/_app/boards.$boardId'
-import { Route as AppNotesIndexRouteImport } from './routes/_app/notes.index'
 import { Route as AppNotesNoteIdRouteImport } from './routes/_app/notes.$noteId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
 
@@ -60,11 +59,6 @@ const AppBoardsBoardIdRoute = AppBoardsBoardIdRouteImport.update({
   path: '/boards/$boardId',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppNotesIndexRoute = AppNotesIndexRouteImport.update({
-  id: '/notes/',
-  path: '/notes/',
-  getParentRoute: () => AppRouteRoute,
-} as any)
 const AppNotesNoteIdRoute = AppNotesNoteIdRouteImport.update({
   id: '/notes/$noteId',
   path: '/notes/$noteId',
@@ -86,7 +80,6 @@ export interface FileRoutesByFullPath {
   '/notes/$noteId': typeof AppNotesNoteIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/boards/': typeof AppBoardsIndexRoute
-  '/notes/': typeof AppNotesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -98,7 +91,6 @@ export interface FileRoutesByTo {
   '/notes/$noteId': typeof AppNotesNoteIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/boards': typeof AppBoardsIndexRoute
-  '/notes': typeof AppNotesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -112,7 +104,6 @@ export interface FileRoutesById {
   '/_app/notes/$noteId': typeof AppNotesNoteIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/boards/': typeof AppBoardsIndexRoute
-  '/_app/notes/': typeof AppNotesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -126,7 +117,6 @@ export interface FileRouteTypes {
     | '/notes/$noteId'
     | '/api/auth/$'
     | '/boards/'
-    | '/notes/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -138,7 +128,6 @@ export interface FileRouteTypes {
     | '/notes/$noteId'
     | '/api/auth/$'
     | '/boards'
-    | '/notes'
   id:
     | '__root__'
     | '/'
@@ -151,7 +140,6 @@ export interface FileRouteTypes {
     | '/_app/notes/$noteId'
     | '/api/auth/$'
     | '/_app/boards/'
-    | '/_app/notes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -220,13 +208,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBoardsBoardIdRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/_app/notes/': {
-      id: '/_app/notes/'
-      path: '/notes'
-      fullPath: '/notes/'
-      preLoaderRoute: typeof AppNotesIndexRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
     '/_app/notes/$noteId': {
       id: '/_app/notes/$noteId'
       path: '/notes/$noteId'
@@ -250,7 +231,6 @@ interface AppRouteRouteChildren {
   AppBoardsBoardIdRoute: typeof AppBoardsBoardIdRoute
   AppNotesNoteIdRoute: typeof AppNotesNoteIdRoute
   AppBoardsIndexRoute: typeof AppBoardsIndexRoute
-  AppNotesIndexRoute: typeof AppNotesIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
@@ -259,7 +239,6 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppBoardsBoardIdRoute: AppBoardsBoardIdRoute,
   AppNotesNoteIdRoute: AppNotesNoteIdRoute,
   AppBoardsIndexRoute: AppBoardsIndexRoute,
-  AppNotesIndexRoute: AppNotesIndexRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

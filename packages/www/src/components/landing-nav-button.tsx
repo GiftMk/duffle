@@ -5,18 +5,24 @@ import { ICON_SIZE_XL } from '@/lib/constants'
 type LandingNavButtonProps = {
 	icon: Icon
 	label: string
-	to: string
+	to?: string
+	onClick?: () => void
 }
 
 export const LandingNavButton = ({
 	icon: IconComponent,
 	label,
 	to,
+	onClick,
 }: LandingNavButtonProps) => {
 	const navigate = useNavigate()
 
 	const handleClick = () => {
-		navigate({ to })
+		if (onClick) {
+			onClick()
+			return
+		}
+		if (to) navigate({ to })
 	}
 
 	return (
