@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { IconButton } from '@/components/icon-button'
 import { BoardNotFound } from '@/components/kanban/board-not-found'
 import { KanbanBoard } from '@/components/kanban/kanban-board'
-import { Sidebar } from '@/components/sidebar'
 import { TitleInput } from '@/components/title-input'
 import { useBoard, useUpdateBoard } from '@/hooks/boards'
 import {
@@ -15,7 +14,7 @@ import {
 import { ICON_SIZE_MD } from '@/lib/constants'
 import type { BoardEntity } from '@/lib/schemas'
 
-export const Route = createFileRoute('/boards/$boardId')({
+export const Route = createFileRoute('/_app/boards/$boardId')({
 	component: RouteComponent,
 	loader: () =>
 		Promise.all([
@@ -34,13 +33,10 @@ function RouteComponent() {
 	}
 
 	return (
-		<main className='flex h-full w-full bg-surface-100'>
-			<Sidebar />
-			<div className='flex h-full w-full flex-col gap-6 px-8 py-4'>
-				<BoardTitle board={board} />
-				<KanbanBoard board={board} />
-			</div>
-		</main>
+		<div className='flex h-full w-full flex-col gap-6 px-8 py-4'>
+			<BoardTitle board={board} />
+			<KanbanBoard board={board} />
+		</div>
 	)
 }
 
