@@ -4,11 +4,7 @@ import { Tooltip } from '@/components/tooltip'
 import { useCreateNote } from '@/hooks/notes'
 import { ICON_SIZE_MD } from '@/lib/constants'
 
-type NotesButtonProps = {
-	active?: boolean
-}
-
-export const NotesButton = ({ active }: NotesButtonProps) => {
+export const NotesButton = () => {
 	const createNote = useCreateNote()
 	const navigate = useNavigate()
 
@@ -22,12 +18,9 @@ export const NotesButton = ({ active }: NotesButtonProps) => {
 			<button
 				onClick={handleClick}
 				type='button'
-				className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
+				className='flex h-fit w-fit scale-125 items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
 			>
-				<PencilSimpleLineIcon
-					weight={active ? 'duotone' : 'regular'}
-					size={ICON_SIZE_MD}
-				/>
+				<PencilSimpleLineIcon size={ICON_SIZE_MD} />
 			</button>
 		</Tooltip>
 	)

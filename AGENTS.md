@@ -42,3 +42,12 @@ Duffle is a collaborative markdown editing app that works on the concept of brai
   return <button onClick={handleClick}>{label}</button>;
   ```
 - Avoid components getting bloated with hooks. Generally if a component looks like it contains a lot (roughly 3 or more) large hooks, split it out into a custom hook kept in the `/hooks` folder
+- When using the `cn` utility for conditional classNames, use object notation instead of `&&`
+  **Bad**
+  ```tsx
+  cn('base-classes', active && 'ring-2 ring-primary-500')
+  ```
+  **Good**
+  ```tsx
+  cn('base-classes', { 'ring-2 ring-primary-500': active })
+  ```

@@ -40,11 +40,7 @@ export const Sidebar = () => {
 			<section className='relative flex flex-col items-center gap-4'>
 				<HomeButton />
 				<SearchDialog scope={context} />
-				{context === 'boards' ? (
-					<BoardsButton active={pathname.startsWith('/boards')} />
-				) : (
-					<NotesButton active={pathname.startsWith('/notes')} />
-				)}
+				{context === 'boards' ? <BoardsButton /> : <NotesButton />}
 				<ThemeToggle />
 				<AccountButton />
 			</section>
