@@ -8,7 +8,7 @@ const InlineCode = () => {
 
 	return (
 		<span
-			className='rounded-md bg-surface-300 px-1.5 py-1.25 font-mono text-primary-600'
+			className='rounded-md bg-surface-200 px-1.5 py-1.25 font-mono text-primary-600'
 			ref={contentRef}
 		/>
 	)
