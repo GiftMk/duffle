@@ -31,7 +31,7 @@ export const LandingNavButton = ({
 			type='button'
 			className='flex flex-col items-center gap-3 focus:outline-none'
 		>
-			<span className='flex h-16 w-16 items-center justify-center rounded-full border-2 border-primary-500 text-primary-500 transition-all duration-200 hover:scale-110 hover:bg-primary-500/10 focus-visible:scale-110 focus-visible:bg-primary-500/10'>
+			<span className='flex h-14 w-14 items-center justify-center rounded-full border-2 border-primary-500 text-primary-500 transition-all duration-200 hover:scale-110 hover:bg-primary-500/10 focus-visible:scale-110 focus-visible:bg-primary-500/10'>
 				<IconComponent size={ICON_SIZE_XL} weight='duotone' />
 			</span>
 			<span className='font-drawn text-lg text-typography-600 tracking-tight'>
