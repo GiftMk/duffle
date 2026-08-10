@@ -10,14 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AnimationsRouteImport } from './routes/animations'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as ThemeRouteImport } from './routes/theme'
-import { Route as BoardsIndexRouteImport } from './routes/boards.index'
-import { Route as BoardsBoardIdRouteImport } from './routes/boards.$boardId'
-import { Route as NotesIndexRouteImport } from './routes/notes.index'
-import { Route as NotesNoteIdRouteImport } from './routes/notes.$noteId'
+import { Route as AppLoginRouteImport } from './routes/_app/login'
+import { Route as AppLogoutRouteImport } from './routes/_app/logout'
+import { Route as AppBoardsIndexRouteImport } from './routes/_app/boards.index'
+import { Route as AppBoardsBoardIdRouteImport } from './routes/_app/boards.$boardId'
+import { Route as AppNotesIndexRouteImport } from './routes/_app/notes.index'
+import { Route as AppNotesNoteIdRouteImport } from './routes/_app/notes.$noteId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -25,19 +26,13 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AnimationsRoute = AnimationsRouteImport.update({
   id: '/animations',
   path: '/animations',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LogoutRoute = LogoutRouteImport.update({
-  id: '/logout',
-  path: '/logout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ThemeRoute = ThemeRouteImport.update({
@@ -45,25 +40,35 @@ const ThemeRoute = ThemeRouteImport.update({
   path: '/theme',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BoardsIndexRoute = BoardsIndexRouteImport.update({
+const AppLoginRoute = AppLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppLogoutRoute = AppLogoutRouteImport.update({
+  id: '/logout',
+  path: '/logout',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppBoardsIndexRoute = AppBoardsIndexRouteImport.update({
   id: '/boards/',
   path: '/boards/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRouteRoute,
 } as any)
-const BoardsBoardIdRoute = BoardsBoardIdRouteImport.update({
+const AppBoardsBoardIdRoute = AppBoardsBoardIdRouteImport.update({
   id: '/boards/$boardId',
   path: '/boards/$boardId',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRouteRoute,
 } as any)
-const NotesIndexRoute = NotesIndexRouteImport.update({
+const AppNotesIndexRoute = AppNotesIndexRouteImport.update({
   id: '/notes/',
   path: '/notes/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRouteRoute,
 } as any)
-const NotesNoteIdRoute = NotesNoteIdRouteImport.update({
+const AppNotesNoteIdRoute = AppNotesNoteIdRouteImport.update({
   id: '/notes/$noteId',
   path: '/notes/$noteId',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -74,89 +79,86 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/animations': typeof AnimationsRoute
-  '/login': typeof LoginRoute
-  '/logout': typeof LogoutRoute
   '/theme': typeof ThemeRoute
-  '/boards/$boardId': typeof BoardsBoardIdRoute
-  '/notes/$noteId': typeof NotesNoteIdRoute
-  '/boards/': typeof BoardsIndexRoute
-  '/notes/': typeof NotesIndexRoute
+  '/login': typeof AppLoginRoute
+  '/logout': typeof AppLogoutRoute
+  '/boards/$boardId': typeof AppBoardsBoardIdRoute
+  '/notes/$noteId': typeof AppNotesNoteIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/boards/': typeof AppBoardsIndexRoute
+  '/notes/': typeof AppNotesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/animations': typeof AnimationsRoute
-  '/login': typeof LoginRoute
-  '/logout': typeof LogoutRoute
   '/theme': typeof ThemeRoute
-  '/boards/$boardId': typeof BoardsBoardIdRoute
-  '/notes/$noteId': typeof NotesNoteIdRoute
-  '/boards': typeof BoardsIndexRoute
-  '/notes': typeof NotesIndexRoute
+  '/login': typeof AppLoginRoute
+  '/logout': typeof AppLogoutRoute
+  '/boards/$boardId': typeof AppBoardsBoardIdRoute
+  '/notes/$noteId': typeof AppNotesNoteIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/boards': typeof AppBoardsIndexRoute
+  '/notes': typeof AppNotesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteRouteWithChildren
   '/animations': typeof AnimationsRoute
-  '/login': typeof LoginRoute
-  '/logout': typeof LogoutRoute
   '/theme': typeof ThemeRoute
-  '/boards/$boardId': typeof BoardsBoardIdRoute
-  '/notes/$noteId': typeof NotesNoteIdRoute
-  '/boards/': typeof BoardsIndexRoute
-  '/notes/': typeof NotesIndexRoute
+  '/_app/login': typeof AppLoginRoute
+  '/_app/logout': typeof AppLogoutRoute
+  '/_app/boards/$boardId': typeof AppBoardsBoardIdRoute
+  '/_app/notes/$noteId': typeof AppNotesNoteIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_app/boards/': typeof AppBoardsIndexRoute
+  '/_app/notes/': typeof AppNotesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/animations'
+    | '/theme'
     | '/login'
     | '/logout'
-    | '/theme'
     | '/boards/$boardId'
     | '/notes/$noteId'
+    | '/api/auth/$'
     | '/boards/'
     | '/notes/'
-    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/animations'
+    | '/theme'
     | '/login'
     | '/logout'
-    | '/theme'
     | '/boards/$boardId'
     | '/notes/$noteId'
+    | '/api/auth/$'
     | '/boards'
     | '/notes'
-    | '/api/auth/$'
   id:
     | '__root__'
     | '/'
+    | '/_app'
     | '/animations'
-    | '/login'
-    | '/logout'
     | '/theme'
-    | '/boards/$boardId'
-    | '/notes/$noteId'
-    | '/boards/'
-    | '/notes/'
+    | '/_app/login'
+    | '/_app/logout'
+    | '/_app/boards/$boardId'
+    | '/_app/notes/$noteId'
     | '/api/auth/$'
+    | '/_app/boards/'
+    | '/_app/notes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRouteRoute: typeof AppRouteRouteWithChildren
   AnimationsRoute: typeof AnimationsRoute
-  LoginRoute: typeof LoginRoute
-  LogoutRoute: typeof LogoutRoute
   ThemeRoute: typeof ThemeRoute
-  BoardsBoardIdRoute: typeof BoardsBoardIdRoute
-  NotesNoteIdRoute: typeof NotesNoteIdRoute
-  BoardsIndexRoute: typeof BoardsIndexRoute
-  NotesIndexRoute: typeof NotesIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -169,25 +171,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/animations': {
       id: '/animations'
       path: '/animations'
       fullPath: '/animations'
       preLoaderRoute: typeof AnimationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/logout': {
-      id: '/logout'
-      path: '/logout'
-      fullPath: '/logout'
-      preLoaderRoute: typeof LogoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/theme': {
@@ -197,33 +192,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ThemeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/boards/': {
-      id: '/boards/'
+    '/_app/login': {
+      id: '/_app/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AppLoginRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/logout': {
+      id: '/_app/logout'
+      path: '/logout'
+      fullPath: '/logout'
+      preLoaderRoute: typeof AppLogoutRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/boards/': {
+      id: '/_app/boards/'
       path: '/boards'
       fullPath: '/boards/'
-      preLoaderRoute: typeof BoardsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppBoardsIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
-    '/boards/$boardId': {
-      id: '/boards/$boardId'
+    '/_app/boards/$boardId': {
+      id: '/_app/boards/$boardId'
       path: '/boards/$boardId'
       fullPath: '/boards/$boardId'
-      preLoaderRoute: typeof BoardsBoardIdRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppBoardsBoardIdRouteImport
+      parentRoute: typeof AppRouteRoute
     }
-    '/notes/': {
-      id: '/notes/'
+    '/_app/notes/': {
+      id: '/_app/notes/'
       path: '/notes'
       fullPath: '/notes/'
-      preLoaderRoute: typeof NotesIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppNotesIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
-    '/notes/$noteId': {
-      id: '/notes/$noteId'
+    '/_app/notes/$noteId': {
+      id: '/_app/notes/$noteId'
       path: '/notes/$noteId'
       fullPath: '/notes/$noteId'
-      preLoaderRoute: typeof NotesNoteIdRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppNotesNoteIdRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -235,16 +244,33 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppRouteRouteChildren {
+  AppLoginRoute: typeof AppLoginRoute
+  AppLogoutRoute: typeof AppLogoutRoute
+  AppBoardsBoardIdRoute: typeof AppBoardsBoardIdRoute
+  AppNotesNoteIdRoute: typeof AppNotesNoteIdRoute
+  AppBoardsIndexRoute: typeof AppBoardsIndexRoute
+  AppNotesIndexRoute: typeof AppNotesIndexRoute
+}
+
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppLoginRoute: AppLoginRoute,
+  AppLogoutRoute: AppLogoutRoute,
+  AppBoardsBoardIdRoute: AppBoardsBoardIdRoute,
+  AppNotesNoteIdRoute: AppNotesNoteIdRoute,
+  AppBoardsIndexRoute: AppBoardsIndexRoute,
+  AppNotesIndexRoute: AppNotesIndexRoute,
+}
+
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRouteRoute: AppRouteRouteWithChildren,
   AnimationsRoute: AnimationsRoute,
-  LoginRoute: LoginRoute,
-  LogoutRoute: LogoutRoute,
   ThemeRoute: ThemeRoute,
-  BoardsBoardIdRoute: BoardsBoardIdRoute,
-  NotesNoteIdRoute: NotesNoteIdRoute,
-  BoardsIndexRoute: BoardsIndexRoute,
-  NotesIndexRoute: NotesIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
