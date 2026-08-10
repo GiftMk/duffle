@@ -13,13 +13,18 @@ import { Tooltip } from '@/components/tooltip'
 import { useRecentSearchResults, useSearch } from '@/hooks/search'
 import { ICON_SIZE_MD, ICON_SIZE_SM } from '@/lib/constants'
 import type { SearchResult as SearchResultItem } from '@/lib/search.worker'
+import type { SidebarContext } from '@/lib/utils'
 
 const RECENT_RESULTS_LIMIT = 3
 
-export const SearchDialog = () => {
+type SearchDialogProps = {
+	scope: SidebarContext
+}
+
+export const SearchDialog = ({ scope }: SearchDialogProps) => {
 	const [open, setOpen] = useState(false)
-	const { query, setQuery, results, isSearching, clear } = useSearch()
-	const recentResults = useRecentSearchResults(RECENT_RESULTS_LIMIT)
+	const { query, setQuery, results, isSearching, clear } = useSearch(scope)
+	const recentResults = useRecentSearchResults(RECENT_RESULTS_LIMIT, scope)
 
 	const hasQuery = query.length > 0
 	const items = hasQuery ? results : recentResults
@@ -70,7 +75,11 @@ export const SearchDialog = () => {
 							<Autocomplete.Input
 								autoFocus
 								className='h-full w-full border-surface-400 border-b py-2 focus:outline-none'
-								placeholder={'Search boards, notes, and tasks...'}
+								placeholder={
+									scope === 'notes'
+										? 'Search notes...'
+										: 'Search boards and tasks...'
+								}
 							/>
 						</span>
 						<Autocomplete.List className='flex max-h-[min(432px,35svh)] flex-col overflow-y-auto px-4'>

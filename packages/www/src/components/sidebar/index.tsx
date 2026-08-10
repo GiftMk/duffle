@@ -1,8 +1,10 @@
 import { useRouterState } from '@tanstack/react-router'
 import { useRef } from 'react'
 import { useRoughSvg } from '@/hooks/use-rough-svg'
+import { getSidebarContext } from '@/lib/utils'
 import { AccountButton } from './account-button'
 import { BoardsButton } from './boards-button'
+import { HomeButton } from './home-button'
 import { NotesButton } from './notes-button'
 import { SearchDialog } from './search-dialog'
 import { ThemeToggle } from './theme-toggle'
@@ -13,6 +15,10 @@ export const Sidebar = () => {
 	const pathname = useRouterState({
 		select: (state) => state.location.pathname,
 	})
+	const search = useRouterState({
+		select: (state) => state.location.search,
+	}) as { redirect?: string }
+	const context = getSidebarContext(pathname, search)
 
 	useRoughSvg(parentRef, svgRef, {
 		fill: 'var(--color-surface-200)',
@@ -32,9 +38,13 @@ export const Sidebar = () => {
 				className='absolute inset-0 h-full w-full opacity-100'
 			/>
 			<section className='relative flex flex-col items-center gap-4'>
-				<SearchDialog />
-				<NotesButton active={pathname.startsWith('/notes')} />
-				<BoardsButton active={pathname.startsWith('/boards')} />
+				<HomeButton />
+				<SearchDialog scope={context} />
+				{context === 'boards' ? (
+					<BoardsButton active={pathname.startsWith('/boards')} />
+				) : (
+					<NotesButton active={pathname.startsWith('/notes')} />
+				)}
 				<ThemeToggle />
 				<AccountButton />
 			</section>

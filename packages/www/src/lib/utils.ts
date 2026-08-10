@@ -7,6 +7,20 @@ export const cn = (...inputs: ClassValue[]) => {
 	return twMerge(clsx(inputs))
 }
 
+export type SidebarContext = 'boards' | 'notes'
+
+export const getSidebarContext = (
+	pathname: string,
+	search: { redirect?: string },
+): SidebarContext => {
+	if (pathname.startsWith('/notes')) return 'notes'
+	if (pathname.startsWith('/boards')) return 'boards'
+	if (pathname === '/login' || pathname === '/logout') {
+		return search.redirect?.startsWith('/notes') ? 'notes' : 'boards'
+	}
+	return 'boards'
+}
+
 export const onNextTick = (callback: () => void) => {
 	return setTimeout(callback, 0)
 }

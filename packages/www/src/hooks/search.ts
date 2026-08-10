@@ -11,8 +11,15 @@ import {
 	taskToSearchItem,
 } from '@/lib/search'
 import type { SearchResult } from '@/lib/search.worker'
+import type { SidebarContext } from '@/lib/utils'
 
-export const useSearch = () => {
+const matchesScope = (result: SearchResult, scope?: SidebarContext) => {
+	if (!scope) return true
+	if (scope === 'notes') return result.type === 'note'
+	return result.type === 'board' || result.type === 'task'
+}
+
+export const useSearch = (scope?: SidebarContext) => {
 	const [query, setQuery] = useState('')
 	const [results, setResults] = useState<SearchResult[]>([])
 	const [isSearching, setIsSearching] = useState(false)
@@ -26,10 +33,10 @@ export const useSearch = () => {
 
 		setIsSearching(true)
 		searchWorker.query(query).then((queryResults) => {
-			setResults(queryResults)
+			setResults(queryResults.filter((result) => matchesScope(result, scope)))
 			setIsSearching(false)
 		})
-	}, [query])
+	}, [query, scope])
 
 	const clear = () => {
 		setQuery('')
@@ -44,16 +51,34 @@ type RecentEntity =
 	| { kind: 'note'; entity: NoteEntity }
 	| { kind: 'task'; entity: TaskEntity }
 
-export const useRecentSearchResults = (limit: number): SearchResult[] => {
+export const useRecentSearchResults = (
+	limit: number,
+	scope?: SidebarContext,
+): SearchResult[] => {
 	const boards = useBoards()
 	const notes = useNotes()
 	const tasks = useAllTasks()
 
-	const entities: RecentEntity[] = [
-		...boards.map((entity) => ({ kind: 'board' as const, entity })),
-		...notes.map((entity) => ({ kind: 'note' as const, entity })),
-		...tasks.map((entity) => ({ kind: 'task' as const, entity })),
-	]
+	const entities: RecentEntity[] = []
+
+	if (scope === 'notes') {
+		notes
+			.map((entity) => ({ kind: 'note' as const, entity }))
+			.forEach((entity) => {
+				entities.push(entity)
+			})
+	} else {
+		boards
+			.map((entity) => ({ kind: 'board' as const, entity }))
+			.forEach((entity) => {
+				entities.push(entity)
+			})
+		tasks
+			.map((entity) => ({ kind: 'task' as const, entity }))
+			.forEach((entity) => {
+				entities.push(entity)
+			})
+	}
 
 	const recent = takeMostRecent(entities, limit)
 
