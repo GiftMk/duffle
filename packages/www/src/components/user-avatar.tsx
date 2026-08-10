@@ -1,7 +1,6 @@
 import { Avatar, Style } from '@dicebear/core'
 import loreleiNeutral from '@dicebear/styles/lorelei-neutral.json'
 import { cn } from '@/lib/utils'
-import { useTheme } from './sidebar/theme-provider'
 
 const style = new Style(loreleiNeutral)
 
