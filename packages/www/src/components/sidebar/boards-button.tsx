@@ -14,6 +14,7 @@ export const BoardsButton = ({ active, disabled }: BoardsButtonProps) => {
 	const navigate = useNavigate()
 
 	const handleClick = () => {
+		if (disabled) return
 		navigate({ to: '/boards' })
 	}
 

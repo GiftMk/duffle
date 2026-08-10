@@ -33,6 +33,8 @@ export const SearchDialog = ({ scope, disabled }: SearchDialogProps) => {
 	const showNoResults = hasQuery && !isSearching && results.length === 0
 
 	const handleOpenChange = (open: boolean) => {
+		if (disabled) return
+
 		setOpen(open)
 		if (!open) {
 			clear()
