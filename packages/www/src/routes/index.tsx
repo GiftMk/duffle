@@ -1,14 +1,8 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { Suspense, useEffect, useRef } from 'react'
+import { KanbanIcon, PencilSimpleLineIcon } from '@phosphor-icons/react'
+import { createFileRoute } from '@tanstack/react-router'
 import { TypeAnimation } from 'react-type-animation'
 import { FadeIn, SpringPopIn } from '@/components/animations'
-import { GithubLoginButton } from '@/components/github-login-button'
-import { LoadingPage } from '@/components/loading-page'
-import { useCreateBoard } from '@/hooks/boards'
-import { useGithubAuth } from '@/hooks/use-github-auth'
-import { useSession } from '@/lib/auth'
-import { boardsCollection } from '@/lib/collections'
-import { uuidv7 } from 'uuidv7'
+import { LandingNavButton } from '@/components/landing-nav-button'
 
 export const Route = createFileRoute('/')({
 	ssr: true,
@@ -30,61 +24,18 @@ const SubHeading = () => (
 )
 
 function RouteComponent() {
-	const { loading, signIn, error } = useGithubAuth()
-	const { data: session, isPending } = useSession()
-
-	const handleClick = async () => {
-		await signIn({ successRoute: '/', errorRoute: '/' })
-	}
-
-	if (session) {
-		return (
-			<Suspense fallback={<LoadingPage message='Signing you in...' />}>
-				<RedirectToBoard />
-			</Suspense>
-		)
-	}
-
-	if (isPending) {
-		return <LoadingPage message='Hitting up GitHub...' />
-	}
-
 	return (
 		<main className='flex h-full w-full flex-col items-center justify-center gap-12 text-center'>
 			<Heading />
 			<SubHeading />
-			<SpringPopIn className='flex flex-col gap-3' initial={{ y: -300 }}>
-				<GithubLoginButton loading={loading} onClick={handleClick} />
-				{error && <p className='text-red-600 text-sm'>{error}</p>}
+			<SpringPopIn className='flex items-center gap-16' initial={{ y: -300 }}>
+				<LandingNavButton icon={KanbanIcon} label='Kanban' to='/boards' />
+				<LandingNavButton
+					icon={PencilSimpleLineIcon}
+					label='Notes'
+					to='/notes'
+				/>
 			</SpringPopIn>
 		</main>
 	)
-}
-
-const getMostRecentlyUpdatedBoard = async () => {
-	const boards = await boardsCollection.toArrayWhenReady()
-	return boards.sort(
-		(a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-	)[0]
-}
-
-const RedirectToBoard = () => {
-	const createBoard = useCreateBoard()
-	const navigate = useNavigate()
-	const hasRedirected = useRef(false)
-
-	useEffect(() => {
-		if (hasRedirected.current) return
-		hasRedirected.current = true
-
-		const goToBoard = async () => {
-			const recentlyUpdated = await getMostRecentlyUpdatedBoard()
-			const board = recentlyUpdated ?? createBoard(uuidv7(), 'Getting Started')
-			navigate({ to: '/boards/$boardId', params: { boardId: board.id } })
-		}
-
-		goToBoard()
-	}, [navigate, createBoard])
-
-	return <LoadingPage message='Signing you in...' />
 }

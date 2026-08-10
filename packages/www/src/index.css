@@ -5,6 +5,7 @@
 	--font-sans:
 		"iA Writer Quattro", -apple-system, BlinkMcSystemFont, sans-serif;
 	--font-mono: "iA Writer Mono", monospace;
+	--font-drawn: "Excalifont", -apple-system, BlinkMcSystemFont, sans-serif;
 
 	--color-border: oklch(0.8234 0 0);
 
@@ -118,6 +119,8 @@
 
 	--spacing-header: calc(var(--spacing) * 14);
 	--spacing-editor: calc(100% - var(--spacing-header));
+
+	--font-drawn: var(--font-drawn);
 }
 
 html {

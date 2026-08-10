@@ -1,3 +1,4 @@
+export const ICON_SIZE_XL = 30
 export const ICON_SIZE_LG = 22
 export const ICON_SIZE_MD = 19
 export const ICON_SIZE_SM = 18
