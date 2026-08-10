@@ -15,7 +15,7 @@ export const Route = createFileRoute('/_app/login')({
 	component: RouteComponent,
 })
 
-const AVATAR_SEED = 'xlelgneb'
+const AVATAR_SEED = 'sfdsc'
 
 function RouteComponent() {
 	const navigate = useNavigate()

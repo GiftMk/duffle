@@ -2,6 +2,7 @@ import { MoonIcon, SunIcon } from '@phosphor-icons/react/dist/ssr'
 import { useTheme } from '@/components/sidebar/theme-provider'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { Tooltip } from '../tooltip'
+import { SidebarButton } from './sidebar-button'
 
 export const ThemeToggle = () => {
 	const { resolvedTheme, setTheme } = useTheme()
@@ -18,17 +19,13 @@ export const ThemeToggle = () => {
 					: 'Switch to dark mode'
 			}
 		>
-			<button
-				onClick={handleClick}
-				type='button'
-				className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
-			>
+			<SidebarButton onClick={handleClick}>
 				{resolvedTheme === 'dark' ? (
 					<SunIcon size={ICON_SIZE_MD} />
 				) : (
 					<MoonIcon size={ICON_SIZE_MD} />
 				)}
-			</button>
+			</SidebarButton>
 		</Tooltip>
 	)
 }

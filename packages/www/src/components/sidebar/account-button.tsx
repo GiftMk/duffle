@@ -5,10 +5,15 @@ import { ICON_SIZE_MD } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { Tooltip } from '../tooltip'
 import { UserAvatar } from '../user-avatar'
+import { SidebarButton } from './sidebar-button'
 
 const AVATAR_FILL_SIZE = 35
 
-export const AccountButton = () => {
+type AccountButtonProps = {
+	active?: boolean
+}
+
+export const AccountButton = ({ active }: AccountButtonProps) => {
 	const navigate = useNavigate()
 	const { data: session } = useSession()
 
@@ -18,20 +23,23 @@ export const AccountButton = () => {
 
 	return (
 		<Tooltip content={session ? (session.user.name ?? 'Account') : 'Sign up'}>
-			<button
+			<SidebarButton
 				onClick={handleClick}
-				type='button'
-				className={cn(
-					'flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none',
-					session && 'p-0',
-				)}
+				className={cn({
+					'p-0': session,
+					'scale-125 bg-surface-200': active,
+				})}
 			>
 				{session ? (
-					<UserAvatar seed={session.user.id} size={AVATAR_FILL_SIZE} />
+					<UserAvatar
+						active={active}
+						seed={session.user.id}
+						size={AVATAR_FILL_SIZE}
+					/>
 				) : (
 					<UserIcon size={ICON_SIZE_MD} />
 				)}
-			</button>
+			</SidebarButton>
 		</Tooltip>
 	)
 }

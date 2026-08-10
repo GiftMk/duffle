@@ -5,34 +5,35 @@ import { cn } from '@/lib/utils'
 const style = new Style(loreleiNeutral)
 
 const THEME_COLOURS = {
-	dark: {
-		surface100: '#1f1c1d',
-		typography600: '#aca6a7',
-	},
-	light: {
-		surface100: '#f3f2ef',
-		typography600: '#7e605f',
-	},
+	surface200: '#e9e8e4',
+	surface100: '#f3f2ef',
+	typography600: '#7e605f',
 } as const
 
 type UserAvatarProps = {
 	seed: string
 	size?: number
 	className?: string
+	active?: boolean
 }
 
-export const UserAvatar = ({ seed, size = 19, className }: UserAvatarProps) => {
-	const colours = THEME_COLOURS.light
-
+export const UserAvatar = ({
+	seed,
+	size = 19,
+	active = false,
+	className,
+}: UserAvatarProps) => {
 	const uri = new Avatar(style, {
 		seed,
-		backgroundColor: colours.surface100,
-		eyebrowsColor: colours.typography600,
-		eyesColor: colours.typography600,
-		frecklesColor: colours.typography600,
-		glassesColor: colours.typography600,
-		mouthColor: colours.typography600,
-		noseColor: colours.typography600,
+		backgroundColor: active
+			? THEME_COLOURS.surface200
+			: THEME_COLOURS.surface100,
+		eyebrowsColor: THEME_COLOURS.typography600,
+		eyesColor: THEME_COLOURS.typography600,
+		frecklesColor: THEME_COLOURS.typography600,
+		glassesColor: THEME_COLOURS.typography600,
+		mouthColor: THEME_COLOURS.typography600,
+		noseColor: THEME_COLOURS.typography600,
 	}).toDataUri()
 
 	return (

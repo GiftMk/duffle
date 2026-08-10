@@ -13,15 +13,17 @@ import { Tooltip } from '@/components/tooltip'
 import { useRecentSearchResults, useSearch } from '@/hooks/search'
 import { ICON_SIZE_MD, ICON_SIZE_SM } from '@/lib/constants'
 import type { SearchResult as SearchResultItem } from '@/lib/search.worker'
-import type { SidebarContext } from '@/lib/utils'
+import { cn, type SidebarContext } from '@/lib/utils'
+import { SidebarButton } from './sidebar-button'
 
 const RECENT_RESULTS_LIMIT = 3
 
 type SearchDialogProps = {
 	scope: SidebarContext
+	disabled?: boolean
 }
 
-export const SearchDialog = ({ scope }: SearchDialogProps) => {
+export const SearchDialog = ({ scope, disabled }: SearchDialogProps) => {
 	const [open, setOpen] = useState(false)
 	const { query, setQuery, results, isSearching, clear } = useSearch(scope)
 	const recentResults = useRecentSearchResults(RECENT_RESULTS_LIMIT, scope)
@@ -41,19 +43,22 @@ export const SearchDialog = ({ scope }: SearchDialogProps) => {
 		handleOpenChange(false)
 	}
 
-	useHotkey('Mod+K', () => setOpen(true))
+	useHotkey('Mod+K', () => {
+		if (!disabled) setOpen(true)
+	})
 
 	return (
 		<Dialog.Root open={open} onOpenChange={handleOpenChange}>
 			<Tooltip content='Search'>
 				<Dialog.Trigger
 					render={
-						<button
-							type='button'
-							className='flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
+						<SidebarButton
+							disabled={disabled}
+							aria-disabled={disabled}
+							className={cn({ 'pointer-events-none opacity-40': disabled })}
 						>
 							<MagnifyingGlassIcon size={ICON_SIZE_MD} />
-						</button>
+						</SidebarButton>
 					}
 				/>
 			</Tooltip>

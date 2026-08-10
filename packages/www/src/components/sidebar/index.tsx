@@ -1,6 +1,7 @@
 import { useRouterState } from '@tanstack/react-router'
 import { useRef } from 'react'
 import { useRoughSvg } from '@/hooks/use-rough-svg'
+import { useSession } from '@/lib/auth'
 import { getSidebarContext } from '@/lib/utils'
 import { AccountButton } from './account-button'
 import { BoardsButton } from './boards-button'
@@ -17,8 +18,14 @@ export const Sidebar = () => {
 	})
 	const search = useRouterState({
 		select: (state) => state.location.search,
-	}) as { redirect?: string }
+	})
 	const context = getSidebarContext(pathname, search)
+	const { data: session } = useSession()
+	const isAuthenticated = !!session?.user
+
+	const isOnBoards = pathname.startsWith('/boards')
+	const isOnNotes = pathname.startsWith('/notes')
+	const isOnAccountRoute = pathname === '/login' || pathname === '/logout'
 
 	useRoughSvg(parentRef, svgRef, {
 		fill: 'var(--color-surface-200)',
@@ -39,10 +46,14 @@ export const Sidebar = () => {
 			/>
 			<section className='relative flex flex-col items-center gap-4'>
 				<HomeButton />
-				<SearchDialog scope={context} />
-				{context === 'boards' ? <BoardsButton /> : <NotesButton />}
+				<SearchDialog scope={context} disabled={!isAuthenticated} />
+				{context === 'boards' ? (
+					<BoardsButton active={isOnBoards} disabled={!isAuthenticated} />
+				) : (
+					<NotesButton active={isOnNotes} disabled={!isAuthenticated} />
+				)}
 				<ThemeToggle />
-				<AccountButton />
+				<AccountButton active={isOnAccountRoute} />
 			</section>
 			<section className='relative flex justify-center'>
 				<h2 className='rotate-180 font-bold text-sm text-typography-500/75 tracking-tight [writing-mode:vertical-rl]'>

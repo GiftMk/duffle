@@ -1,9 +1,16 @@
 import { KanbanIcon } from '@phosphor-icons/react'
 import { useNavigate } from '@tanstack/react-router'
 import { ICON_SIZE_MD } from '@/lib/constants'
+import { cn } from '@/lib/utils'
 import { Tooltip } from '../tooltip'
+import { SidebarButton } from './sidebar-button'
 
-export const BoardsButton = () => {
+type BoardsButtonProps = {
+	active?: boolean
+	disabled?: boolean
+}
+
+export const BoardsButton = ({ active, disabled }: BoardsButtonProps) => {
 	const navigate = useNavigate()
 
 	const handleClick = () => {
@@ -12,13 +19,17 @@ export const BoardsButton = () => {
 
 	return (
 		<Tooltip content='Boards'>
-			<button
+			<SidebarButton
 				onClick={handleClick}
-				type='button'
-				className='flex h-fit w-fit scale-125 items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none'
+				disabled={disabled}
+				aria-disabled={disabled}
+				className={cn({
+					'scale-125 bg-surface-200': active,
+					'pointer-events-none opacity-40': disabled,
+				})}
 			>
 				<KanbanIcon size={ICON_SIZE_MD} />
-			</button>
+			</SidebarButton>
 		</Tooltip>
 	)
 }
