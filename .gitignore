@@ -7,7 +7,11 @@ node_modules
 # output
 out
 dist
+dist-ssr
 *.tgz
+.tanstack
+.output
+.pglite
 
 # code coverage
 coverage

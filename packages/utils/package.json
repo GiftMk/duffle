@@ -1,0 +1,23 @@
+{
+	"name": "@duffle/utils",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts",
+		"./constants": "./src/constants.ts"
+	},
+	"scripts": {
+		"tidy": "biome check --write --unsafe .",
+		"tsc": "tsc -b --noEmit"
+	},
+	"dependencies": {
+		"clsx": "^2.1.1",
+		"remark": "^15.0.1",
+		"strip-markdown": "^6.0.0",
+		"tailwind-merge": "^3.5.0"
+	},
+	"devDependencies": {
+		"typescript": "~6.0.3"
+	}
+}

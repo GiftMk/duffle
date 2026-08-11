@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+.milkdown {
+	.cm-gutters {
+		display: none;
+	}
+
+	.cm-editor {
+		background-color: var(--color-surface-200);
+		padding: calc(var(--spacing) * 3);
+
+		.cm-content {
+			font-family: var(--font-mono), monospace;
+		}
+
+		.cm-activeLine {
+			background-color: rgb(from var(--color-surface-50) r g b / 0.5);
+		}
+
+		.cm-activeLineGutter {
+			background-color: var(--color-surface-50);
+		}
+
+		.cm-panels {
+			background-color: transparent;
+			backdrop-filter: blur(10px);
+			border-top: 0;
+			padding: 8px;
+			border-radius: var(--radius-md);
+
+			.cm-button {
+				background-color: white;
+				background-image: none;
+				border: none;
+				border-radius: var(--radius-md);
+				padding: 6px 10px;
+				color: var(--color-stone-900);
+				text-transform: capitalize;
+			}
+		}
+	}
+
+	.cm-tooltip-autocomplete {
+		background-color: var(--color-surface-50);
+		border-radius: var(--radius-md);
+		border: 1px solid var(--color-border);
+	}
+
+	.cm-focused {
+		outline: none;
+	}
+
+	.cm-focused .cm-selectionBackground,
+	.cm-editor .cm-selectionBackground {
+		/* biome-ignore lint/complexity/noImportantStyles: necessary for rule to take effect on editor focus */
+		background-color: var(--color-selection) !important;
+	}
+
+	.cm-tooltip-autocomplete {
+		border-color: var(--color-surface-400);
+		background-color: var(--color-surface-200);
+		overflow: hidden;
+		@apply border rounded-sm;
+
+		li[aria-selected="true"] {
+			/* biome-ignore lint/complexity/noImportantStyles: necessary */
+			background-color: var(--color-surface-100) !important;
+		}
+	}
+}

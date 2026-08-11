@@ -1,0 +1,12 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
+		"target": "es2023",
+		"lib": ["ES2023"],
+		"module": "esnext",
+		"types": ["node"],
+		"outDir": "./dist"
+	},
+	"include": ["src", "drizzle.config.ts", "vitest.config.ts"]
+}
