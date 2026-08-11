@@ -21,8 +21,8 @@ Duffle is a monorepo with two TanStack Start apps sharing a set of workspace pac
 
 ```
 apps/
-  kanban/         boards.duffle.dev — pnpm --filter @duffle/kanban dev (port 4711)
-  notes/          notes.duffle.dev  — pnpm --filter @duffle/notes dev (port 4712)
+  board/          boards.duffle.dev — pnpm --filter @duffle/board dev (port 3002)
+  book/           notes.duffle.dev  — pnpm --filter @duffle/book dev (port 3001)
 packages/
   ui/             shared components, tailwind theme, fonts
   db/             drizzle schemas/connection, shared better-auth server factory
@@ -30,7 +30,7 @@ packages/
   utils/          small cross-app helpers
 ```
 
-Each app needs its own `.env` (see `apps/kanban/.env`/`apps/notes/.env`) with:
+Each app needs its own `.env` (see `apps/board/.env`/`apps/book/.env`) with:
 
 ```
 DATABASE_URL=
@@ -40,6 +40,6 @@ GITHUB_CLIENT_ID=
 GITHUB_CLIENT_SECRET=
 ```
 
-`DATABASE_URL`, `BETTER_AUTH_SECRET`, and the GitHub credentials should be the same across both apps' `.env` files — they share one database and one auth setup. `BETTER_AUTH_URL` is app-specific (each app's own local URL, e.g. `http://localhost:4711` for kanban).
+`DATABASE_URL`, `BETTER_AUTH_SECRET`, and the GitHub credentials should be the same across both apps' `.env` files — they share one database and one auth setup. `BETTER_AUTH_URL` is app-specific (each app's own local URL, e.g. `http://localhost:3002` for board).
 
-We use pnpm on Node.js, make sure you have those installed. Run `pnpm i` and then `pnpm dev` to run both apps together, or `pnpm dev:kanban` / `pnpm dev:notes` to run just one.
+We use pnpm on Node.js, make sure you have those installed. Run `pnpm i` and then `pnpm dev` to run both apps together, or `pnpm dev:board` / `pnpm dev:book` to run just one.

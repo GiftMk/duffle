@@ -6,9 +6,9 @@
 		"node": "24.x"
 	},
 	"scripts": {
-		"dev": "pnpm --parallel --filter @duffle/kanban --filter @duffle/notes dev",
-		"dev:kanban": "pnpm --filter @duffle/kanban dev",
-		"dev:notes": "pnpm --filter @duffle/notes dev",
+		"dev": "pnpm --parallel --filter @duffle/board --filter @duffle/book dev",
+		"dev:board": "pnpm --filter @duffle/board dev",
+		"dev:book": "pnpm --filter @duffle/book dev",
 		"tidy": "pnpm -r --if-present run tidy",
 		"tsc": "pnpm -r --if-present run tsc",
 		"test": "pnpm -r --if-present run test"
