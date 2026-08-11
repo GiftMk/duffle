@@ -11,6 +11,7 @@ dist-ssr
 *.tgz
 .tanstack
 .output
+.vercel
 .pglite
 
 # code coverage

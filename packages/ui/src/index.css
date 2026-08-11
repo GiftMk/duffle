@@ -1,6 +1,9 @@
 @import "./fonts.css";
 @import "tailwindcss";
 
+@source "./";
+@source "../../markdown/src";
+
 :root {
 	--font-sans:
 		"iA Writer Quattro", -apple-system, BlinkMcSystemFont, sans-serif;
