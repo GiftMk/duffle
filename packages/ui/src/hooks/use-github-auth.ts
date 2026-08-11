@@ -1,8 +1,7 @@
-import type { LinkProps } from '@tanstack/react-router'
 import { useState } from 'react'
 import { signIn } from '../auth'
 
-const safeCallback = (path: LinkProps['to']) => {
+const safeCallback = (path: string) => {
 	return `${window.location.origin}${path}`
 }
 
@@ -14,8 +13,8 @@ export const useGithubAuth = () => {
 		successRoute,
 		errorRoute,
 	}: {
-		successRoute: LinkProps['to']
-		errorRoute: LinkProps['to']
+		successRoute: string
+		errorRoute: string
 	}) => {
 		setLoading(true)
 		setError(null)

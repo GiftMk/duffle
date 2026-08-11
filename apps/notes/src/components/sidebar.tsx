@@ -1,4 +1,9 @@
-import { SearchDialog, SearchResultItem, Sidebar } from '@duffle/ui'
+import {
+	SearchDialog,
+	SearchResultItem,
+	Sidebar,
+	SidebarContext,
+} from '@duffle/ui'
 import { useSession } from '@duffle/ui/auth'
 import { ICON_SIZE_SM } from '@duffle/utils/constants'
 import { ScrollIcon } from '@phosphor-icons/react'
@@ -29,33 +34,40 @@ export const AppSidebar = () => {
 	}
 
 	return (
-		<Sidebar>
-			<SearchDialog
-				disabled={!isAuthenticated}
-				placeholder='Search notes...'
-				query={query}
-				onQueryChange={setQuery}
-				items={items}
-				isSearching={isSearching}
-				getItemKey={(item) => item.id}
-				onClear={clear}
-				renderItem={(item, { onSelect }) => (
-					<SearchResultItem
-						icon={
-							<ScrollIcon
-								size={ICON_SIZE_SM}
-								className='shrink-0 text-typography-600'
-							/>
-						}
-						title={item.title}
-						onClick={() => {
-							onSelect()
-							handleSelect(item)
-						}}
-					/>
-				)}
-			/>
-			<NotesButton active={isOnNotes} disabled={!isAuthenticated} />
-		</Sidebar>
+		<SidebarContext
+			value={{
+				navigate: (path) => navigate({ to: path }),
+				getCurrentPathname: () => pathname,
+			}}
+		>
+			<Sidebar>
+				<SearchDialog
+					disabled={!isAuthenticated}
+					placeholder='Search notes...'
+					query={query}
+					onQueryChange={setQuery}
+					items={items}
+					isSearching={isSearching}
+					getItemKey={(item) => item.id}
+					onClear={clear}
+					renderItem={(item, { onSelect }) => (
+						<SearchResultItem
+							icon={
+								<ScrollIcon
+									size={ICON_SIZE_SM}
+									className='shrink-0 text-typography-600'
+								/>
+							}
+							title={item.title}
+							onClick={() => {
+								onSelect()
+								handleSelect(item)
+							}}
+						/>
+					)}
+				/>
+				<NotesButton active={isOnNotes} disabled={!isAuthenticated} />
+			</Sidebar>
+		</SidebarContext>
 	)
 }

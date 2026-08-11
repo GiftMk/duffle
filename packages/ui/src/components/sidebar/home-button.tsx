@@ -1,14 +1,14 @@
 import { ICON_SIZE_MD } from '@duffle/utils/constants'
 import { HouseIcon } from '@phosphor-icons/react'
-import { useNavigate } from '@tanstack/react-router'
+import { useSidebarNavigation } from '../../sidebar-context'
 import { Tooltip } from '../tooltip'
 import { SidebarButton } from './sidebar-button'
 
 export const HomeButton = () => {
-	const navigate = useNavigate()
+	const { navigate } = useSidebarNavigation()
 
 	const handleClick = () => {
-		navigate({ to: '/' })
+		navigate('/')
 	}
 
 	return (

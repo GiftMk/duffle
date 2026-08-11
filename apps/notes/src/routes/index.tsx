@@ -11,14 +11,16 @@ export const Route = createFileRoute('/')({
 
 const Heading = () => (
 	<FadeIn>
-		<h1 className='font-bold text-9xl tracking-tight'>Duffle.</h1>
+		<h1 className='font-bold text-9xl tracking-tight'>
+			Duffle<span className='text-primary-500'>Book.</span>
+		</h1>
 	</FadeIn>
 )
 
 const SubHeading = () => (
 	<TypeAnimation
 		className='text-pretty text-2xl'
-		sequence={[1000, 'A place to write and move sticky notes (˶ᵔ ᵕ ᵔ˶)']}
+		sequence={[1000, 'A happy place for all your writing (˶ᵔ ᵕ ᵔ˶)']}
 		speed={65}
 	/>
 )

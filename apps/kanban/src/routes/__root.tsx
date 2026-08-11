@@ -54,7 +54,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<head>
 				<meta charSet='UTF-8' />
 				<meta name='viewport' content='width=device-width, initial-scale=1.0' />
-				<title>Duffle</title>
+				<title>Duffle Board</title>
 				<HeadContent />
 			</head>
 			<body className='text-typography-950'>

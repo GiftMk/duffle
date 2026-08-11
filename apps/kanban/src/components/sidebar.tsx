@@ -1,4 +1,9 @@
-import { SearchDialog, SearchResultItem, Sidebar } from '@duffle/ui'
+import {
+	SearchDialog,
+	SearchResultItem,
+	Sidebar,
+	SidebarContext,
+} from '@duffle/ui'
 import { useSession } from '@duffle/ui/auth'
 import { ICON_SIZE_SM } from '@duffle/utils/constants'
 import { CheckSquareOffsetIcon, KanbanIcon } from '@phosphor-icons/react'
@@ -31,40 +36,47 @@ export const AppSidebar = () => {
 	}
 
 	return (
-		<Sidebar>
-			<SearchDialog
-				disabled={!isAuthenticated}
-				placeholder='Search boards and tasks...'
-				query={query}
-				onQueryChange={setQuery}
-				items={items}
-				isSearching={isSearching}
-				getItemKey={(item) => item.id}
-				onClear={clear}
-				renderItem={(item, { onSelect }) => (
-					<SearchResultItem
-						icon={
-							item.type === 'task' ? (
-								<CheckSquareOffsetIcon
-									size={ICON_SIZE_SM}
-									className='shrink-0 text-typography-600'
-								/>
-							) : (
-								<KanbanIcon
-									size={ICON_SIZE_SM}
-									className='shrink-0 text-typography-600'
-								/>
-							)
-						}
-						title={item.title}
-						onClick={() => {
-							onSelect()
-							handleSelect(item)
-						}}
-					/>
-				)}
-			/>
-			<BoardsButton active={isOnBoards} disabled={!isAuthenticated} />
-		</Sidebar>
+		<SidebarContext
+			value={{
+				navigate: (path) => navigate({ to: path }),
+				getCurrentPathname: () => pathname,
+			}}
+		>
+			<Sidebar>
+				<SearchDialog
+					disabled={!isAuthenticated}
+					placeholder='Search boards and tasks...'
+					query={query}
+					onQueryChange={setQuery}
+					items={items}
+					isSearching={isSearching}
+					getItemKey={(item) => item.id}
+					onClear={clear}
+					renderItem={(item, { onSelect }) => (
+						<SearchResultItem
+							icon={
+								item.type === 'task' ? (
+									<CheckSquareOffsetIcon
+										size={ICON_SIZE_SM}
+										className='shrink-0 text-typography-600'
+									/>
+								) : (
+									<KanbanIcon
+										size={ICON_SIZE_SM}
+										className='shrink-0 text-typography-600'
+									/>
+								)
+							}
+							title={item.title}
+							onClick={() => {
+								onSelect()
+								handleSelect(item)
+							}}
+						/>
+					)}
+				/>
+				<BoardsButton active={isOnBoards} disabled={!isAuthenticated} />
+			</Sidebar>
+		</SidebarContext>
 	)
 }

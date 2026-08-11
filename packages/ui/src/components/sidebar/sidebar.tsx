@@ -1,7 +1,7 @@
-import { useRouterState } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import { useRef } from 'react'
 import { useRoughSvg } from '../../hooks/use-rough-svg'
+import { useSidebarNavigation } from '../../sidebar-context'
 import { AccountButton } from './account-button'
 import { HomeButton } from './home-button'
 import { ThemeToggle } from './theme-toggle'
@@ -13,9 +13,8 @@ type SidebarProps = {
 export const Sidebar = ({ children }: SidebarProps) => {
 	const svgRef = useRef<SVGSVGElement | null>(null)
 	const parentRef = useRef<HTMLElement | null>(null)
-	const pathname = useRouterState({
-		select: (state) => state.location.pathname,
-	})
+	const { getCurrentPathname } = useSidebarNavigation()
+	const pathname = getCurrentPathname()
 
 	const isOnAccountRoute = pathname === '/login' || pathname === '/logout'
 
