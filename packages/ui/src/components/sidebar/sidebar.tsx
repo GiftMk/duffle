@@ -7,13 +7,10 @@ import { HomeButton } from './home-button'
 import { ThemeToggle } from './theme-toggle'
 
 type SidebarProps = {
-	/** The app-specific scoped nav button, e.g. a `BoardsButton` or `NotesButton`. */
-	scopedNav: ReactNode
-	/** A `SearchDialog` wired up with the app's own search hook. */
-	search: ReactNode
+	children: ReactNode
 }
 
-export const Sidebar = ({ scopedNav, search }: SidebarProps) => {
+export const Sidebar = ({ children }: SidebarProps) => {
 	const svgRef = useRef<SVGSVGElement | null>(null)
 	const parentRef = useRef<HTMLElement | null>(null)
 	const pathname = useRouterState({
@@ -41,8 +38,7 @@ export const Sidebar = ({ scopedNav, search }: SidebarProps) => {
 			/>
 			<section className='relative flex flex-col items-center gap-4'>
 				<HomeButton />
-				{search}
-				{scopedNav}
+				{children}
 				<ThemeToggle />
 				<AccountButton active={isOnAccountRoute} />
 			</section>

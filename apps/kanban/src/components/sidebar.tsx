@@ -31,44 +31,40 @@ export const AppSidebar = () => {
 	}
 
 	return (
-		<Sidebar
-			scopedNav={
-				<BoardsButton active={isOnBoards} disabled={!isAuthenticated} />
-			}
-			search={
-				<SearchDialog
-					disabled={!isAuthenticated}
-					placeholder='Search boards and tasks...'
-					query={query}
-					onQueryChange={setQuery}
-					items={items}
-					isSearching={isSearching}
-					getItemKey={(item) => item.id}
-					onClear={clear}
-					renderItem={(item, { onSelect }) => (
-						<SearchResultItem
-							icon={
-								item.type === 'task' ? (
-									<CheckSquareOffsetIcon
-										size={ICON_SIZE_SM}
-										className='shrink-0 text-typography-600'
-									/>
-								) : (
-									<KanbanIcon
-										size={ICON_SIZE_SM}
-										className='shrink-0 text-typography-600'
-									/>
-								)
-							}
-							title={item.title}
-							onClick={() => {
-								onSelect()
-								handleSelect(item)
-							}}
-						/>
-					)}
-				/>
-			}
-		/>
+		<Sidebar>
+			<SearchDialog
+				disabled={!isAuthenticated}
+				placeholder='Search boards and tasks...'
+				query={query}
+				onQueryChange={setQuery}
+				items={items}
+				isSearching={isSearching}
+				getItemKey={(item) => item.id}
+				onClear={clear}
+				renderItem={(item, { onSelect }) => (
+					<SearchResultItem
+						icon={
+							item.type === 'task' ? (
+								<CheckSquareOffsetIcon
+									size={ICON_SIZE_SM}
+									className='shrink-0 text-typography-600'
+								/>
+							) : (
+								<KanbanIcon
+									size={ICON_SIZE_SM}
+									className='shrink-0 text-typography-600'
+								/>
+							)
+						}
+						title={item.title}
+						onClick={() => {
+							onSelect()
+							handleSelect(item)
+						}}
+					/>
+				)}
+			/>
+			<BoardsButton active={isOnBoards} disabled={!isAuthenticated} />
+		</Sidebar>
 	)
 }

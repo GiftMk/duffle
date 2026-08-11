@@ -29,35 +29,33 @@ export const AppSidebar = () => {
 	}
 
 	return (
-		<Sidebar
-			scopedNav={<NotesButton active={isOnNotes} disabled={!isAuthenticated} />}
-			search={
-				<SearchDialog
-					disabled={!isAuthenticated}
-					placeholder='Search notes...'
-					query={query}
-					onQueryChange={setQuery}
-					items={items}
-					isSearching={isSearching}
-					getItemKey={(item) => item.id}
-					onClear={clear}
-					renderItem={(item, { onSelect }) => (
-						<SearchResultItem
-							icon={
-								<ScrollIcon
-									size={ICON_SIZE_SM}
-									className='shrink-0 text-typography-600'
-								/>
-							}
-							title={item.title}
-							onClick={() => {
-								onSelect()
-								handleSelect(item)
-							}}
-						/>
-					)}
-				/>
-			}
-		/>
+		<Sidebar>
+			<SearchDialog
+				disabled={!isAuthenticated}
+				placeholder='Search notes...'
+				query={query}
+				onQueryChange={setQuery}
+				items={items}
+				isSearching={isSearching}
+				getItemKey={(item) => item.id}
+				onClear={clear}
+				renderItem={(item, { onSelect }) => (
+					<SearchResultItem
+						icon={
+							<ScrollIcon
+								size={ICON_SIZE_SM}
+								className='shrink-0 text-typography-600'
+							/>
+						}
+						title={item.title}
+						onClick={() => {
+							onSelect()
+							handleSelect(item)
+						}}
+					/>
+				)}
+			/>
+			<NotesButton active={isOnNotes} disabled={!isAuthenticated} />
+		</Sidebar>
 	)
 }
