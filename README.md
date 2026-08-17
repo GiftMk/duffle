@@ -40,6 +40,6 @@ GITHUB_CLIENT_ID=
 GITHUB_CLIENT_SECRET=
 ```
 
-`DATABASE_URL`, `BETTER_AUTH_SECRET`, and the GitHub credentials should be the same across both apps' `.env` files — they share one database and one auth setup. `BETTER_AUTH_URL` is app-specific (each app's own local URL, e.g. `http://localhost:3002` for board).
+`DATABASE_URL`, `BETTER_AUTH_SECRET`, and the GitHub credentials should be the same across both apps' `.env` files, `BETTER_AUTH_URL` is app-specific (each app's own local URL, e.g. `http://localhost:3002` for board).
 
-We use pnpm on Node.js, make sure you have those installed. Run `pnpm i` and then `pnpm dev` to run both apps together, or `pnpm dev:board` / `pnpm dev:book` to run just one.
+Run `pnpm dev` to run both apps together, or `pnpm dev:board` / `pnpm dev:book` to run just one.
