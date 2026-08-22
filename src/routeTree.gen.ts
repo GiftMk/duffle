@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AppLoginRouteImport } from './routes/_app/login'
 import { Route as AppLogoutRouteImport } from './routes/_app/logout'
+import { Route as AppNotesIndexRouteImport } from './routes/_app/notes.index'
 import { Route as AppNotesNoteIdRouteImport } from './routes/_app/notes.$noteId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
 
@@ -35,6 +36,11 @@ const AppLogoutRoute = AppLogoutRouteImport.update({
   path: '/logout',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppNotesIndexRoute = AppNotesIndexRouteImport.update({
+  id: '/notes/',
+  path: '/notes/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppNotesNoteIdRoute = AppNotesNoteIdRouteImport.update({
   id: '/notes/$noteId',
   path: '/notes/$noteId',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/logout': typeof AppLogoutRoute
   '/notes/$noteId': typeof AppNotesNoteIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/notes/': typeof AppNotesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/logout': typeof AppLogoutRoute
   '/notes/$noteId': typeof AppNotesNoteIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/notes': typeof AppNotesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -68,12 +76,14 @@ export interface FileRoutesById {
   '/_app/logout': typeof AppLogoutRoute
   '/_app/notes/$noteId': typeof AppNotesNoteIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_app/notes/': typeof AppNotesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/logout' | '/notes/$noteId' | '/api/auth/$'
+  fullPaths:
+    '/' | '/login' | '/logout' | '/notes/$noteId' | '/api/auth/$' | '/notes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/logout' | '/notes/$noteId' | '/api/auth/$'
+  to: '/' | '/login' | '/logout' | '/notes/$noteId' | '/api/auth/$' | '/notes'
   id:
     | '__root__'
     | '/'
@@ -82,6 +92,7 @@ export interface FileRouteTypes {
     | '/_app/logout'
     | '/_app/notes/$noteId'
     | '/api/auth/$'
+    | '/_app/notes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -120,6 +131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLogoutRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/notes/': {
+      id: '/_app/notes/'
+      path: '/notes'
+      fullPath: '/notes/'
+      preLoaderRoute: typeof AppNotesIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/_app/notes/$noteId': {
       id: '/_app/notes/$noteId'
       path: '/notes/$noteId'
@@ -141,12 +159,14 @@ interface AppRouteRouteChildren {
   AppLoginRoute: typeof AppLoginRoute
   AppLogoutRoute: typeof AppLogoutRoute
   AppNotesNoteIdRoute: typeof AppNotesNoteIdRoute
+  AppNotesIndexRoute: typeof AppNotesIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppLoginRoute: AppLoginRoute,
   AppLogoutRoute: AppLogoutRoute,
   AppNotesNoteIdRoute: AppNotesNoteIdRoute,
+  AppNotesIndexRoute: AppNotesIndexRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

@@ -3,6 +3,7 @@ import {
 	useLiveQuery,
 	usePacedMutations,
 } from '@tanstack/react-db'
+import { useNavigate } from '@tanstack/react-router'
 import { uuidv7 } from 'uuidv7'
 import { notesCollection } from '@/lib/collections'
 import type { NoteEntity } from '@/lib/schemas'
@@ -39,6 +40,16 @@ export const useCreateNote = () => {
 		notesCollection.insert(note)
 
 		return note
+	}
+}
+
+export const useCreateAndOpenNote = () => {
+	const createNote = useCreateNote()
+	const navigate = useNavigate()
+
+	return () => {
+		const note = createNote()
+		navigate({ to: '/notes/$noteId', params: { noteId: note.id } })
 	}
 }
 

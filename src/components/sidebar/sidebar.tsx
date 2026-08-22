@@ -1,9 +1,10 @@
 import { useRef } from 'react'
-import { NotesButton } from '@/components/notes-button'
 import { useRoughSvg } from '@/hooks/use-rough-svg'
 import { useSession } from '@/lib/auth-client'
 import { AccountButton } from './account-button'
 import { HomeButton } from './home-button'
+import { NewNoteButton } from './new-note-button'
+import { NotesButton } from './notes-button'
 import { SearchDialog } from './search-dialog'
 import { ThemeToggle } from './theme-toggle'
 
@@ -34,6 +35,7 @@ export const Sidebar = () => {
 				<HomeButton />
 				<SearchDialog disabled={!isAuthenticated} />
 				<NotesButton disabled={!isAuthenticated} />
+				<NewNoteButton disabled={!isAuthenticated} />
 				<ThemeToggle />
 				<AccountButton />
 			</section>

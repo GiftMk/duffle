@@ -25,7 +25,7 @@ function RouteComponent() {
 
 	useEffect(() => {
 		if (session) {
-			navigate({ to: redirect ?? '/' })
+			navigate({ to: redirect ?? '/notes' })
 		}
 	}, [session, navigate, redirect])
 
