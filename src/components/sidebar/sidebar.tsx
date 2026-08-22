@@ -1,6 +1,6 @@
 import { useRef } from 'react'
+import { useCurrentSession } from '@/hooks/use-current-session'
 import { useRoughSvg } from '@/hooks/use-rough-svg'
-import { useSession } from '@/lib/auth-client'
 import { AccountButton } from './account-button'
 import { HomeButton } from './home-button'
 import { NewNoteButton } from './new-note-button'
@@ -11,7 +11,7 @@ import { ThemeToggle } from './theme-toggle'
 export const Sidebar = () => {
 	const svgRef = useRef<SVGSVGElement | null>(null)
 	const parentRef = useRef<HTMLElement | null>(null)
-	const { data: session } = useSession()
+	const session = useCurrentSession()
 	const isAuthenticated = !!session?.user
 
 	useRoughSvg(parentRef, svgRef, {

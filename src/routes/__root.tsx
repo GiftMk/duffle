@@ -21,7 +21,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 				PUBLIC_PATHS.includes(location.pathname) ||
 				location.pathname.startsWith('/api/auth')
 			) {
-				return
+				return { session: null }
 			}
 
 			const session = await getSession()
@@ -32,6 +32,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 					search: { redirect: location.href },
 				})
 			}
+
+			return { session: session.data }
 		},
 		pendingComponent: LoadingPage,
 		shellComponent: RootDocument,

@@ -1,6 +1,8 @@
 import type { ComponentProps } from 'react'
 import { cn } from '@/lib/utils'
 
+export const SIDEBAR_BUTTON_SIZE = 35
+
 export const SidebarButton = ({
 	className,
 	...props
@@ -8,7 +10,7 @@ export const SidebarButton = ({
 	<button
 		type='button'
 		className={cn(
-			'flex h-fit w-fit items-center justify-center rounded-full border border-surface-400 bg-surface-100 p-2 text-typography-600 transition-all duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none',
+			'flex h-[35px] w-[35px] items-center justify-center rounded-full border border-surface-400 bg-surface-100 text-typography-600 transition-transform duration-75 hover:scale-125 hover:bg-surface-300/50 focus:outline-none',
 			className,
 		)}
 		{...props}
