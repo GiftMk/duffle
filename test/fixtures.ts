@@ -1,5 +1,5 @@
-import type { Database } from '@/db'
 import { test as baseTest } from 'vitest'
+import type { Database } from '@/db'
 import { getTestDb } from './setup'
 
 const { db } = await getTestDb()

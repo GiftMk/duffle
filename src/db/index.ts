@@ -1,6 +1,7 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { PGlite } from '@electric-sql/pglite'
+import { pg_trgm } from '@electric-sql/pglite/contrib/pg_trgm'
 import {
 	drizzle as drizzleNodePostgres,
 	type NodePgDatabase,
@@ -12,7 +13,6 @@ import {
 import { migrate as migratePglite } from 'drizzle-orm/pglite/migrator'
 import { Pool } from 'pg'
 import { env } from '@/env'
-import { pg_trgm } from '@electric-sql/pglite/contrib/pg_trgm'
 
 export type Database = NodePgDatabase | PgliteDatabase
 

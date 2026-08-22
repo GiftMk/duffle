@@ -1,6 +1,6 @@
-import { utcNow } from '@/lib/utils'
 import { uuidv7 } from 'uuidv7'
 import type { NoteEntity } from '@/lib/schemas'
+import { utcNow } from '@/lib/utils'
 
 export const createUser = () => {
 	const id = uuidv7()

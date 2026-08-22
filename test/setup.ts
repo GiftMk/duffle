@@ -1,7 +1,7 @@
-import { createPgliteDb, type TestDbContext } from '@/db'
+import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import fs from 'node:fs'
+import { createPgliteDb, type TestDbContext } from '@/db'
 
 let dbPromise: Promise<TestDbContext> | undefined
 
