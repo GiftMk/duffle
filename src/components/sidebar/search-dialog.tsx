@@ -1,11 +1,11 @@
 import { Autocomplete, Dialog } from '@base-ui/react'
-import { MagnifyingGlassIcon, ScrollIcon, XIcon } from '@phosphor-icons/react'
+import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { useNavigate } from '@tanstack/react-router'
-import { Fragment, type ReactNode, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { Tooltip } from '@/components/tooltip'
 import { useRecentSearchResults, useSearch } from '@/hooks/search'
-import { ICON_SIZE_MD, ICON_SIZE_SM } from '@/lib/constants'
+import { ICON_SIZE_MD } from '@/lib/constants'
 import type { NoteEntity } from '@/lib/schemas'
 import { cn } from '@/lib/utils'
 import { SidebarButton } from './sidebar-button'
@@ -93,12 +93,6 @@ export const SearchDialog = ({ disabled }: SearchDialogProps) => {
 								items.map((item) => (
 									<Fragment key={item.id}>
 										<SearchResultItem
-											icon={
-												<ScrollIcon
-													size={ICON_SIZE_SM}
-													className='shrink-0 text-typography-600'
-												/>
-											}
 											title={item.title}
 											onClick={() => {
 												closeDialog()
@@ -118,18 +112,16 @@ export const SearchDialog = ({ disabled }: SearchDialogProps) => {
 }
 
 type SearchResultItemProps = {
-	icon: ReactNode
 	title: string
 	onClick?: () => void
 }
 
-const SearchResultItem = ({ icon, title, onClick }: SearchResultItemProps) => {
+const SearchResultItem = ({ title, onClick }: SearchResultItemProps) => {
 	return (
 		<Autocomplete.Item
 			onClick={onClick}
 			className='flex w-full items-center gap-2 rounded-md px-4 py-3 data-highlighted:bg-surface-300/70'
 		>
-			{icon}
 			<p>{title}</p>
 		</Autocomplete.Item>
 	)
