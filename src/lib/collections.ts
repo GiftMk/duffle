@@ -7,7 +7,7 @@ import {
 	deleteNoteFn,
 	getNotesFn,
 	updateNoteFn,
-} from '@/server/notes'
+} from '@/server/notes.functions'
 
 export const queryClient = new QueryClient()
 

@@ -33,6 +33,7 @@
 		"@dicebear/core": "^10.3.0",
 		"@dicebear/styles": "^10.2.0",
 		"@electric-sql/pglite": "^0.5.4",
+		"@electric-sql/pglite-pgvector": "^0.0.6",
 		"@milkdown/kit": "^7.21.2",
 		"@milkdown/prose": "^7.21.2",
 		"@milkdown/react": "^7.21.2",

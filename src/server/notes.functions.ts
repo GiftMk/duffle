@@ -5,6 +5,8 @@ import { noteSchema } from '@/lib/schemas'
 import { withIsoTimestamps } from '@/lib/utils'
 import { withDb } from '@/server/middleware'
 import { requireSession } from '@/server/session.server'
+import z from 'zod'
+import { searchQuery } from './notes.server'
 
 export const getNotesFn = createServerFn({ method: 'GET' })
 	.middleware([withDb])
@@ -60,4 +62,17 @@ export const deleteNoteFn = createServerFn({ method: 'POST' })
 			.where(and(eq(notesTable.userId, user.id), eq(notesTable.id, data.id)))
 
 		return { id: data.id }
+	})
+
+const searchSchema = z.object({
+	query: z.string().nonempty(),
+	limit: z.number().positive(),
+})
+
+export const searchFn = createServerFn({ method: 'GET' })
+	.middleware([withDb])
+	.validator(searchSchema)
+	.handler(async ({ data, context }) => {
+		const { user } = await requireSession()
+		return await searchQuery(context.db, user.id, data.query, data.limit)
 	})

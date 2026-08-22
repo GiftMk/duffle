@@ -12,6 +12,7 @@ import {
 import { migrate as migratePglite } from 'drizzle-orm/pglite/migrator'
 import { Pool } from 'pg'
 import { env } from '@/env'
+import { pg_trgm } from '@electric-sql/pglite/contrib/pg_trgm'
 
 export type Database = NodePgDatabase | PgliteDatabase
 
@@ -27,17 +28,29 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const migrationsFolder = path.join(__dirname, '../../drizzle')
 const devDataDir = path.join(__dirname, '../../.pglite')
 
-const createPgliteDb = async (dataDir?: string): Promise<Database> => {
-	const client = new PGlite(dataDir)
+export type TestDbContext = { db: Database; dispose: () => Promise<void> }
+
+export const createPgliteDb = async (
+	dataDir?: string,
+): Promise<TestDbContext> => {
+	const client = new PGlite(dataDir, { extensions: { pg_trgm } })
 	const db = drizzlePglite({ client })
 	await migratePglite(db, { migrationsFolder })
-	return db
+	return {
+		db,
+		dispose: async () => {
+			await client.close()
+		},
+	}
 }
 
 export const createDb = async (): Promise<Database> => {
-	if (env.NODE_ENV === 'production' || env.CI) return createPostgresDb()
-	if (env.NODE_ENV === 'test') return createPgliteDb()
-	return createPgliteDb(devDataDir)
+	if (env.NODE_ENV === 'development') {
+		const { db } = await createPgliteDb(devDataDir)
+		return db
+	}
+
+	return createPostgresDb()
 }
 
 let dbPromise: Promise<Database> | undefined
