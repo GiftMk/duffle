@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils'
 const style = new Style(loreleiNeutral)
 
 const THEME_COLOURS = {
-	surface200: '#e9e8e4',
 	surface100: '#f3f2ef',
 	typography600: '#7e605f',
 } as const
@@ -14,20 +13,12 @@ type UserAvatarProps = {
 	seed: string
 	size?: number
 	className?: string
-	active?: boolean
 }
 
-export const UserAvatar = ({
-	seed,
-	size = 19,
-	active = false,
-	className,
-}: UserAvatarProps) => {
+export const UserAvatar = ({ seed, size = 19, className }: UserAvatarProps) => {
 	const uri = new Avatar(style, {
 		seed,
-		backgroundColor: active
-			? THEME_COLOURS.surface200
-			: THEME_COLOURS.surface100,
+		backgroundColor: THEME_COLOURS.surface100,
 		eyebrowsColor: THEME_COLOURS.typography600,
 		eyesColor: THEME_COLOURS.typography600,
 		frecklesColor: THEME_COLOURS.typography600,

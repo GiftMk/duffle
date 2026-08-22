@@ -1,4 +1,3 @@
-import { useRouterState } from '@tanstack/react-router'
 import { useRef } from 'react'
 import { NotesButton } from '@/components/notes-button'
 import { useRoughSvg } from '@/hooks/use-rough-svg'
@@ -11,14 +10,8 @@ import { ThemeToggle } from './theme-toggle'
 export const Sidebar = () => {
 	const svgRef = useRef<SVGSVGElement | null>(null)
 	const parentRef = useRef<HTMLElement | null>(null)
-	const pathname = useRouterState({
-		select: (state) => state.location.pathname,
-	})
 	const { data: session } = useSession()
-
 	const isAuthenticated = !!session?.user
-	const isOnNotes = pathname.startsWith('/notes')
-	const isOnAccountRoute = pathname === '/login' || pathname === '/logout'
 
 	useRoughSvg(parentRef, svgRef, {
 		fill: 'var(--color-surface-200)',
@@ -40,9 +33,9 @@ export const Sidebar = () => {
 			<section className='relative flex flex-col items-center gap-4'>
 				<HomeButton />
 				<SearchDialog disabled={!isAuthenticated} />
-				<NotesButton active={isOnNotes} disabled={!isAuthenticated} />
+				<NotesButton disabled={!isAuthenticated} />
 				<ThemeToggle />
-				<AccountButton active={isOnAccountRoute} />
+				<AccountButton />
 			</section>
 			<section className='relative flex justify-center'>
 				<h2 className='rotate-180 font-bold text-sm text-typography-500/75 tracking-tight [writing-mode:vertical-rl]'>

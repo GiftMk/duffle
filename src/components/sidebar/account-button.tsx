@@ -9,11 +9,7 @@ import { SidebarButton } from './sidebar-button'
 
 const AVATAR_FILL_SIZE = 35
 
-type AccountButtonProps = {
-	active?: boolean
-}
-
-export const AccountButton = ({ active }: AccountButtonProps) => {
+export const AccountButton = () => {
 	const navigate = useNavigate()
 	const { data: session } = useSession()
 
@@ -27,15 +23,10 @@ export const AccountButton = ({ active }: AccountButtonProps) => {
 				onClick={handleClick}
 				className={cn({
 					'p-0': session,
-					'scale-125 bg-surface-200': active,
 				})}
 			>
 				{session ? (
-					<UserAvatar
-						active={active}
-						seed={session.user.id}
-						size={AVATAR_FILL_SIZE}
-					/>
+					<UserAvatar seed={session.user.id} size={AVATAR_FILL_SIZE} />
 				) : (
 					<UserIcon size={ICON_SIZE_MD} />
 				)}

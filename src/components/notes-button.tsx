@@ -7,11 +7,10 @@ import { ICON_SIZE_MD } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
 type NotesButtonProps = {
-	active?: boolean
 	disabled?: boolean
 }
 
-export const NotesButton = ({ active, disabled }: NotesButtonProps) => {
+export const NotesButton = ({ disabled }: NotesButtonProps) => {
 	const createNote = useCreateNote()
 	const navigate = useNavigate()
 
@@ -27,7 +26,6 @@ export const NotesButton = ({ active, disabled }: NotesButtonProps) => {
 				disabled={disabled}
 				aria-disabled={disabled}
 				className={cn({
-					'scale-125 bg-surface-200': active,
 					'pointer-events-none opacity-40': disabled,
 				})}
 			>
