@@ -36,4 +36,4 @@ GITHUB_CLIENT_ID=
 GITHUB_CLIENT_SECRET=
 ```
 
-We use pnpm on Node.js, make sure you have those installed. Run `pnpm i` and then `pnpm dev` to start the app on `localhost:3001`.
+Run `pnpm i` and then `pnpm dev` to start the app on `localhost:3001`.

@@ -9,7 +9,7 @@ export const env = createEnv({
 		NODE_ENV: z
 			.enum(['development', 'test', 'production'])
 			.default('development'),
-		DATABASE_URL: z.url().optional(),
+		DATABASE_URL: z.url().default('.pglite'),
 		GITHUB_CLIENT_ID: z.string(),
 		GITHUB_CLIENT_SECRET: z.string(),
 		BETTER_AUTH_URL: z.url(),
