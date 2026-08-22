@@ -16,7 +16,7 @@ type SearchDialogProps = {
 	disabled?: boolean
 }
 
-export const SearchDialog = ({ disabled }: SearchDialogProps) => {
+export const SearchButton = ({ disabled }: SearchDialogProps) => {
 	const [open, setOpen] = useState(false)
 	const navigate = useNavigate()
 

@@ -5,7 +5,7 @@ import { AccountButton } from './account-button'
 import { HomeButton } from './home-button'
 import { NewNoteButton } from './new-note-button'
 import { NotesButton } from './notes-button'
-import { SearchDialog } from './search-dialog'
+import { SearchButton } from './search-button'
 import { ThemeToggle } from './theme-toggle'
 
 export const Sidebar = () => {
@@ -33,9 +33,9 @@ export const Sidebar = () => {
 			/>
 			<section className='relative flex flex-col items-center gap-4'>
 				<HomeButton />
-				<SearchDialog disabled={!isAuthenticated} />
-				<NotesButton disabled={!isAuthenticated} />
+				<SearchButton disabled={!isAuthenticated} />
 				<NewNoteButton disabled={!isAuthenticated} />
+				<NotesButton disabled={!isAuthenticated} />
 				<ThemeToggle />
 				<AccountButton />
 			</section>
