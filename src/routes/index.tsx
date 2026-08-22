@@ -11,9 +11,7 @@ export const Route = createFileRoute('/')({
 
 const Heading = () => (
 	<FadeIn>
-		<h1 className='font-bold text-9xl tracking-tight'>
-			Duffle<span className='text-primary-500'>.</span>
-		</h1>
+		<h1 className='font-bold text-9xl tracking-tight'>Duffle.</h1>
 	</FadeIn>
 )
 
