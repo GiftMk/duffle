@@ -17,8 +17,7 @@
 		"test": "vitest run",
 		"db:push": "drizzle-kit push",
 		"db:generate": "drizzle-kit generate",
-		"db:migrate": "drizzle-kit migrate",
-		"db:studio": "drizzle-kit studio"
+		"db:migrate": "drizzle-kit migrate"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.4.1",
