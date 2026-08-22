@@ -3,16 +3,18 @@ import type { Database } from '@/db'
 import { notesTable } from '@/db/schema.notes'
 import type { NoteEntity } from '@/lib/schemas'
 
+const noteProjection = () => ({
+	id: notesTable.id,
+	title: notesTable.title,
+	body: notesTable.body,
+	markdown: notesTable.markdown,
+	createdAt: notesTable.createdAt,
+	updatedAt: notesTable.updatedAt,
+})
+
 export const getNotesQuery = async (db: Database, userId: string) => {
 	return await db
-		.select({
-			id: notesTable.id,
-			title: notesTable.title,
-			body: notesTable.body,
-			markdown: notesTable.markdown,
-			createdAt: notesTable.createdAt,
-			updatedAt: notesTable.updatedAt,
-		})
+		.select(noteProjection())
 		.from(notesTable)
 		.where(eq(notesTable.userId, userId))
 		.orderBy(desc(notesTable.updatedAt))
@@ -65,12 +67,7 @@ export const searchQuery = async (
 	limit = 10,
 ) => {
 	return await db
-		.select({
-			id: notesTable.id,
-			title: notesTable.title,
-			body: notesTable.body,
-			markdown: notesTable.markdown,
-		})
+		.select(noteProjection())
 		.from(notesTable)
 		.where(
 			and(eq(notesTable.userId, userId), sql`${notesTable.title} % ${query}`),

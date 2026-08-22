@@ -6,7 +6,7 @@ import { Fragment, type ReactNode, useState } from 'react'
 import { Tooltip } from '@/components/tooltip'
 import { useRecentSearchResults, useSearch } from '@/hooks/search'
 import { ICON_SIZE_MD, ICON_SIZE_SM } from '@/lib/constants'
-import type { SearchResult } from '@/lib/search.worker'
+import type { NoteEntity } from '@/lib/schemas'
 import { cn } from '@/lib/utils'
 import { SidebarButton } from './sidebar-button'
 
@@ -40,7 +40,7 @@ export const SearchDialog = ({ disabled }: SearchDialogProps) => {
 		handleOpenChange(false)
 	}
 
-	const handleSelect = (item: SearchResult) => {
+	const handleSelect = (item: NoteEntity) => {
 		navigate({ to: '/notes/$noteId', params: { noteId: item.id } })
 	}
 

@@ -2,7 +2,6 @@ import { useLiveQuery } from '@tanstack/react-db'
 import { uuidv7 } from 'uuidv7'
 import { notesCollection } from '@/lib/collections'
 import type { NoteEntity } from '@/lib/schemas'
-import { noteToSearchItem, searchWorker } from '@/lib/search'
 import { splitMarkdown, utcNow } from '@/lib/utils'
 
 export const useNotes = () => {
@@ -33,7 +32,6 @@ export const useCreateNote = () => {
 		}
 
 		notesCollection.insert(note)
-		searchWorker.add([noteToSearchItem(note)])
 
 		return note
 	}
@@ -53,8 +51,7 @@ export const useUpdateNote = () => {
 			draft.updatedAt = utcNow()
 		})
 
-		const updated = notesCollection.get(id)
-		if (updated) searchWorker.add([noteToSearchItem(updated)])
+		const _updated = notesCollection.get(id)
 	}
 }
 

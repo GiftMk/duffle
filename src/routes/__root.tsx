@@ -1,17 +1,15 @@
-import type { QueryClient } from '@tanstack/react-query'
+import { type QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import {
 	createRootRouteWithContext,
 	HeadContent,
 	redirect,
 	Scripts,
 } from '@tanstack/react-router'
-import { useEffect, useRef } from 'react'
 import '@/index.css'
 import { LoadingPage } from '@/components/loading-page'
 import { ThemeProvider } from '@/components/sidebar/theme-provider'
 import { TooltipProvider } from '@/components/tooltip'
-import { getSession, useSession } from '@/lib/auth-client'
-import { preloadSearchIndex } from '@/lib/search'
+import { getSession } from '@/lib/auth-client'
 
 const PUBLIC_PATHS = ['/', '/login']
 
@@ -41,15 +39,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 )
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	const { data: session } = useSession()
-	const hasPreloadedSearchIndex = useRef(false)
-
-	useEffect(() => {
-		if (!session || hasPreloadedSearchIndex.current) return
-		hasPreloadedSearchIndex.current = true
-
-		preloadSearchIndex().catch(() => {})
-	}, [session])
+	const { queryClient } = Route.useRouteContext()
 
 	return (
 		<html lang='en'>
@@ -60,9 +50,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body className='text-typography-950'>
-				<ThemeProvider>
-					<TooltipProvider delay={300}>{children}</TooltipProvider>
-				</ThemeProvider>
+				<QueryClientProvider client={queryClient}>
+					<ThemeProvider>
+						<TooltipProvider delay={300}>{children}</TooltipProvider>
+					</ThemeProvider>
+				</QueryClientProvider>
 				<Scripts />
 			</body>
 		</html>

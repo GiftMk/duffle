@@ -1,42 +1,34 @@
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 import { useNotes } from '@/hooks/notes'
 import type { NoteEntity } from '@/lib/schemas'
-import { noteToSearchItem, searchWorker } from '@/lib/search'
-import type { SearchResult } from '@/lib/search.worker'
+import { searchFn } from '@/server/notes.functions'
+import { useDebounce } from './use-debounce'
 
 export const useSearch = () => {
 	const [query, setQuery] = useState('')
-	const [results, setResults] = useState<SearchResult[]>([])
-	const [isSearching, setIsSearching] = useState(false)
+	const debouncedQuery = useDebounce(query, 250)
 
-	useEffect(() => {
-		if (!query.length) {
-			setResults([])
-			setIsSearching(false)
-			return
-		}
+	const { data, isFetching } = useQuery({
+		queryKey: ['search', debouncedQuery],
+		queryFn: () => searchFn({ data: { query: debouncedQuery } }),
+		enabled: debouncedQuery.length > 0,
+	})
 
-		setIsSearching(true)
-		searchWorker.query(query).then((queryResults) => {
-			setResults(queryResults)
-			setIsSearching(false)
-		})
-	}, [query])
+	const clear = () => setQuery('')
 
-	const clear = () => {
-		setQuery('')
-		setResults([])
+	return {
+		query,
+		setQuery,
+		results: data ?? [],
+		isSearching: isFetching,
+		clear,
 	}
-
-	return { query, setQuery, results, isSearching, clear }
 }
 
-export const useRecentSearchResults = (limit: number): SearchResult[] => {
+export const useRecentSearchResults = (limit: number): NoteEntity[] => {
 	const notes = useNotes()
-
-	const recent = takeMostRecent(notes, limit)
-
-	return recent.map(noteToSearchItem)
+	return takeMostRecent(notes, limit)
 }
 
 const takeMostRecent = (notes: NoteEntity[], limit: number): NoteEntity[] => {

@@ -47,7 +47,7 @@ export const deleteNoteFn = createServerFn({ method: 'POST' })
 
 const searchSchema = z.object({
 	query: z.string().nonempty(),
-	limit: z.number().positive(),
+	limit: z.number().positive().optional(),
 })
 
 export const searchFn = createServerFn({ method: 'GET' })
