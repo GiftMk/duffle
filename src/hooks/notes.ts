@@ -1,4 +1,5 @@
 import { useLiveQuery } from '@tanstack/react-db'
+import { useNavigate } from '@tanstack/react-router'
 import { uuidv7 } from 'uuidv7'
 import { notesCollection } from '@/lib/collections'
 import type { NoteEntity } from '@/lib/schemas'
@@ -37,6 +38,16 @@ export const useCreateNote = () => {
 	}
 }
 
+export const useCreateAndOpenNote = () => {
+	const createNote = useCreateNote()
+	const navigate = useNavigate()
+
+	return () => {
+		const note = createNote()
+		navigate({ to: '/notes/$noteId', params: { noteId: note.id } })
+	}
+}
+
 export const useUpdateNote = () => {
 	return (id: string, markdown: string) => {
 		const note = notesCollection.get(id)
@@ -50,8 +61,6 @@ export const useUpdateNote = () => {
 			draft.body = body ?? ''
 			draft.updatedAt = utcNow()
 		})
-
-		const _updated = notesCollection.get(id)
 	}
 }
 

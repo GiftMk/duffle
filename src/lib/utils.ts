@@ -9,6 +9,8 @@ export const cn = (...inputs: ClassValue[]) => {
 
 export const utcNow = () => new Date().toISOString()
 
+export const onNextTick = (callback: () => void) => setTimeout(callback, 0)
+
 export const withIsoTimestamps = <
 	T extends { createdAt: string; updatedAt: string },
 >(
