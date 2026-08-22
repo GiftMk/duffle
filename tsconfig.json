@@ -1,9 +1,9 @@
 {
 	"compilerOptions": {
 		// Environment setup & latest features
-		"lib": ["ESNext"],
-		"target": "ESNext",
-		"module": "Preserve",
+		"lib": ["ES2023", "DOM", "DOM.Iterable"],
+		"target": "es2023",
+		"module": "esnext",
 		"moduleDetection": "force",
 		"jsx": "react-jsx",
 		"allowJs": true,
@@ -20,10 +20,17 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedIndexedAccess": true,
 		"noImplicitOverride": true,
+		"erasableSyntaxOnly": true,
 
 		// Some stricter flags (disabled by default)
 		"noUnusedLocals": false,
 		"noUnusedParameters": false,
-		"noPropertyAccessFromIndexSignature": false
-	}
+		"noPropertyAccessFromIndexSignature": false,
+
+		"types": ["vite/client", "node"],
+		"paths": {
+			"@/*": ["./src/*"]
+		}
+	},
+	"include": ["src", "vite.config.ts", "drizzle.config.ts", "vitest.config.ts"]
 }

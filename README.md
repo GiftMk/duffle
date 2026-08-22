@@ -6,40 +6,34 @@ You don't organize files and folders, you simply write and search when needed.
 
 ![Duffle screenshot](duffle-screenshot.png)
 
-There's absolutely no login required ( ˶°ㅁ°) !!
-
-We have a cool feature where you can generate an import code to load your notes onto another device.
-Lazy-man's cross-device sync!
-
-We support GitHub flavoured markdown in what I baisedly think is quite a tasty editing experience.
+Sign in with GitHub, and write. We support GitHub flavoured markdown in what I
+baisedly think is quite a tasty editing experience.
 
 Enjoy!
 
 ## Local Development
 
-Duffle is a monorepo with two TanStack Start apps sharing a set of workspace packages:
+Duffle is a single TanStack Start app:
 
 ```
-apps/
-  board/          boards.duffle.dev — pnpm --filter @duffle/board dev (port 3002)
-  book/           notes.duffle.dev  — pnpm --filter @duffle/book dev (port 3001)
-packages/
-  ui/             shared components, tailwind theme, fonts
-  db/             drizzle schemas/connection, shared better-auth server factory
-  markdown/       the markdown editor and its prosemirror extensions
-  utils/          small cross-app helpers
+src/
+  components/   editor + shared UI components (sidebar, buttons, dialogs)
+  hooks/        client-side hooks
+  lib/          utils, auth client, search, collections
+  prosemirror/  the markdown editor's prosemirror extensions
+  db/           drizzle schemas and connection
+  routes/       file-based routes
+  server/       server functions and middleware
 ```
 
-Each app needs its own `.env` (see `apps/board/.env`/`apps/book/.env`) with:
+You'll need a `.env` with:
 
 ```
-DATABASE_URL=
+DATABASE_URL=      # optional locally — dev falls through to an in-memory PGlite DB
 BETTER_AUTH_SECRET=
 BETTER_AUTH_URL=
 GITHUB_CLIENT_ID=
 GITHUB_CLIENT_SECRET=
 ```
 
-`DATABASE_URL`, `BETTER_AUTH_SECRET`, and the GitHub credentials should be the same across both apps' `.env` files — they share one database and one auth setup. `BETTER_AUTH_URL` is app-specific (each app's own local URL, e.g. `http://localhost:3002` for board).
-
-We use pnpm on Node.js, make sure you have those installed. Run `pnpm i` and then `pnpm dev` to run both apps together, or `pnpm dev:board` / `pnpm dev:book` to run just one.
+We use pnpm on Node.js, make sure you have those installed. Run `pnpm i` and then `pnpm dev` to start the app on `localhost:3001`.

@@ -2,6 +2,8 @@
 
 Duffle is a collaborative markdown editing app that works on the concept of brain dumps. Instead of organizing files and folders, users just write and write some more. When they want to access their knowledge they can search (fuzzy or semantic) or even ask to use an agent.
 
+It's a single TanStack Start app with a flat `src/`: `components/` (including the editor and sidebar), `hooks/`, `lib/` (utils, auth client, search, collections), `prosemirror/` (the editor's prosemirror extensions), `db/` (drizzle schemas and connection), `routes/` (file-based routes), and `server/` (server functions and middleware).
+
 # General Instructions
 
 - Always do new work, bug fixes, features etc. in a dedicated worktree unless told otherwise
