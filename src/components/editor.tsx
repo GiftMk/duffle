@@ -108,7 +108,7 @@ export const MarkdownEditor = ({
 			ref={ref}
 			id='markdown-editor-container'
 			className={cn(
-				'scrollbar-gutter-stable flex h-full w-full justify-center overflow-y-auto px-12 pt-9',
+				'scrollbar-gutter-stable flex h-[calc(100%-128px)] w-full justify-center overflow-y-auto px-12 pt-9',
 				className,
 			)}
 		>

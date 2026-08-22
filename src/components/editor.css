@@ -5,11 +5,11 @@ div[data-milkdown-root="true"] {
 }
 
 /* Equals 128px, keep in sync with EDITOR_SPACER_HEIGHT_PX in @/lib/constants */
-/*.milkdown::after {
+.milkdown::after {
 	content: "";
 	height: calc(var(--spacing) * 32);
 	display: block;
-}*/
+}
 
 .milkdown {
 	height: 100%;
