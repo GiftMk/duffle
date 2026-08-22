@@ -50,8 +50,6 @@ export const useUpdateNote = () => {
 			draft.body = body ?? ''
 			draft.updatedAt = utcNow()
 		})
-
-		const _updated = notesCollection.get(id)
 	}
 }
 
