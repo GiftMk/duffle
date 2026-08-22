@@ -13,6 +13,7 @@ import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react'
 import {
 	ProsemirrorAdapterProvider,
 	useNodeViewFactory,
+	usePluginViewFactory,
 } from '@prosemirror-adapter/react'
 import './editor.css'
 import '@milkdown/kit/prose/view/style/prosemirror.css'
@@ -39,35 +40,43 @@ const EditorContent = ({ defaultValue, onChange }: EditorContentProps) => {
 	const nodeViewFactory = useNodeViewFactory()
 
 	const { get, loading } = useEditor((root) => {
-		return Editor.make()
-			.config((ctx) => {
-				ctx.set(rootCtx, root)
-				ctx.set(defaultValueCtx, defaultValue)
-				ctx.update(listenerCtx, (prev) => {
-					prev.markdownUpdated((_, markdown) => {
-						onChange(markdown)
+		return (
+			Editor.make()
+				.config((ctx) => {
+					ctx.set(rootCtx, root)
+					ctx.set(defaultValueCtx, defaultValue)
+					// ctx.set(slash.key, {
+					// 	view: pluginViewFactory({
+					// 		component: SlashCommands,
+					// 	}),
+					// })
+					ctx.update(listenerCtx, (prev) => {
+						prev.markdownUpdated((_, markdown) => {
+							onChange(markdown)
+						})
+						return prev
 					})
-					return prev
+					ctx.update(editorViewOptionsCtx, (prev) => ({
+						...prev,
+						attributes: { autofocus: 'true' },
+					}))
 				})
-				ctx.update(editorViewOptionsCtx, (prev) => ({
-					...prev,
-					attributes: { autofocus: 'true' },
-				}))
-			})
-			.use(commonmark)
-			.use(gfm)
-			.use(codeBlock)
-			.use(blockquote(nodeViewFactory))
-			.use(inlineCode(nodeViewFactory))
-			.use(listItem(nodeViewFactory))
-			.use(imageBlock(nodeViewFactory))
-			.use(listener)
-			.use(clipboard)
-			.use(headingLevelIndicator)
-			.use(autoscroll)
-			.use(history)
-			.use(trailing)
-			.use(indent)
+				.use(commonmark)
+				.use(gfm)
+				.use(codeBlock)
+				.use(blockquote(nodeViewFactory))
+				.use(inlineCode(nodeViewFactory))
+				.use(listItem(nodeViewFactory))
+				.use(imageBlock(nodeViewFactory))
+				// .use(slash)
+				.use(listener)
+				.use(clipboard)
+				.use(headingLevelIndicator)
+				.use(autoscroll)
+				.use(history)
+				.use(trailing)
+				.use(indent)
+		)
 	})
 
 	const initRef = useRef(false)
