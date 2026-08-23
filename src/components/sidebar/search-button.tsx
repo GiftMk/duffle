@@ -1,55 +1,30 @@
-import { Autocomplete, Dialog } from '@base-ui/react'
-import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
-import { useHotkey } from '@tanstack/react-hotkeys'
-import { useNavigate } from '@tanstack/react-router'
-import { Fragment, useState } from 'react'
+import { Dialog } from '@base-ui/react'
+import { MagnifyingGlassIcon } from '@phosphor-icons/react'
+import { SearchDialog } from '@/components/search/search-dialog'
 import { Tooltip } from '@/components/tooltip'
-import { useRecentSearchResults, useSearch } from '@/hooks/search'
+import { useSearchDialog } from '@/hooks/search'
 import { ICON_SIZE_MD } from '@/lib/constants'
-import type { NoteEntity } from '@/lib/schemas'
 import { cn } from '@/lib/utils'
 import { SidebarButton } from './sidebar-button'
 
-const RECENT_RESULTS_LIMIT = 3
-
-type SearchDialogProps = {
+type SearchButtonProps = {
 	disabled?: boolean
 }
 
-export const SearchButton = ({ disabled }: SearchDialogProps) => {
-	const [open, setOpen] = useState(false)
-	const navigate = useNavigate()
-
-	const { query, setQuery, results, isSearching, clear } = useSearch()
-	const recentResults = useRecentSearchResults(RECENT_RESULTS_LIMIT)
-
-	const hasQuery = query.length > 0
-	const items = hasQuery ? results : recentResults
-	const showNoResults = hasQuery && !isSearching && items.length === 0
-
-	const handleOpenChange = (nextOpen: boolean) => {
-		if (disabled) return
-
-		setOpen(nextOpen)
-		if (!nextOpen) {
-			clear()
-		}
-	}
-
-	const closeDialog = () => {
-		handleOpenChange(false)
-	}
-
-	const handleSelect = (item: NoteEntity) => {
-		navigate({ to: '/notes/$noteId', params: { noteId: item.id } })
-	}
-
-	useHotkey('Mod+K', () => {
-		if (!disabled) setOpen(true)
-	})
+export const SearchButton = ({ disabled }: SearchButtonProps) => {
+	const {
+		open,
+		setOpen,
+		query,
+		handleValueChange,
+		items,
+		state,
+		isRefreshing,
+		selectNote,
+	} = useSearchDialog({ disabled })
 
 	return (
-		<Dialog.Root open={open} onOpenChange={handleOpenChange}>
+		<Dialog.Root open={open} onOpenChange={setOpen}>
 			<Tooltip content='Search'>
 				<Dialog.Trigger
 					render={
@@ -63,66 +38,14 @@ export const SearchButton = ({ disabled }: SearchDialogProps) => {
 					}
 				/>
 			</Tooltip>
-			<Dialog.Portal>
-				<Dialog.Popup className='fixed top-44 left-1/2 w-2xl -translate-x-1/2 rounded-md border border-surface-400 bg-surface-100 py-4 shadow-2xl shadow-surface-400/50 focus:outline-none'>
-					<Dialog.Close
-						onClick={closeDialog}
-						className='absolute top-2 right-2 rounded-full p-1.5 text-surface-800 hover:bg-surface-300'
-					>
-						<XIcon size={ICON_SIZE_MD} weight='bold' />
-					</Dialog.Close>
-					<Autocomplete.Root
-						value={query}
-						onValueChange={setQuery}
-						items={items}
-						autoHighlight={'always'}
-					>
-						<span className='flex w-full items-center gap-3 px-4 py-4'>
-							<Autocomplete.Input
-								autoFocus
-								className='h-full w-full border-surface-400 border-b py-2 focus:outline-none'
-								placeholder='Search notes...'
-							/>
-						</span>
-						<Autocomplete.List className='flex max-h-[min(432px,35svh)] flex-col overflow-y-auto px-4'>
-							{showNoResults ? (
-								<p className='px-4 py-6 text-center text-typography-600'>
-									No results found.
-								</p>
-							) : (
-								items.map((item) => (
-									<Fragment key={item.id}>
-										<SearchResultItem
-											title={item.title}
-											onClick={() => {
-												closeDialog()
-												handleSelect(item)
-											}}
-										/>
-										<hr className='my-2 text-surface-400' />
-									</Fragment>
-								))
-							)}
-						</Autocomplete.List>
-					</Autocomplete.Root>
-				</Dialog.Popup>
-			</Dialog.Portal>
+			<SearchDialog
+				query={query}
+				onValueChange={handleValueChange}
+				items={items}
+				state={state}
+				isRefreshing={isRefreshing}
+				onSelect={selectNote}
+			/>
 		</Dialog.Root>
-	)
-}
-
-type SearchResultItemProps = {
-	title: string
-	onClick?: () => void
-}
-
-const SearchResultItem = ({ title, onClick }: SearchResultItemProps) => {
-	return (
-		<Autocomplete.Item
-			onClick={onClick}
-			className='flex w-full items-center gap-2 rounded-md px-4 py-3 data-highlighted:bg-surface-300/70'
-		>
-			<p>{title}</p>
-		</Autocomplete.Item>
 	)
 }
