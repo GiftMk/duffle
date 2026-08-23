@@ -11,6 +11,18 @@ export const utcNow = () => new Date().toISOString()
 
 export const onNextTick = (callback: () => void) => setTimeout(callback, 0)
 
+export const chunk = <T>(items: readonly T[], size: number): T[][] => {
+	const chunks: T[][] = []
+	for (let index = 0; index < items.length; index += size) {
+		chunks.push(items.slice(index, index + size))
+	}
+	return chunks
+}
+
+export const clamp = (value: number, min: number, max: number): number => {
+	return Math.min(Math.max(value, min), max)
+}
+
 export const withIsoTimestamps = <
 	T extends { createdAt: string; updatedAt: string },
 >(

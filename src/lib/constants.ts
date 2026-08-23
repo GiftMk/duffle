@@ -8,3 +8,6 @@ export const ELEMENT_IDS = {
 } as const
 
 export const EDITOR_SPACER_HEIGHT_PX = 128
+
+export const SEARCH_RESULTS_LIMIT = 24
+export const RECENT_RESULTS_LIMIT = 12
