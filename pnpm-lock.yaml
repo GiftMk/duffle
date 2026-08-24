@@ -71,12 +71,6 @@ importers:
       '@t3-oss/env-core':
         specifier: ^0.13.11
         version: 0.13.11(typescript@6.0.3)(zod@4.4.3)
-      '@tanstack/query-db-collection':
-        specifier: ^1.2.1
-        version: 1.2.1(@tanstack/query-core@5.101.4)(typescript@6.0.3)
-      '@tanstack/react-db':
-        specifier: ^0.1.95
-        version: 0.1.95(react@19.2.8)(typescript@6.0.3)
       '@tanstack/react-hotkeys':
         specifier: ^0.10.0
         version: 0.10.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)

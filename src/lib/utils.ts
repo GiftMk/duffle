@@ -11,6 +11,17 @@ export const utcNow = () => new Date().toISOString()
 
 export const onNextTick = (callback: () => void) => setTimeout(callback, 0)
 
+export const debounce = <Args extends unknown[]>(
+	fn: (...args: Args) => void,
+	wait: number,
+): ((...args: Args) => void) => {
+	let timeout: ReturnType<typeof setTimeout> | undefined
+	return (...args: Args) => {
+		clearTimeout(timeout)
+		timeout = setTimeout(() => fn(...args), wait)
+	}
+}
+
 export const chunk = <T>(items: readonly T[], size: number): T[][] => {
 	const chunks: T[][] = []
 	for (let index = 0; index < items.length; index += size) {

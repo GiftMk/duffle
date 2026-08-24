@@ -9,7 +9,7 @@ import '@/index.css'
 import { LoadingPage } from '@/components/loading-page'
 import { ThemeProvider } from '@/components/sidebar/theme-provider'
 import { TooltipProvider } from '@/components/tooltip'
-import { getSession } from '@/lib/auth-client'
+import { getSessionFn } from '@/server/session.functions'
 
 const PUBLIC_PATHS = ['/', '/login']
 
@@ -24,16 +24,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 				return { session: null }
 			}
 
-			const session = await getSession()
+			const session = await getSessionFn()
 
-			if (!session.data) {
+			if (!session) {
 				throw redirect({
 					to: '/login',
 					search: { redirect: location.href },
 				})
 			}
 
-			return { session: session.data }
+			return { session }
 		},
 		pendingComponent: LoadingPage,
 		shellComponent: RootDocument,
