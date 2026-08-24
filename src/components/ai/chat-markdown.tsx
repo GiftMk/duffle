@@ -1,9 +1,7 @@
 import { type Components, Streamdown } from 'streamdown'
 import { cn } from '@/lib/utils'
 
-// Mirrors src/components/editor.css and the equivalent ProseMirror node
-// views, so assistant messages read like the editor rather than a foreign
-// markdown renderer.
+// Mirrors src/components/editor.css
 const components: Components = {
 	h1: ({ className, ...props }) => (
 		<h1 className={cn('mt-5 mb-4 font-bold text-3xl', className)} {...props} />

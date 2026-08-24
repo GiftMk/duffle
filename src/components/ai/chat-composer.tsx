@@ -23,21 +23,16 @@ export const ChatComposer = ({
 }: ChatComposerProps) => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-	// Focuses on mount, which covers both landing in the centered new-chat
-	// state and remounting here after the layout-animated move to the
-	// bottom-docked state on first send.
 	useEffect(() => {
 		textareaRef.current?.focus()
 	}, [])
 
-	// Grows the textarea with its content, up to a max height, and shrinks it
-	// back down once the composer clears after a submit. The callback reads
-	// the DOM via the ref rather than `input` directly, but it has to rerun
-	// on every content change to remeasure `scrollHeight`.
-	// biome-ignore lint/correctness/useExhaustiveDependencies: see above
+	// biome-ignore lint/correctness/useExhaustiveDependencies: intentional
 	useEffect(() => {
 		const textarea = textareaRef.current
-		if (!textarea) return
+		if (!textarea) {
+			return
+		}
 
 		textarea.style.height = 'auto'
 		textarea.style.height = `${Math.min(textarea.scrollHeight, MAX_TEXTAREA_HEIGHT_PX)}px`
