@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useCurrentSession } from '@/hooks/use-current-session'
 import { useRoughSvg } from '@/hooks/use-rough-svg'
 import { AccountButton } from './account-button'
+import { ChatButton } from './chat-button'
 import { HomeButton } from './home-button'
 import { NewNoteButton } from './new-note-button'
 import { NotesButton } from './notes-button'
@@ -34,6 +35,7 @@ export const Sidebar = () => {
 			<section className='relative flex flex-col items-center gap-4'>
 				<HomeButton />
 				<SearchButton disabled={!isAuthenticated} />
+				<ChatButton disabled={!isAuthenticated} />
 				<NewNoteButton disabled={!isAuthenticated} />
 				<NotesButton disabled={!isAuthenticated} />
 				<ThemeToggle />

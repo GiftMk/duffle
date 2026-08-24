@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
+import { Route as AppChatRouteImport } from './routes/_app/chat'
 import { Route as AppLoginRouteImport } from './routes/_app/login'
 import { Route as AppLogoutRouteImport } from './routes/_app/logout'
+import { Route as ApiChatRouteImport } from './routes/api.chat'
 import { Route as AppNotesIndexRouteImport } from './routes/_app/notes.index'
 import { Route as AppNotesNoteIdRouteImport } from './routes/_app/notes.$noteId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
@@ -26,6 +28,11 @@ const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppChatRoute = AppChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppLoginRoute = AppLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -35,6 +42,11 @@ const AppLogoutRoute = AppLogoutRouteImport.update({
   id: '/logout',
   path: '/logout',
   getParentRoute: () => AppRouteRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AppNotesIndexRoute = AppNotesIndexRouteImport.update({
   id: '/notes/',
@@ -54,16 +66,20 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/chat': typeof AppChatRoute
   '/login': typeof AppLoginRoute
   '/logout': typeof AppLogoutRoute
+  '/api/chat': typeof ApiChatRoute
   '/notes/$noteId': typeof AppNotesNoteIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/notes/': typeof AppNotesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/chat': typeof AppChatRoute
   '/login': typeof AppLoginRoute
   '/logout': typeof AppLogoutRoute
+  '/api/chat': typeof ApiChatRoute
   '/notes/$noteId': typeof AppNotesNoteIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/notes': typeof AppNotesIndexRoute
@@ -72,8 +88,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteRouteWithChildren
+  '/_app/chat': typeof AppChatRoute
   '/_app/login': typeof AppLoginRoute
   '/_app/logout': typeof AppLogoutRoute
+  '/api/chat': typeof ApiChatRoute
   '/_app/notes/$noteId': typeof AppNotesNoteIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_app/notes/': typeof AppNotesIndexRoute
@@ -81,15 +99,32 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/login' | '/logout' | '/notes/$noteId' | '/api/auth/$' | '/notes/'
+    | '/'
+    | '/chat'
+    | '/login'
+    | '/logout'
+    | '/api/chat'
+    | '/notes/$noteId'
+    | '/api/auth/$'
+    | '/notes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/logout' | '/notes/$noteId' | '/api/auth/$' | '/notes'
+  to:
+    | '/'
+    | '/chat'
+    | '/login'
+    | '/logout'
+    | '/api/chat'
+    | '/notes/$noteId'
+    | '/api/auth/$'
+    | '/notes'
   id:
     | '__root__'
     | '/'
     | '/_app'
+    | '/_app/chat'
     | '/_app/login'
     | '/_app/logout'
+    | '/api/chat'
     | '/_app/notes/$noteId'
     | '/api/auth/$'
     | '/_app/notes/'
@@ -98,6 +133,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRouteRoute: typeof AppRouteRouteWithChildren
+  ApiChatRoute: typeof ApiChatRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -117,6 +153,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/chat': {
+      id: '/_app/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof AppChatRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/_app/login': {
       id: '/_app/login'
       path: '/login'
@@ -130,6 +173,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/logout'
       preLoaderRoute: typeof AppLogoutRouteImport
       parentRoute: typeof AppRouteRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_app/notes/': {
       id: '/_app/notes/'
@@ -156,6 +206,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteRouteChildren {
+  AppChatRoute: typeof AppChatRoute
   AppLoginRoute: typeof AppLoginRoute
   AppLogoutRoute: typeof AppLogoutRoute
   AppNotesNoteIdRoute: typeof AppNotesNoteIdRoute
@@ -163,6 +214,7 @@ interface AppRouteRouteChildren {
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppChatRoute: AppChatRoute,
   AppLoginRoute: AppLoginRoute,
   AppLogoutRoute: AppLogoutRoute,
   AppNotesNoteIdRoute: AppNotesNoteIdRoute,
@@ -176,6 +228,7 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRouteRoute: AppRouteRouteWithChildren,
+  ApiChatRoute: ApiChatRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

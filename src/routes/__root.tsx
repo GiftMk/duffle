@@ -19,7 +19,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 		beforeLoad: async ({ location }) => {
 			if (
 				PUBLIC_PATHS.includes(location.pathname) ||
-				location.pathname.startsWith('/api/auth')
+				location.pathname.startsWith('/api/auth') ||
+				location.pathname.startsWith('/api/chat')
 			) {
 				return { session: null }
 			}
