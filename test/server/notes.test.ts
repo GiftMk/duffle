@@ -345,4 +345,65 @@ describe('searchQuery', () => {
 			expect(results[1]?.id).toBe(noteA.id)
 		},
 	)
+
+	dbTest('Performs full-text search on note bodies', async ({ db }) => {
+		const user = createUser()
+		await db.insert(usersTable).values(user)
+
+		const noteA = createNote(user.id, {
+			title: 'Unrelated title',
+			body: 'A treatise on the history of hot air balloons',
+		})
+		const noteB = createNote(user.id, {
+			title: 'Another unrelated title',
+			body: 'Notes from a cooking class',
+		})
+
+		await db.insert(notesTable).values([noteA, noteB])
+
+		const results = await searchQuery(db, user.id, 'balloons')
+
+		expect(results).toHaveLength(1)
+		expect(results[0]?.id).toBe(noteA.id)
+	})
+
+	dbTest('Only returns body matches belonging to user', async ({ db }) => {
+		const userA = createUser()
+		const userB = createUser()
+		await db.insert(usersTable).values([userA, userB])
+
+		const noteA = createNote(userA.id, { body: 'Talks about spaceships' })
+		const noteB = createNote(userB.id, { body: 'Talks about spaceships' })
+
+		await db.insert(notesTable).values([noteA, noteB])
+
+		const results = await searchQuery(db, userA.id, 'spaceships')
+
+		expect(results).toHaveLength(1)
+		expect(results[0]?.id).toBe(noteA.id)
+	})
+
+	dbTest(
+		'Ranks a note matching both title and body above a single match',
+		async ({ db }) => {
+			const user = createUser()
+			await db.insert(usersTable).values(user)
+
+			const noteA = createNote(user.id, {
+				title: 'Notes on dragons',
+				body: 'Everything I know about dragons and their habits',
+			})
+			const noteB = createNote(user.id, {
+				title: 'A completely different title',
+				body: 'A single mention of dragons here',
+			})
+
+			await db.insert(notesTable).values([noteA, noteB])
+
+			const results = await searchQuery(db, user.id, 'dragons')
+
+			expect(results[0]?.id).toBe(noteA.id)
+			expect(results[1]?.id).toBe(noteB.id)
+		},
+	)
 })

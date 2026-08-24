@@ -75,18 +75,66 @@ export const deleteNotesForUserQuery = async (db: Database, userId: string) => {
 	await db.delete(notesTable).where(eq(notesTable.userId, userId))
 }
 
+// Reciprocal rank fusion constant. Controls how quickly a match's influence
+// decays as its rank within a branch gets worse; 60 is the commonly cited
+// default from the original RRF paper.
+const RRF_K = 60
+
 export const searchQuery = async (
 	db: Database,
 	userId: string,
 	query: string,
 	limit = 10,
 ) => {
+	const titleMatches = db.$with('title_matches').as(
+		db
+			.select({
+				id: notesTable.id,
+				rank: sql`row_number() over (order by ${notesTable.title} <-> ${query}, ${notesTable.updatedAt} desc)`.as(
+					'rank',
+				),
+			})
+			.from(notesTable)
+			.where(
+				and(eq(notesTable.userId, userId), sql`${notesTable.title} % ${query}`),
+			),
+	)
+
+	const bodyMatches = db.$with('body_matches').as(
+		db
+			.select({
+				id: notesTable.id,
+				rank: sql`row_number() over (order by ts_rank_cd(to_tsvector('english', ${notesTable.body}), websearch_to_tsquery('english', ${query})) desc, ${notesTable.updatedAt} desc)`.as(
+					'rank',
+				),
+			})
+			.from(notesTable)
+			.where(
+				and(
+					eq(notesTable.userId, userId),
+					sql`to_tsvector('english', ${notesTable.body}) @@ websearch_to_tsquery('english', ${query})`,
+				),
+			),
+	)
+
+	const fused = db.$with('fused').as(
+		db
+			.select({
+				id: sql`coalesce(${titleMatches.id}, ${bodyMatches.id})`.as('id'),
+				score:
+					sql`coalesce(1.0 / (${RRF_K} + ${titleMatches.rank}), 0) + coalesce(1.0 / (${RRF_K} + ${bodyMatches.rank}), 0)`.as(
+						'score',
+					),
+			})
+			.from(titleMatches)
+			.fullJoin(bodyMatches, eq(titleMatches.id, bodyMatches.id)),
+	)
+
 	return await db
+		.with(titleMatches, bodyMatches, fused)
 		.select(noteProjection())
-		.from(notesTable)
-		.where(
-			and(eq(notesTable.userId, userId), sql`${notesTable.title} % ${query}`),
-		)
-		.orderBy(sql`${notesTable.title} <-> ${query}`, desc(notesTable.updatedAt))
+		.from(fused)
+		.innerJoin(notesTable, eq(notesTable.id, fused.id))
+		.orderBy(desc(fused.score), desc(notesTable.updatedAt))
 		.limit(limit)
 }

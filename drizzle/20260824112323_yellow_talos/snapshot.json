@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "040df906-4ae7-4071-89cb-dac589e96c0f",
+  "id": "e09eb819-5c94-4df7-b7a1-1ac0644dfa6d",
   "prevIds": [
     "1435cb40-515a-482f-aed5-ee24ae273076"
   ],
@@ -673,6 +673,27 @@
       "method": "gin",
       "concurrently": false,
       "name": "notes_title_idx",
+      "entityType": "indexes",
+      "schema": "notes",
+      "table": "notes"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "to_tsvector('english', \"body\")",
+          "isExpression": true,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "gin",
+      "concurrently": false,
+      "name": "notes_body_search_idx",
       "entityType": "indexes",
       "schema": "notes",
       "table": "notes"
