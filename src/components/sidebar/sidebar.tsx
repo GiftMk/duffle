@@ -33,7 +33,7 @@ export const Sidebar = () => {
 				<HomeButton />
 				<SearchButton />
 				<ChatButton />
-				<NewNoteButton />
+				{/*<NewNoteButton />*/}
 				<NotesButton />
 				<ThemeToggle />
 				<AccountButton />
