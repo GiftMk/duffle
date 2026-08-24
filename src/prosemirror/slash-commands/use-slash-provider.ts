@@ -33,9 +33,6 @@ export const useSlashProvider = () => {
 			return
 		}
 
-		// The provider owns this element: it appends it next to the editor and
-		// positions it. React only portals the menu's content into it, so the
-		// two never fight over the same DOM node.
 		const content = document.createElement('div')
 		content.dataset.show = 'false'
 		content.className = "absolute z-10 data-[show='false']:hidden"
@@ -84,14 +81,11 @@ export const useSlashProvider = () => {
 
 	// `container` is set in the same effect that creates the provider, so
 	// depending on it guarantees the provider gets an initial update
+	// biome-ignore lint/correctness/useExhaustiveDependencies: intentional
 	useEffect(() => {
 		providerRef.current?.update(view, prevState)
 	}, [view, prevState, container])
 
-	// The provider only re-computes the menu position on editor updates, so a
-	// layout shift (window resize, sidebar toggle, ...) leaves it stale.
-	// Forcing an update without a prevState bypasses its "nothing changed"
-	// bail-out and re-computes the position.
 	useEffect(() => {
 		const reposition = () => providerRef.current?.update(view)
 

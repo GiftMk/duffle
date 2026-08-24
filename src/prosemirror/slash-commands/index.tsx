@@ -36,18 +36,12 @@ export const SlashCommands = () => {
 	const { container, open, value, hide, view } = useSlashProvider()
 	const { commands, runCommand } = useCommands(value)
 
-	// Close the menu when nothing matches the filter so keys like Enter
-	// fall through to the editor again
 	useEffect(() => {
 		if (open && commands.length === 0) {
 			hide()
 		}
 	}, [open, commands.length, hide])
 
-	// Forward menu keys to the hidden autocomplete input. This must happen in
-	// the capture phase: prosemirror ignores events whose default was already
-	// prevented, while a bubble-phase listener would run after prosemirror
-	// handled the key (e.g. Enter splitting the block before the command runs)
 	useEffect(() => {
 		const input = inputRef.current
 

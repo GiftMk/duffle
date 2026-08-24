@@ -51,44 +51,42 @@ const EditorContent = ({ defaultValue, onChange }: EditorContentProps) => {
 	const pluginViewFactory = usePluginViewFactory()
 
 	const { get, loading } = useEditor((root) => {
-		return (
-			Editor.make()
-				.config((ctx) => {
-					ctx.set(rootCtx, root)
-					ctx.set(defaultValueCtx, defaultValue)
-					ctx.set(slash.key, {
-						view: pluginViewFactory({
-							component: SlashCommands,
-						}),
-					})
-					ctx.update(listenerCtx, (prev) => {
-						prev.markdownUpdated((_, markdown) => {
-							onChange(markdown)
-						})
-						return prev
-					})
-					ctx.update(editorViewOptionsCtx, (prev) => ({
-						...prev,
-						attributes: { autofocus: 'true' },
-					}))
+		return Editor.make()
+			.config((ctx) => {
+				ctx.set(rootCtx, root)
+				ctx.set(defaultValueCtx, defaultValue)
+				ctx.set(slash.key, {
+					view: pluginViewFactory({
+						component: SlashCommands,
+					}),
 				})
-				.use(commonmarkPreset)
-				.use(gfm)
-				.use(codeBlock)
-				.use(blockquote(nodeViewFactory))
-				.use(inlineCode(nodeViewFactory))
-				.use(codemark)
-				.use(listItem(nodeViewFactory))
-				.use(imageBlock(nodeViewFactory))
-				.use(slash)
-				.use(listener)
-				.use(clipboard)
-				.use(headingLevelIndicator)
-				.use(autoscroll)
-				.use(history)
-				.use(trailing)
-				.use(indent)
-		)
+				ctx.update(listenerCtx, (prev) => {
+					prev.markdownUpdated((_, markdown) => {
+						onChange(markdown)
+					})
+					return prev
+				})
+				ctx.update(editorViewOptionsCtx, (prev) => ({
+					...prev,
+					attributes: { autofocus: 'true' },
+				}))
+			})
+			.use(commonmarkPreset)
+			.use(gfm)
+			.use(codeBlock)
+			.use(blockquote(nodeViewFactory))
+			.use(inlineCode(nodeViewFactory))
+			.use(codemark)
+			.use(listItem(nodeViewFactory))
+			.use(imageBlock(nodeViewFactory))
+			.use(slash)
+			.use(listener)
+			.use(clipboard)
+			.use(headingLevelIndicator)
+			.use(autoscroll)
+			.use(history)
+			.use(trailing)
+			.use(indent)
 	})
 
 	const initRef = useRef(false)
