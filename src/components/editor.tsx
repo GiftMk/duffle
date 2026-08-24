@@ -30,6 +30,7 @@ import { headingLevelIndicator } from '@/prosemirror/heading-level-indicator'
 import { imageBlock } from '@/prosemirror/image-block'
 import { inlineCode } from '@/prosemirror/inline-code'
 import { listItem } from '@/prosemirror/list-item'
+import { SlashCommands, slash } from '@/prosemirror/slash-commands'
 
 type EditorContentProps = {
   defaultValue: string
@@ -38,6 +39,7 @@ type EditorContentProps = {
 
 const EditorContent = ({ defaultValue, onChange }: EditorContentProps) => {
   const nodeViewFactory = useNodeViewFactory()
+  const pluginViewFactory = usePluginViewFactory()
 
   const { get, loading } = useEditor((root) => {
     return (
@@ -45,11 +47,11 @@ const EditorContent = ({ defaultValue, onChange }: EditorContentProps) => {
         .config((ctx) => {
           ctx.set(rootCtx, root)
           ctx.set(defaultValueCtx, defaultValue)
-          // ctx.set(slash.key, {
-          // 	view: pluginViewFactory({
-          // 		component: SlashCommands,
-          // 	}),
-          // })
+          ctx.set(slash.key, {
+            view: pluginViewFactory({
+              component: SlashCommands,
+            }),
+          })
           ctx.update(listenerCtx, (prev) => {
             prev.markdownUpdated((_, markdown) => {
               onChange(markdown)
@@ -68,7 +70,7 @@ const EditorContent = ({ defaultValue, onChange }: EditorContentProps) => {
         .use(inlineCode(nodeViewFactory))
         .use(listItem(nodeViewFactory))
         .use(imageBlock(nodeViewFactory))
-        // .use(slash)
+        .use(slash)
         .use(listener)
         .use(clipboard)
         .use(headingLevelIndicator)

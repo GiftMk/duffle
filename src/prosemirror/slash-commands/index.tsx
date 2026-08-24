@@ -1,84 +1,127 @@
 import { Autocomplete } from '@base-ui/react'
 import { slashFactory } from '@milkdown/kit/plugin/slash'
-import type React from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import type { SlashCommand } from './default-commands'
 import { useCommands } from './use-commands'
 import { useSlashProvider } from './use-slash-provider'
 
 export const slash = slashFactory('slash-commands')
 
-export const SlashCommands = () => {
-	const [open, setOpen] = useState(false)
-	const inputRef = useRef<HTMLInputElement>(null)
-	const listRef = useRef<HTMLDivElement>(null)
-	const { value, view } = useSlashProvider({
-		contentRef: listRef,
-		onOpenChange: setOpen,
-	})
-	const { commands, runCommand } = useCommands()
+const NAVIGATION_KEYS = ['ArrowUp', 'ArrowDown', 'Enter']
 
-	useEffect(() => {
-		const input = inputRef.current
-		if (!input) {
-			return
-		}
+type SlashCommandItemProps = {
+	command: SlashCommand
+	onRun: (command: SlashCommand, e: React.MouseEvent) => void
+}
 
-		const listener = (e: KeyboardEvent) => {
-			if (!open || !view.dom.contains(e.target as Node)) {
-				return
-			}
-
-			if (['ArrowUp', 'ArrowDown', 'Enter', 'Escape'].includes(e.key)) {
-				e.preventDefault()
-				input.dispatchEvent(
-					new KeyboardEvent('keydown', {
-						key: e.key,
-						code: e.code,
-						bubbles: e.bubbles,
-					}),
-				)
-			}
-		}
-
-		document.addEventListener('keydown', listener)
-
-		return () => document.removeEventListener('keydown', listener)
-	}, [view, open])
-
-	const handleKeyDown = (command: SlashCommand, e: React.KeyboardEvent) => {
-		if (e.key === 'Enter') {
-			runCommand(command, e)
-		}
+const SlashCommandItem = ({ command, onRun }: SlashCommandItemProps) => {
+	const handleClick = (e: React.MouseEvent) => {
+		onRun(command, e)
 	}
 
 	return (
+		<Autocomplete.Item
+			value={command}
+			onClick={handleClick}
+			className='px-4 py-1.5 text-sm hover:bg-surface-300 data-highlighted:bg-surface-300'
+		>
+			{command.label}
+		</Autocomplete.Item>
+	)
+}
+
+export const SlashCommands = () => {
+	const inputRef = useRef<HTMLInputElement>(null)
+	const { container, open, value, hide, view } = useSlashProvider()
+	const { commands, runCommand } = useCommands(value)
+
+	// Close the menu when nothing matches the filter so keys like Enter
+	// fall through to the editor again
+	useEffect(() => {
+		if (open && commands.length === 0) {
+			hide()
+		}
+	}, [open, commands.length, hide])
+
+	// Forward menu keys to the hidden autocomplete input. This must happen in
+	// the capture phase: prosemirror ignores events whose default was already
+	// prevented, while a bubble-phase listener would run after prosemirror
+	// handled the key (e.g. Enter splitting the block before the command runs)
+	useEffect(() => {
+		const input = inputRef.current
+
+		if (!open || !input) {
+			return
+		}
+
+		const onKeyDown = (event: KeyboardEvent) => {
+			if (!view.dom.contains(event.target as Node)) {
+				return
+			}
+
+			if (event.metaKey || event.ctrlKey || event.altKey) {
+				return
+			}
+
+			if (event.key === 'Escape') {
+				event.preventDefault()
+				hide()
+				return
+			}
+
+			if (!NAVIGATION_KEYS.includes(event.key)) {
+				return
+			}
+
+			event.preventDefault()
+			input.dispatchEvent(
+				new KeyboardEvent('keydown', {
+					key: event.key,
+					code: event.code,
+					bubbles: true,
+					cancelable: true,
+				}),
+			)
+		}
+
+		window.addEventListener('keydown', onKeyDown, { capture: true })
+
+		return () =>
+			window.removeEventListener('keydown', onKeyDown, { capture: true })
+	}, [open, view, hide])
+
+	const handleOpenChange = (nextOpen: boolean) => {
+		if (!nextOpen) {
+			hide()
+		}
+	}
+
+	if (!container) {
+		return null
+	}
+
+	return createPortal(
 		<Autocomplete.Root
 			inline
+			mode='none'
 			open={open}
+			onOpenChange={handleOpenChange}
 			items={commands}
 			value={value}
 			autoHighlight='always'
 		>
 			<Autocomplete.Input className='sr-only' ref={inputRef} />
-			<Autocomplete.List
-				ref={listRef}
-				className="absolute h-fit max-h-96 min-w-52 overflow-y-auto overscroll-contain rounded-sm border border-border bg-surface-100 p-1 data-[empty]:hidden data-[show='false']:hidden"
-			>
+			<Autocomplete.List className='h-fit max-h-96 min-w-52 overflow-y-auto overscroll-contain rounded-sm border border-border bg-surface-100 p-1 data-[empty]:hidden'>
 				{(command: SlashCommand) => (
-					<Autocomplete.Item
+					<SlashCommandItem
 						key={command.value}
-						value={command}
-						onClick={(e) => runCommand(command, e)}
-						onKeyDown={(e) => {
-							handleKeyDown(command, e)
-						}}
-						className='px-4 py-1.5 text-sm hover:bg-surface-300 data-highlighted:bg-surface-300'
-					>
-						{command.label}
-					</Autocomplete.Item>
+						command={command}
+						onRun={runCommand}
+					/>
 				)}
 			</Autocomplete.List>
-		</Autocomplete.Root>
+		</Autocomplete.Root>,
+		container,
 	)
 }

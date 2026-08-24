@@ -6,9 +6,9 @@ recommended_agent: open code with a smart model
 
 The slash commands menu needs some love, currently they are a whole host of bugs which is why I've just un-commented it for now. But the bugs include:
 
-1. On first page load the slash menu appears and then hides breifly
-2. The slash menu doesn't appear in the right position when the page is resized
-3. When an option is selected, it's kind of broken:
+1. ~~On first page load the slash menu appears and then hides breifly~~ Done. The menu rendered visible until the provider's first debounced (200ms) update hid it. The provider now owns an imperatively created container that starts with `data-show='false'` and a 20ms debounce, matching crepe.
+2. ~~The slash menu doesn't appear in the right position when the page is resized~~ Done. The provider only re-computes position on editor updates (and bails when doc/selection are unchanged). A window resize listener + ResizeObserver on the editor now force an update without a prevState, bypassing that bail-out.
+3. ~~When an option is selected, it's kind of broken~~ Done. Keys were forwarded in a bubble-phase `document` listener, so prosemirror handled Enter first and split the block before the command ran. Keys are now forwarded in the capture phase (like crepe), which prosemirror ignores because `event.defaultPrevented` is already set.
    For the last one in particular (3) if I were to trigger the slash commands by enter the following
 
 ```md
