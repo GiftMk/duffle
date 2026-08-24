@@ -89,10 +89,6 @@ const takeMostRecent = (notes: NoteEntity[], limit: number): NoteEntity[] => {
 		.slice(0, limit)
 }
 
-type UseSearchDialogOptions = {
-	disabled?: boolean
-}
-
 type UseSearchDialogResult = {
 	open: boolean
 	setOpen: (open: boolean) => void
@@ -108,9 +104,7 @@ type UseSearchDialogResult = {
 	selectNote: (note: NoteEntity) => void
 }
 
-export const useSearchDialog = ({
-	disabled,
-}: UseSearchDialogOptions = {}): UseSearchDialogResult => {
+export const useSearchDialog = (): UseSearchDialogResult => {
 	const [open, setOpenState] = useState(false)
 	const navigate = useNavigate()
 
@@ -120,8 +114,6 @@ export const useSearchDialog = ({
 	const items = query.length > 0 ? results : recentResults
 
 	const setOpen = (nextOpen: boolean) => {
-		if (disabled) return
-
 		setOpenState(nextOpen)
 		if (!nextOpen) clear()
 	}
@@ -142,7 +134,7 @@ export const useSearchDialog = ({
 	}
 
 	useHotkey('Mod+K', () => {
-		if (!disabled) setOpen(true)
+		setOpen(true)
 	})
 
 	return {

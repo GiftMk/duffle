@@ -22,14 +22,15 @@ function RouteComponent() {
 	const { redirect } = Route.useSearch()
 	const { data: session, isPending } = useSession()
 	const { loading, error, signIn } = useGithubAuth()
+	const isLinked = !!session && !session.user.isAnonymous
 
 	useEffect(() => {
-		if (session) {
+		if (isLinked) {
 			navigate({ to: redirect ?? '/notes' })
 		}
-	}, [session, navigate, redirect])
+	}, [isLinked, navigate, redirect])
 
-	if (isPending || session) {
+	if (isPending || isLinked) {
 		return <LoadingPage />
 	}
 
@@ -43,7 +44,7 @@ function RouteComponent() {
 				<UserAvatar seed={AVATAR_SEED} size={64} />
 				<h1 className='font-bold text-2xl tracking-tight'>Hey Stranger.</h1>
 				<p className='text-pretty text-typography-600'>
-					Login to get cross-device sync and more.
+					Link GitHub to keep your notes safe across devices.
 				</p>
 			</FadeIn>
 			<SpringPopIn className='flex flex-col items-center gap-3'>

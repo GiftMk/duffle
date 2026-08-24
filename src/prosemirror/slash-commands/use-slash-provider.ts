@@ -1,34 +1,61 @@
 import { SlashProvider } from '@milkdown/kit/plugin/slash'
+import { type Selection, TextSelection } from '@milkdown/prose/state'
 import type { EditorView } from '@milkdown/prose/view'
 import { useInstance } from '@milkdown/react'
 import { usePluginViewContext } from '@prosemirror-adapter/react'
-import { type RefObject, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
-type UseSlashProviderProps<T extends HTMLElement> = {
-	contentRef: RefObject<T | null>
-	onOpenChange: (open: boolean) => void
+const isInCodeBlock = (selection: Selection) =>
+	selection.$from.parent.type.name === 'code_block'
+
+const isInList = (selection: Selection) =>
+	selection.$from.node(selection.$from.depth - 1)?.type.name === 'list_item'
+
+const isSelectionAtEndOfNode = (selection: Selection) => {
+	if (!(selection instanceof TextSelection)) {
+		return false
+	}
+
+	const { $head } = selection
+	return $head.parentOffset === $head.parent.content.size
 }
 
-export const useSlashProvider = <T extends HTMLElement>({
-	contentRef,
-	onOpenChange,
-}: UseSlashProviderProps<T>) => {
+export const useSlashProvider = () => {
 	const { view, prevState } = usePluginViewContext()
-	const [value, setValue] = useState('')
-	const [slashProvider, setSlashProvider] = useState<SlashProvider | null>(null)
 	const [loading] = useInstance()
+	const [value, setValue] = useState('')
+	const [open, setOpen] = useState(false)
+	const [container, setContainer] = useState<HTMLDivElement | null>(null)
+	const providerRef = useRef<SlashProvider | null>(null)
 
 	useEffect(() => {
-		const content = contentRef.current
-
-		if (loading || !content) {
+		if (loading) {
 			return
 		}
 
+		// The provider owns this element: it appends it next to the editor and
+		// positions it. React only portals the menu's content into it, so the
+		// two never fight over the same DOM node.
+		const content = document.createElement('div')
+		content.dataset.show = 'false'
+		content.className = "absolute z-10 data-[show='false']:hidden"
+
 		const slashProvider = new SlashProvider({
 			content,
-			shouldShow(this: SlashProvider, view: EditorView) {
-				const currentText = this.getContent(view, (node) =>
+			debounce: 20,
+			offset: 10,
+			shouldShow(this: SlashProvider, currentView: EditorView) {
+				const { selection } = currentView.state
+
+				if (isInCodeBlock(selection) || isInList(selection)) {
+					return false
+				}
+
+				if (!isSelectionAtEndOfNode(selection)) {
+					return false
+				}
+
+				const currentText = this.getContent(currentView, (node) =>
 					['paragraph', 'heading'].includes(node.type.name),
 				)
 
@@ -36,25 +63,50 @@ export const useSlashProvider = <T extends HTMLElement>({
 					return false
 				}
 
-				const trimmedText = currentText.startsWith('/')
-					? currentText.slice(1)
-					: currentText
-				setValue(trimmedText)
+				setValue(
+					currentText.startsWith('/') ? currentText.slice(1) : currentText,
+				)
 
 				return currentText.startsWith('/')
 			},
 		})
-		slashProvider.onHide = () => onOpenChange(false)
-		slashProvider.onShow = () => onOpenChange(true)
-		setSlashProvider(slashProvider)
+		slashProvider.onShow = () => setOpen(true)
+		slashProvider.onHide = () => setOpen(false)
+		providerRef.current = slashProvider
+		setContainer(content)
 
-		return () => slashProvider.destroy()
-	}, [loading, onOpenChange, contentRef])
+		return () => {
+			slashProvider.destroy()
+			providerRef.current = null
+			content.remove()
+		}
+	}, [loading])
 
-	useEffect(
-		() => slashProvider?.update(view, prevState),
-		[view, prevState, slashProvider],
-	)
+	// `container` is set in the same effect that creates the provider, so
+	// depending on it guarantees the provider gets an initial update
+	useEffect(() => {
+		providerRef.current?.update(view, prevState)
+	}, [view, prevState, container])
 
-	return { value, view }
+	// The provider only re-computes the menu position on editor updates, so a
+	// layout shift (window resize, sidebar toggle, ...) leaves it stale.
+	// Forcing an update without a prevState bypasses its "nothing changed"
+	// bail-out and re-computes the position.
+	useEffect(() => {
+		const reposition = () => providerRef.current?.update(view)
+
+		window.addEventListener('resize', reposition)
+
+		const observer = new ResizeObserver(reposition)
+		observer.observe(view.dom)
+
+		return () => {
+			window.removeEventListener('resize', reposition)
+			observer.disconnect()
+		}
+	}, [view])
+
+	const hide = useCallback(() => providerRef.current?.hide(), [])
+
+	return { container, value, open, hide, view }
 }

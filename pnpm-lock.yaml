@@ -125,6 +125,9 @@ importers:
       pg:
         specifier: ^8.22.0
         version: 8.22.0
+      prosemirror-codemark:
+        specifier: ^0.4.2
+        version: 0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.11)(prosemirror-state@1.4.4)(prosemirror-view@1.42.2)
       react:
         specifier: ^19.2.4
         version: 19.2.8
@@ -3705,6 +3708,14 @@ packages:
 
   prosemirror-changeset@2.4.1:
     resolution: {integrity: sha512-96WBLhOaYhJ+kPhLg3uW359Tz6I/MfcrQfL4EGv4SrcqKEMC1gmoGrXHecPE8eOwTVCJ4IwgfzM8fFad25wNfw==}
+
+  prosemirror-codemark@0.4.2:
+    resolution: {integrity: sha512-4n+PnGQToa/vTjn0OiivUvE8/moLtguUAfry8UA4Q8p47MhqT2Qpf2zBLustX5Upi4mSp3z1ZYBqLLovZC6abA==}
+    peerDependencies:
+      prosemirror-inputrules: ^1.2.0
+      prosemirror-model: ^1.18.1
+      prosemirror-state: ^1.4.1
+      prosemirror-view: ^1.26.2
 
   prosemirror-commands@1.7.1:
     resolution: {integrity: sha512-rT7qZnQtx5c0/y/KlYaGvtG411S97UaL6gdp6RIZ23DLHanMYLyfGBV5DtSnZdthQql7W+lEVbpSfwtO8T+L2w==}
@@ -7868,6 +7879,13 @@ snapshots:
   prosemirror-changeset@2.4.1:
     dependencies:
       prosemirror-transform: 1.12.0
+
+  prosemirror-codemark@0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.11)(prosemirror-state@1.4.4)(prosemirror-view@1.42.2):
+    dependencies:
+      prosemirror-inputrules: 1.5.1
+      prosemirror-model: 1.25.11
+      prosemirror-state: 1.4.4
+      prosemirror-view: 1.42.2
 
   prosemirror-commands@1.7.1:
     dependencies:

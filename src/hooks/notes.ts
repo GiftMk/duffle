@@ -4,7 +4,6 @@ import {
 	usePacedMutations,
 } from '@tanstack/react-db'
 import { useNavigate } from '@tanstack/react-router'
-import { uuidv7 } from 'uuidv7'
 import { notesCollection } from '@/lib/collections'
 import type { NoteEntity } from '@/lib/schemas'
 import { splitMarkdown, utcNow } from '@/lib/utils'
@@ -24,12 +23,14 @@ export const useNote = (id: string) => {
 	return notes.find((note) => note.id === id)
 }
 
-export const useCreateNote = () => {
-	return () => {
+export const useNewNote = (id: string) => {
+	const navigate = useNavigate()
+
+	const create = () => {
 		const timestamp = utcNow()
 
 		const note: NoteEntity = {
-			id: uuidv7(),
+			id,
 			title: '',
 			body: '',
 			markdown: '# ',
@@ -41,16 +42,12 @@ export const useCreateNote = () => {
 
 		return note
 	}
-}
 
-export const useCreateAndOpenNote = () => {
-	const createNote = useCreateNote()
-	const navigate = useNavigate()
-
-	return () => {
-		const note = createNote()
-		navigate({ to: '/notes/$noteId', params: { noteId: note.id } })
+	const open = () => {
+		navigate({ to: '/notes/$noteId', params: { noteId: id } })
 	}
+
+	return { create, open }
 }
 
 type UpdateNoteVariables = { id: string; markdown: string }

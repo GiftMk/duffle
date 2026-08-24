@@ -1,7 +1,8 @@
 import { PencilSimpleLineIcon } from '@phosphor-icons/react'
+import { uuidv7 } from 'uuidv7'
 import { SidebarButton } from '@/components/sidebar/sidebar-button'
 import { Tooltip } from '@/components/tooltip'
-import { useCreateAndOpenNote } from '@/hooks/notes'
+import { useNewNote } from '@/hooks/notes'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
@@ -10,12 +11,17 @@ type NewNoteButtonProps = {
 }
 
 export const NewNoteButton = ({ disabled }: NewNoteButtonProps) => {
-	const createAndOpenNote = useCreateAndOpenNote()
+	const newNote = useNewNote(uuidv7())
+
+	const handleClick = () => {
+		newNote.create()
+		newNote.open()
+	}
 
 	return (
 		<Tooltip content='New note'>
 			<SidebarButton
-				onClick={createAndOpenNote}
+				onClick={handleClick}
 				disabled={disabled}
 				aria-disabled={disabled}
 				className={cn({

@@ -3,8 +3,15 @@ import type { Ctx } from '@milkdown/kit/ctx'
 import { useInstance } from '@milkdown/react'
 import { DEFAULT_COMMANDS, type SlashCommand } from './default-commands'
 
-export const useCommands = (commands: SlashCommand[] = DEFAULT_COMMANDS) => {
+export const useCommands = (
+	filter: string,
+	commands: SlashCommand[] = DEFAULT_COMMANDS,
+) => {
 	const [loading, get] = useInstance()
+
+	const filteredCommands = commands.filter((command) =>
+		command.label.toLowerCase().includes(filter.toLowerCase()),
+	)
 
 	const action = (fn: (ctx: Ctx) => void) => {
 		if (loading) return
@@ -23,5 +30,5 @@ export const useCommands = (commands: SlashCommand[] = DEFAULT_COMMANDS) => {
 		})
 	}
 
-	return { commands, runCommand }
+	return { commands: filteredCommands, runCommand }
 }

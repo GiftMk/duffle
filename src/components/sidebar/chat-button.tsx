@@ -6,17 +6,12 @@ import { ICON_SIZE_MD } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { SidebarButton } from './sidebar-button'
 
-type ChatButtonProps = {
-	disabled?: boolean
-}
-
-export const ChatButton = ({ disabled }: ChatButtonProps) => {
+export const ChatButton = () => {
 	const navigate = useNavigate()
 	const aiChatEnabled = useAiChatEnabled()
-	const isDisabled = disabled || !aiChatEnabled
 
 	const handleClick = () => {
-		if (isDisabled) return
+		if (!aiChatEnabled) return
 		navigate({ to: '/chat' })
 	}
 
@@ -24,10 +19,10 @@ export const ChatButton = ({ disabled }: ChatButtonProps) => {
 		<Tooltip content='Chat'>
 			<SidebarButton
 				onClick={handleClick}
-				disabled={isDisabled}
-				aria-disabled={isDisabled}
+				disabled={!aiChatEnabled}
+				aria-disabled={!aiChatEnabled}
 				className={cn({
-					'pointer-events-none opacity-40': isDisabled,
+					'pointer-events-none opacity-40': !aiChatEnabled,
 				})}
 			>
 				<ChatsIcon size={ICON_SIZE_MD} />
