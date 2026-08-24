@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "0a81844b-02cf-406f-b1fb-790096f96598",
+  "id": "e09eb819-5c94-4df7-b7a1-1ac0644dfa6d",
   "prevIds": [
     "1435cb40-515a-482f-aed5-ee24ae273076"
   ],
@@ -378,6 +378,19 @@
       "generated": null,
       "identity": null,
       "name": "image",
+      "entityType": "columns",
+      "schema": "auth",
+      "table": "users"
+    },
+    {
+      "type": "boolean",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "false",
+      "generated": null,
+      "identity": null,
+      "name": "is_anonymous",
       "entityType": "columns",
       "schema": "auth",
       "table": "users"
