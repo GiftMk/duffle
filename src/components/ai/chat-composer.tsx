@@ -50,7 +50,7 @@ export const ChatComposer = ({
 			layout
 			layoutId={CHAT_COMPOSER_LAYOUT_ID}
 			transition={{ type: 'spring', duration: 0.5, bounce: 0.15 }}
-			className='mx-auto flex w-full max-w-3xl items-center gap-3 rounded-md border border-surface-400 bg-surface-50 px-4 py-3 shadow-sm'
+			className='mx-auto flex w-full max-w-3xl items-center gap-3 rounded-md border border-surface-400 bg-surface-50 px-4 py-3'
 		>
 			<textarea
 				ref={textareaRef}
@@ -58,7 +58,7 @@ export const ChatComposer = ({
 				value={input}
 				onChange={(event) => setInput(event.target.value)}
 				onKeyDown={handleKeyDown}
-				placeholder='Ask Sir Duffle...'
+				placeholder='Ask away...'
 				className='max-h-40 w-full resize-none bg-transparent text-lg focus:outline-none'
 			/>
 			<button

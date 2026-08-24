@@ -45,8 +45,8 @@ const ChatMessagePart = ({ part, isStreaming }: ChatMessagePartProps) => {
 	if (isToolUIPart(part) && getToolName(part) === 'recentNotes') {
 		const label =
 			part.state === 'output-available'
-				? 'Perused your 20 most recent notes'
-				: 'Perusing your recent notes…'
+				? 'Read your 20 most recent notes… Any moment now'
+				: 'Reading your recent notes…'
 
 		return <p className='text-typography-600 text-xs'>{label}</p>
 	}

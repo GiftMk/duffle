@@ -27,10 +27,6 @@ function RouteComponent() {
 
 	return (
 		<div className='flex h-full w-full flex-col'>
-			<header className='shrink-0 px-8 py-5'>
-				<h1 className='font-bold text-3xl tracking-tight'>Sir Duffle</h1>
-			</header>
-
 			{hasMessages ? (
 				<>
 					<FadeIn className='flex min-h-0 flex-1 flex-col'>
@@ -40,13 +36,11 @@ function RouteComponent() {
 							isThinking={status === 'submitted'}
 						/>
 					</FadeIn>
-
 					{error && (
 						<p className='mx-auto w-full max-w-3xl shrink-0 px-8 pt-3 text-red-700 text-sm'>
 							{error.message}
 						</p>
 					)}
-
 					<div className='shrink-0 px-8 pb-6'>{composer}</div>
 				</>
 			) : (

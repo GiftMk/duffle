@@ -31,8 +31,8 @@ export const Sidebar = () => {
 			<section className='relative flex flex-col items-center gap-4'>
 				<HomeButton />
 				<SearchButton />
-				<ChatButton />
 				<NotesButton />
+				<ChatButton />
 				<ThemeToggle />
 				<AccountButton />
 			</section>
