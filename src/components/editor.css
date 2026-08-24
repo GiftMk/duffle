@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* prosemirror-codemark's fake cursor, recolored to match the app caret */
+@keyframes codemark-caret-blink {
+	0%,
+	49% {
+		border-color: var(--color-primary-500);
+	}
+	50%,
+	100% {
+		border-color: transparent;
+	}
+}
+
 div[data-milkdown-root="true"] {
 	height: calc(100% - calc(var(--spacing) * 9));
 }
@@ -49,6 +61,10 @@ div[data-milkdown-root="true"] {
 		line-height: var(--leading-normal);
 		color: var(--color-typography-950);
 		caret-color: var(--color-primary-500);
+
+		.fake-cursor {
+			animation-name: codemark-caret-blink;
+		}
 
 		> *:first-child {
 			margin-top: 0;
