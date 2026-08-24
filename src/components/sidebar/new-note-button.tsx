@@ -1,5 +1,4 @@
 import { PencilSimpleLineIcon } from '@phosphor-icons/react'
-import { useState } from 'react'
 import { uuidv7 } from 'uuidv7'
 import { SidebarButton } from '@/components/sidebar/sidebar-button'
 import { Tooltip } from '@/components/tooltip'
@@ -12,13 +11,11 @@ type NewNoteButtonProps = {
 }
 
 export const NewNoteButton = ({ disabled }: NewNoteButtonProps) => {
-	const [noteId, setNoteId] = useState(() => uuidv7())
-	const newNote = useNewNote(noteId)
+	const newNote = useNewNote(uuidv7())
 
 	const handleClick = () => {
 		newNote.create()
 		newNote.open()
-		setNoteId(uuidv7())
 	}
 
 	return (

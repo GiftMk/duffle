@@ -1,6 +1,5 @@
 import { ArrowFatRightIcon } from '@phosphor-icons/react/dist/ssr'
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { uuidv7 } from 'uuidv7'
 import { FadeIn, SpringPopIn } from '@/components/animations'
@@ -26,13 +25,11 @@ const SubHeading = () => (
 )
 
 function RouteComponent() {
-	const [noteId, setNoteId] = useState(() => uuidv7())
-	const newNote = useNewNote(noteId)
+	const newNote = useNewNote(uuidv7())
 
 	const handleClick = () => {
 		newNote.create()
 		newNote.open()
-		setNoteId(uuidv7())
 	}
 
 	return (
