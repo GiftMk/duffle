@@ -34,6 +34,7 @@ BETTER_AUTH_SECRET=
 BETTER_AUTH_URL=
 GITHUB_CLIENT_ID=
 GITHUB_CLIENT_SECRET=
+OPENAI_API_KEY=     # optional — omit to disable the AI chat feature
 ```
 
 Run `pnpm i` and then `pnpm dev` to start the app on `localhost:3001`.
