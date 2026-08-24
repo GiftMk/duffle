@@ -2,12 +2,17 @@ import { uuidv7 } from 'uuidv7'
 import type { NoteEntity } from '@/lib/schemas'
 import { utcNow } from '@/lib/utils'
 
-export const createUser = () => {
+export const createUser = ({
+	isAnonymous = false,
+}: {
+	isAnonymous?: boolean
+} = {}) => {
 	const id = uuidv7()
 	return {
 		id,
 		name: `Test User ${id}`,
 		email: `test-${id}@example.com`,
+		isAnonymous,
 	}
 }
 

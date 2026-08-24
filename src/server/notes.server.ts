@@ -60,6 +60,21 @@ export const deleteNoteQuery = async (
 	return row
 }
 
+export const reassignNotesQuery = async (
+	db: Database,
+	fromUserId: string,
+	toUserId: string,
+) => {
+	await db
+		.update(notesTable)
+		.set({ userId: toUserId })
+		.where(eq(notesTable.userId, fromUserId))
+}
+
+export const deleteNotesForUserQuery = async (db: Database, userId: string) => {
+	await db.delete(notesTable).where(eq(notesTable.userId, userId))
+}
+
 export const searchQuery = async (
 	db: Database,
 	userId: string,

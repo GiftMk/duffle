@@ -4,14 +4,9 @@ import { SearchDialog } from '@/components/search/search-dialog'
 import { Tooltip } from '@/components/tooltip'
 import { useSearchDialog } from '@/hooks/search'
 import { ICON_SIZE_MD } from '@/lib/constants'
-import { cn } from '@/lib/utils'
 import { SidebarButton } from './sidebar-button'
 
-type SearchButtonProps = {
-	disabled?: boolean
-}
-
-export const SearchButton = ({ disabled }: SearchButtonProps) => {
+export const SearchButton = () => {
 	const {
 		open,
 		setOpen,
@@ -21,18 +16,14 @@ export const SearchButton = ({ disabled }: SearchButtonProps) => {
 		state,
 		isRefreshing,
 		selectNote,
-	} = useSearchDialog({ disabled })
+	} = useSearchDialog()
 
 	return (
 		<Dialog.Root open={open} onOpenChange={setOpen}>
 			<Tooltip content='Search'>
 				<Dialog.Trigger
 					render={
-						<SidebarButton
-							disabled={disabled}
-							aria-disabled={disabled}
-							className={cn({ 'pointer-events-none opacity-40': disabled })}
-						>
+						<SidebarButton>
 							<MagnifyingGlassIcon size={ICON_SIZE_MD} />
 						</SidebarButton>
 					}

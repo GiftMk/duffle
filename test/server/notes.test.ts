@@ -7,7 +7,9 @@ import { utcNow } from '@/lib/utils'
 import {
 	createNoteQuery,
 	deleteNoteQuery,
+	deleteNotesForUserQuery,
 	getNotesQuery,
+	reassignNotesQuery,
 	searchQuery,
 	updateNoteQuery,
 } from '@/server/notes.server'
@@ -166,6 +168,97 @@ describe('deleteNoteQuery', () => {
 		await db.insert(notesTable).values(note)
 
 		await deleteNoteQuery(db, user.id, note.id)
+
+		const remaining = await db
+			.select()
+			.from(notesTable)
+			.where(eq(notesTable.id, note.id))
+
+		expect(remaining).toHaveLength(0)
+	})
+})
+
+describe('reassignNotesQuery', () => {
+	dbTest(
+		'Moves only the source user’s notes to the target user',
+		async ({ db }) => {
+			const anonymousUser = createUser({ isAnonymous: true })
+			const otherUser = createUser()
+			const targetUser = createUser()
+			await db.insert(usersTable).values([anonymousUser, otherUser, targetUser])
+
+			const anonymousNote = createNote(anonymousUser.id, {
+				title: 'Written while anonymous',
+			})
+			const otherNote = createNote(otherUser.id, {
+				title: 'Someone else’s note',
+			})
+			await db.insert(notesTable).values([anonymousNote, otherNote])
+
+			await reassignNotesQuery(db, anonymousUser.id, targetUser.id)
+
+			const targetNotes = await getNotesQuery(db, targetUser.id)
+			expect(targetNotes).toHaveLength(1)
+			expect(targetNotes[0]?.id).toBe(anonymousNote.id)
+
+			const untouchedNotes = await getNotesQuery(db, otherUser.id)
+			expect(untouchedNotes).toHaveLength(1)
+			expect(untouchedNotes[0]?.id).toBe(otherNote.id)
+		},
+	)
+
+	dbTest(
+		'Merges alongside notes the target user already owns',
+		async ({ db }) => {
+			const anonymousUser = createUser({ isAnonymous: true })
+			const targetUser = createUser()
+			await db.insert(usersTable).values([anonymousUser, targetUser])
+
+			const anonymousNote = createNote(anonymousUser.id, {
+				title: 'Written while anonymous',
+			})
+			const existingNote = createNote(targetUser.id, {
+				title: 'Already on the account',
+			})
+			await db.insert(notesTable).values([anonymousNote, existingNote])
+
+			await reassignNotesQuery(db, anonymousUser.id, targetUser.id)
+
+			const targetNotes = await getNotesQuery(db, targetUser.id)
+			expect(targetNotes).toHaveLength(2)
+			expect(targetNotes.map((note) => note.id).sort()).toEqual(
+				[anonymousNote.id, existingNote.id].sort(),
+			)
+		},
+	)
+})
+
+describe('deleteNotesForUserQuery', () => {
+	dbTest('Removes only that user’s notes', async ({ db }) => {
+		const userA = createUser()
+		const userB = createUser()
+		await db.insert(usersTable).values([userA, userB])
+
+		const noteA = createNote(userA.id, { title: 'User A note' })
+		const noteB = createNote(userB.id, { title: 'User B note' })
+		await db.insert(notesTable).values([noteA, noteB])
+
+		await deleteNotesForUserQuery(db, userA.id)
+
+		expect(await getNotesQuery(db, userA.id)).toHaveLength(0)
+		expect(await getNotesQuery(db, userB.id)).toHaveLength(1)
+	})
+})
+
+describe('deleting a user', () => {
+	dbTest('Cascades to delete their notes', async ({ db }) => {
+		const user = createUser({ isAnonymous: true })
+		await db.insert(usersTable).values(user)
+
+		const note = createNote(user.id, { title: 'Anonymous note' })
+		await db.insert(notesTable).values(note)
+
+		await db.delete(usersTable).where(eq(usersTable.id, user.id))
 
 		const remaining = await db
 			.select()

@@ -1,8 +1,7 @@
 import { ArrowFatRightIcon } from '@phosphor-icons/react/dist/ssr'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { TypeAnimation } from 'react-type-animation'
 import { FadeIn, SpringPopIn } from '@/components/animations'
-import { useCreateAndOpenNote } from '@/hooks/notes'
 
 export const Route = createFileRoute('/')({
 	ssr: true,
@@ -24,7 +23,11 @@ const SubHeading = () => (
 )
 
 function RouteComponent() {
-	const handleClick = useCreateAndOpenNote()
+	const navigate = useNavigate()
+
+	const handleClick = () => {
+		navigate({ to: '/notes' })
+	}
 
 	return (
 		<main className='flex h-full w-full flex-col items-center justify-center gap-12 text-center'>

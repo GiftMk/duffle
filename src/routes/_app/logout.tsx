@@ -14,14 +14,18 @@ function RouteComponent() {
 	const navigate = useNavigate()
 	const { data: session, isPending } = useSession()
 	const [loading, setLoading] = useState(false)
+	const isLinked = !!session && !session.user.isAnonymous
 
 	useEffect(() => {
-		if (!isPending && !session) {
+		if (isPending) return
+		if (!session) {
 			navigate({ to: '/' })
+		} else if (session.user.isAnonymous) {
+			navigate({ to: '/login', search: { redirect: undefined } })
 		}
 	}, [isPending, session, navigate])
 
-	if (isPending || !session) {
+	if (isPending || !isLinked) {
 		return <LoadingPage />
 	}
 
