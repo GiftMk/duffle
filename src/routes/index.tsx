@@ -1,9 +1,9 @@
 import { ArrowFatRightIcon } from '@phosphor-icons/react/dist/ssr'
-import { createFileRoute } from '@tanstack/react-router'
+import { useHotkey } from '@tanstack/react-hotkeys'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useRef } from 'react'
 import { TypeAnimation } from 'react-type-animation'
-import { uuidv7 } from 'uuidv7'
 import { FadeIn, SpringPopIn } from '@/components/animations'
-import { useNewNote } from '@/hooks/notes'
 
 export const Route = createFileRoute('/')({
 	ssr: true,
@@ -25,12 +25,16 @@ const SubHeading = () => (
 )
 
 function RouteComponent() {
-	const newNote = useNewNote(uuidv7())
+	const navigate = useNavigate()
+	const actionButtonRef = useRef<HTMLButtonElement>(null)
 
 	const handleClick = () => {
-		newNote.create()
-		newNote.open()
+		navigate({ to: '/notes' })
 	}
+
+	useHotkey('Enter', () => {
+		actionButtonRef.current?.click()
+	})
 
 	return (
 		<main className='flex h-full w-full flex-col items-center justify-center gap-12 text-center'>
@@ -38,6 +42,7 @@ function RouteComponent() {
 			<SubHeading />
 			<SpringPopIn className='flex items-center gap-2' initial={{ y: -300 }}>
 				<button
+					ref={actionButtonRef}
 					type='button'
 					onClick={handleClick}
 					className='rounded-sm border border-primary-500 px-5 py-2 transition-all duration-200 hover:scale-110 hover:bg-primary-500/10'

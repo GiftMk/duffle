@@ -1,6 +1,11 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { anonymous } from 'better-auth/plugins'
 import { tanstackStartCookies } from 'better-auth/tanstack-start'
+import {
+	deleteNotesForUserQuery,
+	reassignNotesQuery,
+} from '@/server/notes.server'
 import type { Database } from './index'
 import * as schema from './schema.auth'
 
@@ -10,12 +15,6 @@ type CreateAuthOptions = {
 	secret: string
 	githubClientId: string
 	githubClientSecret: string
-	/**
-	 * Set to the apex domain (e.g. `.duffle.dev`) in production so a session
-	 * created on one subdomain app is valid on the other. Leave undefined in
-	 * local dev, where apps run on different localhost ports and can't share
-	 * a subdomain-scoped cookie anyway.
-	 */
 	crossSubDomainCookieDomain?: string
 }
 
@@ -48,5 +47,13 @@ export const createAuth = ({
 					},
 				}
 			: undefined,
-		plugins: [tanstackStartCookies()], // must be the last plugin
+		plugins: [
+			anonymous({
+				onLinkAccount: async ({ anonymousUser, newUser }) => {
+					await reassignNotesQuery(db, anonymousUser.user.id, newUser.user.id)
+					await deleteNotesForUserQuery(db, anonymousUser.user.id)
+				},
+			}),
+			tanstackStartCookies(), // must be the last plugin
+		],
 	})

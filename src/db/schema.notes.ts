@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm'
 import { index, snakeCase, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { userReference } from './schema.auth'
 
@@ -16,5 +17,9 @@ export const notesTable = notesSchema.table(
 	},
 	(table) => [
 		index('notes_title_idx').using('gin', table.title.op('gin_trgm_ops')),
+		index('notes_body_search_idx').using(
+			'gin',
+			sql`to_tsvector('english', ${table.body})`,
+		),
 	],
 )

@@ -9,6 +9,7 @@ export const user = authSchema.table('users', {
 	email: text().notNull().unique(),
 	emailVerified: boolean().default(false).notNull(),
 	image: text(),
+	isAnonymous: boolean().default(false).notNull(),
 	createdAt: timestamp().defaultNow().notNull(),
 	updatedAt: timestamp()
 		.defaultNow()

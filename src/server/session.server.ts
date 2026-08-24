@@ -1,21 +1,17 @@
-import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { auth } from '@/server/auth.server'
 
-const getSession = async () => {
-	return auth.api.getSession({ headers: getRequestHeaders() })
+const getCurrentUser = async () => {
+	const session = await auth.api.getSession({ headers: getRequestHeaders() })
+	return session?.user ?? null
 }
 
-export const getSessionFn = createServerFn({ method: 'GET' }).handler(
-	getSession,
-)
+export const ensureCurrentUser = async () => {
+	const existing = await getCurrentUser()
+	if (existing) return existing
 
-export const requireSession = async () => {
-	const session = await getSession()
-
-	if (!session) {
-		throw new Error('Unauthorized')
-	}
-
-	return session
+	const { user } = await auth.api.signInAnonymous({
+		headers: getRequestHeaders(),
+	})
+	return user
 }
