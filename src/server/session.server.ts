@@ -1,4 +1,3 @@
-import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { auth } from '@/server/auth.server'
 
@@ -16,7 +15,3 @@ export const ensureCurrentUser = async () => {
 	})
 	return user
 }
-
-export const ensureCurrentUserFn = createServerFn({ method: 'GET' }).handler(
-	ensureCurrentUser,
-)

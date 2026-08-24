@@ -8,7 +8,7 @@ import '@/index.css'
 import { LoadingPage } from '@/components/loading-page'
 import { ThemeProvider } from '@/components/sidebar/theme-provider'
 import { TooltipProvider } from '@/components/tooltip'
-import { ensureCurrentUserFn } from '@/server/session.server'
+import { ensureCurrentUserFn } from '@/server/session.functions'
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 	{
