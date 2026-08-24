@@ -3,7 +3,6 @@ import { useRoughSvg } from '@/hooks/use-rough-svg'
 import { AccountButton } from './account-button'
 import { ChatButton } from './chat-button'
 import { HomeButton } from './home-button'
-import { NewNoteButton } from './new-note-button'
 import { NotesButton } from './notes-button'
 import { SearchButton } from './search-button'
 import { ThemeToggle } from './theme-toggle'
@@ -33,7 +32,6 @@ export const Sidebar = () => {
 				<HomeButton />
 				<SearchButton />
 				<ChatButton />
-				{/*<NewNoteButton />*/}
 				<NotesButton />
 				<ThemeToggle />
 				<AccountButton />
