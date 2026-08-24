@@ -9,6 +9,7 @@ import {
 	deleteNoteQuery,
 	deleteNotesForUserQuery,
 	getNotesQuery,
+	getRecentNotesQuery,
 	reassignNotesQuery,
 	searchQuery,
 	updateNoteQuery,
@@ -52,6 +53,74 @@ describe('getNotesQuery', () => {
 
 		expect(results[0]?.id).toBe(noteB.id)
 		expect(results[1]?.id).toBe(noteA.id)
+	})
+})
+
+describe('getRecentNotesQuery', () => {
+	dbTest('Only returns notes belonging to the user', async ({ db }) => {
+		const userA = createUser()
+		const userB = createUser()
+		await db.insert(usersTable).values([userA, userB])
+
+		const noteA = createNote(userA.id, { title: 'Notes for user A' })
+		const noteB = createNote(userB.id, { title: 'Notes for user B' })
+
+		await db.insert(notesTable).values([noteA, noteB])
+
+		const results = await getRecentNotesQuery(db, userA.id)
+
+		expect(results).toHaveLength(1)
+		const result = results[0]
+		expect(result?.id).toBe(noteA.id)
+	})
+
+	dbTest('Orders notes by most recently updated', async ({ db }) => {
+		const user = createUser()
+		await db.insert(usersTable).values(user)
+
+		const noteA = createNote(user.id, {
+			title: 'Older note',
+			updatedAt: minusDays(utcNow(), 7),
+		})
+		const noteB = createNote(user.id, {
+			title: 'Newer note',
+			updatedAt: minusDays(utcNow(), 3),
+		})
+
+		await db.insert(notesTable).values([noteA, noteB])
+
+		const results = await getRecentNotesQuery(db, user.id)
+
+		expect(results[0]?.id).toBe(noteB.id)
+		expect(results[1]?.id).toBe(noteA.id)
+	})
+
+	dbTest('Respects the limit', async ({ db }) => {
+		const user = createUser()
+		await db.insert(usersTable).values(user)
+
+		const notes = [
+			createNote(user.id, {
+				title: 'Note 1',
+				updatedAt: minusDays(utcNow(), 1),
+			}),
+			createNote(user.id, {
+				title: 'Note 2',
+				updatedAt: minusDays(utcNow(), 2),
+			}),
+			createNote(user.id, {
+				title: 'Note 3',
+				updatedAt: minusDays(utcNow(), 3),
+			}),
+		]
+
+		await db.insert(notesTable).values(notes)
+
+		const results = await getRecentNotesQuery(db, user.id, 2)
+
+		expect(results).toHaveLength(2)
+		expect(results[0]?.id).toBe(notes[0]?.id)
+		expect(results[1]?.id).toBe(notes[1]?.id)
 	})
 })
 
