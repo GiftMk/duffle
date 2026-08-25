@@ -1,7 +1,6 @@
 import { and, desc, eq, sql } from 'drizzle-orm'
 import type { Database } from '@/db'
 import { notesTable } from '@/db/schema.notes'
-import { RECENT_NOTES_TOOL_LIMIT } from '@/lib/constants'
 import type { NoteEntity } from '@/lib/schemas'
 
 const noteProjection = () => ({
@@ -19,19 +18,6 @@ export const getNotesQuery = async (db: Database, userId: string) => {
 		.from(notesTable)
 		.where(eq(notesTable.userId, userId))
 		.orderBy(desc(notesTable.updatedAt))
-}
-
-export const getRecentNotesQuery = async (
-	db: Database,
-	userId: string,
-	limit: number = RECENT_NOTES_TOOL_LIMIT,
-) => {
-	return await db
-		.select(noteProjection())
-		.from(notesTable)
-		.where(eq(notesTable.userId, userId))
-		.orderBy(desc(notesTable.updatedAt))
-		.limit(limit)
 }
 
 export const createNoteQuery = async (
