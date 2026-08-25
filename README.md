@@ -19,7 +19,7 @@ Duffle is a single TanStack Start app:
 src/
   components/   editor + shared UI components (sidebar, buttons, dialogs)
   hooks/        client-side hooks
-  lib/          utils, auth client, search, collections
+  lib/          utils, auth client, schemas, query cache helpers
   prosemirror/  the markdown editor's prosemirror extensions
   db/           drizzle schemas and connection
   routes/       file-based routes
