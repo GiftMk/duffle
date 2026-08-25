@@ -1,6 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import { uuidv7 } from 'uuidv7'
 import { AddNoteCard } from '@/components/notes/add-note-card'
 import { NoteCard } from '@/components/notes/note-card'
 import { notesQuery, useNewNote, useNotes } from '@/hooks/notes'
@@ -11,9 +9,8 @@ export const Route = createFileRoute('/_app/notes/')({
 })
 
 function RouteComponent() {
-	const [pendingNoteId] = useState(() => uuidv7())
-	const notes = useNotes().filter((note) => note.id !== pendingNoteId)
-	const newNote = useNewNote(pendingNoteId)
+	const notes = useNotes()
+	const newNote = useNewNote()
 
 	const handleAddNote = () => {
 		newNote.create()

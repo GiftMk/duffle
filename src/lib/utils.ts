@@ -44,15 +44,15 @@ export const stripMarkdown = (markdown: string): string => {
 
 export const splitMarkdown = (
 	markdown: string,
-): { title?: string; description?: string } => {
+): { title?: string; body?: string } => {
 	const stripped = stripMarkdown(markdown)
 	const lines = stripped.split('\n')
 	const title = lines[0]?.trim() || undefined
-	const description =
+	const body =
 		lines
 			.slice(1)
 			.map((line) => line.trim())
 			.join('\n') || undefined
 
-	return { title, description }
+	return { title, body }
 }

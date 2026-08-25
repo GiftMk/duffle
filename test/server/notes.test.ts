@@ -121,7 +121,7 @@ describe('updateNoteQuery', () => {
 
 		const result = await updateNoteQuery(db, user.id, {
 			id: note.id,
-			title: 'Updated title',
+			markdown: '# Updated title',
 		})
 
 		expect(result?.title).toBe('Updated title')
@@ -139,7 +139,7 @@ describe('updateNoteQuery', () => {
 
 		const result = await updateNoteQuery(db, userA.id, {
 			id: note.id,
-			title: 'Updated title',
+			markdown: '# Updated title',
 		})
 
 		expect(result).toBeUndefined()

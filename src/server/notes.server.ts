@@ -2,6 +2,7 @@ import { and, desc, eq, sql } from 'drizzle-orm'
 import type { Database } from '@/db'
 import { notesTable } from '@/db/schema.notes'
 import type { NoteEntity } from '@/lib/schemas'
+import { splitMarkdown, utcNow } from '@/lib/utils'
 
 const noteProjection = () => ({
 	id: notesTable.id,
@@ -11,6 +12,20 @@ const noteProjection = () => ({
 	createdAt: notesTable.createdAt,
 	updatedAt: notesTable.updatedAt,
 })
+
+export const getNoteQuery = async (
+	db: Database,
+	userId: string,
+	noteId: string,
+) => {
+	const [note] = await db
+		.select(noteProjection())
+		.from(notesTable)
+		.where(and(eq(notesTable.userId, userId), eq(notesTable.id, noteId)))
+		.orderBy(desc(notesTable.updatedAt))
+
+	return note
+}
 
 export const getNotesQuery = async (db: Database, userId: string) => {
 	return await db
@@ -23,11 +38,12 @@ export const getNotesQuery = async (db: Database, userId: string) => {
 export const createNoteQuery = async (
 	db: Database,
 	userId: string,
-	note: NoteEntity,
+	note: Omit<NoteEntity, 'updatedAt' | 'createdAt'>,
 ) => {
+	const now = utcNow()
 	const [row] = await db
 		.insert(notesTable)
-		.values({ userId, ...note })
+		.values({ userId, ...note, updatedAt: now, createdAt: now })
 		.returning()
 
 	return row
@@ -36,11 +52,12 @@ export const createNoteQuery = async (
 export const updateNoteQuery = async (
 	db: Database,
 	userId: string,
-	note: Partial<NoteEntity> & Pick<NoteEntity, 'id'>,
+	note: Pick<NoteEntity, 'id' | 'markdown'>,
 ) => {
+	const { title, body } = splitMarkdown(note.markdown)
 	const [row] = await db
 		.update(notesTable)
-		.set(note)
+		.set({ ...note, updatedAt: utcNow(), title: title ?? '', body: body ?? '' })
 		.where(and(eq(notesTable.userId, userId), eq(notesTable.id, note.id)))
 		.returning()
 

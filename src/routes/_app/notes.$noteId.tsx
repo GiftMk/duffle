@@ -1,11 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { MarkdownEditor } from '@/components/editor'
 import { NoteNotFound } from '@/components/note-not-found'
-import { notesQuery, useNote, useUpdateNote } from '@/hooks/notes'
+import { noteQuery, useNote, useUpdateNote } from '@/hooks/notes'
 
 export const Route = createFileRoute('/_app/notes/$noteId')({
 	component: RouteComponent,
-	loader: ({ context }) => context.queryClient.ensureQueryData(notesQuery),
+	loader: ({ context, params }) =>
+		context.queryClient.ensureQueryData(noteQuery(params.noteId)),
 })
 
 function RouteComponent() {
@@ -21,7 +22,7 @@ function RouteComponent() {
 		<MarkdownEditor
 			key={note.id}
 			defaultValue={note.markdown}
-			onChange={(markdown) => updateNote(note.id, markdown)}
+			onChange={(markdown) => updateNote({ id: note.id, markdown })}
 		/>
 	)
 }

@@ -7,10 +7,22 @@ import { ensureCurrentUser } from '@/server/session.server'
 import {
 	createNoteQuery,
 	deleteNoteQuery,
+	getNoteQuery,
 	getNotesQuery,
 	searchQuery,
 	updateNoteQuery,
 } from './notes.server'
+
+export const getNoteFn = createServerFn({ method: 'GET' })
+	.middleware([withDb])
+	.validator(noteSchema.pick({ id: true }))
+	.handler(async ({ data, context }) => {
+		const user = await ensureCurrentUser()
+		const note = await getNoteQuery(context.db, user.id, data.id)
+
+		if (!note) return undefined
+		return withIsoTimestamps(note)
+	})
 
 export const getNotesFn = createServerFn({ method: 'GET' })
 	.middleware([withDb])
@@ -22,7 +34,7 @@ export const getNotesFn = createServerFn({ method: 'GET' })
 
 export const createNoteFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
-	.validator(noteSchema)
+	.validator(noteSchema.omit({ updatedAt: true, createdAt: true }))
 	.handler(async ({ data, context }) => {
 		const user = await ensureCurrentUser()
 		return await createNoteQuery(context.db, user.id, data)
@@ -30,7 +42,7 @@ export const createNoteFn = createServerFn({ method: 'POST' })
 
 export const updateNoteFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
-	.validator(noteSchema)
+	.validator(noteSchema.pick({ id: true, markdown: true }))
 	.handler(async ({ data, context }) => {
 		const user = await ensureCurrentUser()
 		return await updateNoteQuery(context.db, user.id, data)

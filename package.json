@@ -51,6 +51,7 @@
 		"codemirror": "^6.0.2",
 		"comlink": "^4.4.2",
 		"drizzle-orm": "^1.0.0-rc.4",
+		"es-toolkit": "^1.51.0",
 		"framer-motion": "^12.38.0",
 		"minisearch": "^7.2.0",
 		"pg": "^8.22.0",

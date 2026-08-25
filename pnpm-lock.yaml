@@ -101,6 +101,9 @@ importers:
       drizzle-orm:
         specifier: ^1.0.0-rc.4
         version: 1.0.0-rc.4-de6c356(@electric-sql/pglite@0.5.4)(@types/pg@8.20.4)(pg@8.22.0)(zod@4.4.3)
+      es-toolkit:
+        specifier: ^1.51.0
+        version: 1.51.0
       framer-motion:
         specifier: ^12.38.0
         version: 12.43.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
