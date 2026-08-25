@@ -6,8 +6,8 @@ You don't organize files and folders, you simply write and search when needed.
 
 ![Duffle screenshot](duffle-screenshot.png)
 
-Sign in with GitHub, and write. We support GitHub flavoured markdown in what I
-baisedly think is quite a tasty editing experience.
+No account needed to get writing.
+We support GitHub flavoured markdown in what I baisedly think is quite a tasty editing experience.
 
 Enjoy!
 
@@ -29,12 +29,12 @@ src/
 You'll need a `.env` with:
 
 ```
-DATABASE_URL=      # optional locally — dev falls through to an in-memory PGlite DB
+DATABASE_URL=      # optional - dev falls back to an in-memory DB
 BETTER_AUTH_SECRET=
 BETTER_AUTH_URL=
 GITHUB_CLIENT_ID=
 GITHUB_CLIENT_SECRET=
-OPENAI_API_KEY=     # optional — omit to disable the AI chat feature
+OPENAI_API_KEY=     # optional
 ```
 
 Run `pnpm i` and then `pnpm dev` to start the app on `localhost:3001`.
