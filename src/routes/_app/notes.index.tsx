@@ -3,12 +3,11 @@ import { useState } from 'react'
 import { uuidv7 } from 'uuidv7'
 import { AddNoteCard } from '@/components/notes/add-note-card'
 import { NoteCard } from '@/components/notes/note-card'
-import { useNewNote, useNotes } from '@/hooks/notes'
-import { notesCollection } from '@/lib/collections'
+import { notesQuery, useNewNote, useNotes } from '@/hooks/notes'
 
 export const Route = createFileRoute('/_app/notes/')({
 	component: RouteComponent,
-	loader: () => notesCollection.preload(),
+	loader: ({ context }) => context.queryClient.ensureQueryData(notesQuery),
 })
 
 function RouteComponent() {

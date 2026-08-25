@@ -1,21 +1,38 @@
 import {
-	debounceStrategy,
-	useLiveQuery,
-	usePacedMutations,
-} from '@tanstack/react-db'
+	type QueryClient,
+	queryOptions,
+	useMutation,
+	useQuery,
+	useQueryClient,
+} from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { notesCollection } from '@/lib/collections'
-import type { NoteEntity } from '@/lib/schemas'
+import { useRef } from 'react'
+import { removeItem, upsertItem } from '@/lib/query-list'
+import { type NoteEntity, noteSchema } from '@/lib/schemas'
 import { splitMarkdown, utcNow } from '@/lib/utils'
-import { updateNoteFn } from '@/server/notes.functions'
+import {
+	createNoteFn,
+	deleteNoteFn,
+	getNotesFn,
+	updateNoteFn,
+} from '@/server/notes.functions'
+
+const UPDATE_DEBOUNCE_MS = 250
+
+export const notesQuery = queryOptions({
+	queryKey: ['notes'],
+	queryFn: async () => noteSchema.array().parse(await getNotesFn()),
+	staleTime: Number.POSITIVE_INFINITY,
+})
+
+const readNotes = (queryClient: QueryClient) =>
+	queryClient.getQueryData<NoteEntity[]>(notesQuery.queryKey)
 
 export const useNotes = () => {
-	const { data } = useLiveQuery((q) =>
-		q
-			.from({ note: notesCollection })
-			.orderBy(({ note }) => note.updatedAt, 'desc'),
+	const { data } = useQuery(notesQuery)
+	return [...(data ?? [])].sort((a, b) =>
+		b.updatedAt.localeCompare(a.updatedAt),
 	)
-	return data
 }
 
 export const useNote = (id: string) => {
@@ -25,6 +42,25 @@ export const useNote = (id: string) => {
 
 export const useNewNote = (id: string) => {
 	const navigate = useNavigate()
+	const queryClient = useQueryClient()
+
+	const { mutate } = useMutation({
+		mutationFn: (note: NoteEntity) => createNoteFn({ data: note }),
+		onMutate: async (note) => {
+			await queryClient.cancelQueries({ queryKey: notesQuery.queryKey })
+			const previous = readNotes(queryClient)
+			queryClient.setQueryData<NoteEntity[]>(notesQuery.queryKey, (old) =>
+				upsertItem(old, note),
+			)
+			return { previous }
+		},
+		onError: (_error, _note, context) => {
+			queryClient.setQueryData(notesQuery.queryKey, context?.previous)
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: notesQuery.queryKey })
+		},
+	})
 
 	const create = () => {
 		const timestamp = utcNow()
@@ -38,7 +74,7 @@ export const useNewNote = (id: string) => {
 			updatedAt: timestamp,
 		}
 
-		notesCollection.insert(note)
+		mutate(note)
 
 		return note
 	}
@@ -50,40 +86,85 @@ export const useNewNote = (id: string) => {
 	return { create, open }
 }
 
-type UpdateNoteVariables = { id: string; markdown: string }
-
 export const useUpdateNote = () => {
-	const mutate = usePacedMutations<UpdateNoteVariables, NoteEntity>({
-		onMutate: ({ id, markdown }) => {
-			const note = notesCollection.get(id)
-			if (!note) throw new Error(`Note with id '${id}' not found`)
+	const queryClient = useQueryClient()
+	const previousRef = useRef<NoteEntity[] | undefined>(undefined)
+	const pendingRef = useRef(new Map<string, NoteEntity>())
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+		undefined,
+	)
 
-			const { title, description: body } = splitMarkdown(markdown)
-
-			notesCollection.update(id, (draft) => {
-				draft.markdown = markdown
-				draft.title = title ?? ''
-				draft.body = body ?? ''
-				draft.updatedAt = utcNow()
-			})
+	const { mutate } = useMutation({
+		mutationFn: async (notes: NoteEntity[]) => {
+			await Promise.all(notes.map((note) => updateNoteFn({ data: note })))
 		},
-		mutationFn: async ({ transaction }) => {
-			await Promise.all(
-				transaction.mutations.map((m) => updateNoteFn({ data: m.modified })),
-			)
-			await notesCollection.utils.refetch()
+		onError: () => {
+			queryClient.setQueryData(notesQuery.queryKey, previousRef.current)
 		},
-		strategy: debounceStrategy({ wait: 250 }),
+		onSettled: () => {
+			previousRef.current = undefined
+			queryClient.invalidateQueries({ queryKey: notesQuery.queryKey })
+		},
 	})
 
-	return (id: string, markdown: string) => mutate({ id, markdown })
+	const flush = () => {
+		const pending = [...pendingRef.current.values()]
+		pendingRef.current.clear()
+		if (pending.length > 0) mutate(pending)
+	}
+
+	return (id: string, markdown: string) => {
+		const notes = readNotes(queryClient) ?? []
+		const note = notes.find((existing) => existing.id === id)
+		if (!note) throw new Error(`Note with id '${id}' not found`)
+
+		previousRef.current ??= notes
+
+		const { title, description: body } = splitMarkdown(markdown)
+		const updated: NoteEntity = {
+			...note,
+			markdown,
+			title: title ?? '',
+			body: body ?? '',
+			updatedAt: utcNow(),
+		}
+
+		queryClient.setQueryData<NoteEntity[]>(notesQuery.queryKey, (old) =>
+			upsertItem(old, updated),
+		)
+		pendingRef.current.set(id, updated)
+
+		clearTimeout(timeoutRef.current)
+		timeoutRef.current = setTimeout(flush, UPDATE_DEBOUNCE_MS)
+	}
 }
 
 export const useDeleteNote = () => {
-	return (id: string) => {
-		const note = notesCollection.get(id)
-		if (!note) throw new Error(`Note with id '${id}' not found`)
+	const queryClient = useQueryClient()
 
-		notesCollection.delete(id)
+	const { mutate } = useMutation({
+		mutationFn: (id: string) => deleteNoteFn({ data: { id } }),
+		onMutate: async (id) => {
+			await queryClient.cancelQueries({ queryKey: notesQuery.queryKey })
+			const previous = readNotes(queryClient)
+			queryClient.setQueryData<NoteEntity[]>(notesQuery.queryKey, (old) =>
+				removeItem(old, id),
+			)
+			return { previous }
+		},
+		onError: (_error, _id, context) => {
+			queryClient.setQueryData(notesQuery.queryKey, context?.previous)
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: notesQuery.queryKey })
+		},
+	})
+
+	return (id: string) => {
+		const notes = readNotes(queryClient) ?? []
+		if (!notes.some((note) => note.id === id)) {
+			throw new Error(`Note with id '${id}' not found`)
+		}
+		mutate(id)
 	}
 }
