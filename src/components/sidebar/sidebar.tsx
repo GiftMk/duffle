@@ -1,7 +1,6 @@
 import { useRef } from 'react'
 import { useRoughSvg } from '@/hooks/use-rough-svg'
 import { AccountButton } from './account-button'
-import { ChatButton } from './chat-button'
 import { HomeButton } from './home-button'
 import { NotesButton } from './notes-button'
 import { SearchButton } from './search-button'
@@ -32,7 +31,6 @@ export const Sidebar = () => {
 				<HomeButton />
 				<SearchButton />
 				<NotesButton />
-				<ChatButton />
 				<ThemeToggle />
 				<AccountButton />
 			</section>
