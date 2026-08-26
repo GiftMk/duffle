@@ -11,7 +11,7 @@ const SKELETON_ROW_COUNT = 2
 
 const getEmptyMessage = (state: SearchState): string | null => {
 	if (state === 'empty') return 'No results found.'
-	if (state === 'recent') return 'No notes yet. Start writing to see them here.'
+	if (state === 'recent') return `ᕙ( •̀ ᗜ •́ )ᕗ ready, set, go!`
 	return null
 }
 

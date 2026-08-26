@@ -60,7 +60,7 @@ export const SearchDialog = ({
 					itemToStringValue={noteToStringValue}
 					autoHighlight
 				>
-					<header className='flex shrink-0 items-center gap-3 border-surface-400 border-b px-8 py-5'>
+					<header className='flex shrink-0 items-center gap-3 border-surface-400 border-b px-8 py-4'>
 						<MagnifyingGlassIcon
 							size={ICON_SIZE_MD}
 							className='shrink-0 text-surface-800'
@@ -68,7 +68,7 @@ export const SearchDialog = ({
 						<Autocomplete.Input
 							autoFocus
 							placeholder='Search notes...'
-							className='w-full bg-transparent text-lg focus:outline-none'
+							className='w-full focus:outline-none'
 						/>
 						{isRefreshing && (
 							<SpinnerGapIcon
