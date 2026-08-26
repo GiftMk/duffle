@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx'
 import { remark } from 'remark'
 import strip from 'strip-markdown'
 import { twMerge } from 'tailwind-merge'
+import { uuidv7 } from 'uuidv7'
 
 export const cn = (...inputs: ClassValue[]) => {
 	return twMerge(clsx(inputs))
@@ -56,3 +57,10 @@ export const splitMarkdown = (
 
 	return { title, body }
 }
+
+export const emptyNote = () => ({
+	id: uuidv7(),
+	title: '',
+	body: '',
+	markdown: '# ',
+})

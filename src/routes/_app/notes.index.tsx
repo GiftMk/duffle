@@ -1,20 +1,23 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { AddNoteCard } from '@/components/notes/add-note-card'
 import { NoteCard } from '@/components/notes/note-card'
-import { notesQuery, useNewNote, useNotes } from '@/hooks/notes'
+import { emptyNote } from '@/lib/utils'
+import { createNoteFn, getNotesFn } from '@/server/notes.functions'
 
 export const Route = createFileRoute('/_app/notes/')({
 	component: RouteComponent,
-	loader: ({ context }) => context.queryClient.ensureQueryData(notesQuery),
+	loader: async () => getNotesFn(),
 })
 
 function RouteComponent() {
-	const notes = useNotes()
-	const newNote = useNewNote()
+	const notes = Route.useLoaderData()
+	const navigate = useNavigate()
 
-	const handleAddNote = () => {
-		newNote.create()
-		newNote.open()
+	const handleAddNote = async () => {
+		const note = await createNoteFn({ data: emptyNote() })
+		if (note) {
+			navigate({ to: '/notes/$noteId', params: { noteId: note.id } })
+		}
 	}
 
 	return (

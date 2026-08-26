@@ -1,3 +1,4 @@
+import { getRequestHeaders } from '@tanstack/react-start/server'
 import { getDb } from '@/db'
 import { createAuth } from '@/db/auth'
 import { env } from '@/env'
@@ -13,3 +14,17 @@ export const auth = createAuth({
 	crossSubDomainCookieDomain:
 		env.NODE_ENV === 'production' ? '.duffle.dev' : undefined,
 })
+
+export const getCurrentUser = async () => {
+	const session = await auth.api.getSession({ headers: getRequestHeaders() })
+
+	if (session?.user) {
+		return session.user
+	}
+
+	const { user } = await auth.api.signInAnonymous({
+		headers: getRequestHeaders(),
+	})
+
+	return user
+}

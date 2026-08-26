@@ -4,10 +4,12 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useRef } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { FadeIn, SpringPopIn } from '@/components/animations'
+import { emptyNote } from '@/lib/utils'
+import { createNoteFn, getLatestNoteFn } from '@/server/notes.functions'
 
 export const Route = createFileRoute('/')({
-	ssr: true,
 	component: RouteComponent,
+	loader: async () => getLatestNoteFn(),
 })
 
 const Heading = () => (
@@ -25,11 +27,23 @@ const SubHeading = () => (
 )
 
 function RouteComponent() {
+	const latestNote = Route.useLoaderData()
 	const navigate = useNavigate()
 	const actionButtonRef = useRef<HTMLButtonElement>(null)
 
-	const handleClick = () => {
-		navigate({ to: '/notes' })
+	const handleClick = async () => {
+		let id: string | undefined
+
+		if (latestNote) {
+			id = latestNote.id
+		} else {
+			const note = await createNoteFn({ data: emptyNote() })
+			id = note?.id
+		}
+
+		if (id) {
+			navigate({ to: '/notes/$noteId', params: { noteId: id } })
+		}
 	}
 
 	useHotkey('Enter', () => {

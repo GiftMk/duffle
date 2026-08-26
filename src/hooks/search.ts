@@ -1,12 +1,7 @@
-import type { Autocomplete } from '@base-ui/react'
-import { useHotkey } from '@tanstack/react-hotkeys'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
 import type { RefObject } from 'react'
 import { useState } from 'react'
-import { useNotes } from '@/hooks/notes'
 import { useDimensions } from '@/hooks/use-dimensions'
-import { RECENT_RESULTS_LIMIT, SEARCH_RESULTS_LIMIT } from '@/lib/constants'
 import type { NoteEntity } from '@/lib/schemas'
 import { clamp } from '@/lib/utils'
 import { searchFn } from '@/server/notes.functions'
@@ -39,6 +34,8 @@ type UseSearchResult = {
 	isRefreshing: boolean
 	clear: () => void
 }
+
+const SEARCH_RESULTS_LIMIT = 24
 
 export const useSearch = (): UseSearchResult => {
 	const [query, setQuery] = useState('')
@@ -73,80 +70,6 @@ export const useSearch = (): UseSearchResult => {
 		state,
 		isRefreshing: state === 'results' && isSearching,
 		clear,
-	}
-}
-
-export const useRecentSearchResults = (
-	limit: number = RECENT_RESULTS_LIMIT,
-): NoteEntity[] => {
-	const notes = useNotes()
-	return takeMostRecent(notes, limit)
-}
-
-const takeMostRecent = (notes: NoteEntity[], limit: number): NoteEntity[] => {
-	return [...notes]
-		.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
-		.slice(0, limit)
-}
-
-type UseSearchDialogResult = {
-	open: boolean
-	setOpen: (open: boolean) => void
-	close: () => void
-	query: string
-	handleValueChange: (
-		value: string,
-		details: Autocomplete.Root.ChangeEventDetails,
-	) => void
-	items: NoteEntity[]
-	state: SearchState
-	isRefreshing: boolean
-	selectNote: (note: NoteEntity) => void
-}
-
-export const useSearchDialog = (): UseSearchDialogResult => {
-	const [open, setOpenState] = useState(false)
-	const navigate = useNavigate()
-
-	const { query, setQuery, results, state, isRefreshing, clear } = useSearch()
-	const recentResults = useRecentSearchResults()
-
-	const items = query.length > 0 ? results : recentResults
-
-	const setOpen = (nextOpen: boolean) => {
-		setOpenState(nextOpen)
-		if (!nextOpen) clear()
-	}
-
-	const close = () => setOpen(false)
-
-	const handleValueChange = (
-		value: string,
-		details: Autocomplete.Root.ChangeEventDetails,
-	) => {
-		if (details.reason === 'item-press') return
-		setQuery(value)
-	}
-
-	const selectNote = (note: NoteEntity) => {
-		close()
-		navigate({ to: '/notes/$noteId', params: { noteId: note.id } })
-	}
-
-	useHotkey('Mod+K', () => {
-		setOpen(true)
-	})
-
-	return {
-		open,
-		setOpen,
-		close,
-		query,
-		handleValueChange,
-		items,
-		state,
-		isRefreshing,
-		selectNote,
 	}
 }
 

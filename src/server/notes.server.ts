@@ -1,4 +1,4 @@
-import { and, desc, eq, sql } from 'drizzle-orm'
+import { and, asc, desc, eq, sql } from 'drizzle-orm'
 import type { Database } from '@/db'
 import { notesTable } from '@/db/schema.notes'
 import type { NoteEntity } from '@/lib/schemas'
@@ -27,12 +27,23 @@ export const getNoteQuery = async (
 	return note
 }
 
-export const getNotesQuery = async (db: Database, userId: string) => {
-	return await db
+export const getNotesQuery = async (
+	db: Database,
+	userId: string,
+	limit?: number,
+) => {
+	let query = db
 		.select(noteProjection())
 		.from(notesTable)
 		.where(eq(notesTable.userId, userId))
-		.orderBy(desc(notesTable.updatedAt))
+		.orderBy(desc(notesTable.updatedAt), asc(notesTable.title))
+		.$dynamic()
+
+	if (limit) {
+		query = query.limit(limit)
+	}
+
+	return query
 }
 
 export const createNoteQuery = async (

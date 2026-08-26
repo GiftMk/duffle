@@ -1,20 +1,23 @@
 import { PencilSimpleLineIcon } from '@phosphor-icons/react'
+import { useNavigate } from '@tanstack/react-router'
 import { SidebarButton } from '@/components/sidebar/sidebar-button'
 import { Tooltip } from '@/components/tooltip'
-import { useNewNote } from '@/hooks/notes'
 import { ICON_SIZE_MD } from '@/lib/constants'
-import { cn } from '@/lib/utils'
+import { cn, emptyNote } from '@/lib/utils'
+import { createNoteFn } from '@/server/notes.functions'
 
 type NewNoteButtonProps = {
 	disabled?: boolean
 }
 
 export const NewNoteButton = ({ disabled }: NewNoteButtonProps) => {
-	const newNote = useNewNote()
+	const navigate = useNavigate()
 
-	const handleClick = () => {
-		newNote.create()
-		newNote.open()
+	const handleClick = async () => {
+		const note = await createNoteFn({ data: emptyNote() })
+		if (note) {
+			navigate({ to: '/notes/$noteId', params: { noteId: note.id } })
+		}
 	}
 
 	return (

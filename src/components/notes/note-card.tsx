@@ -1,5 +1,5 @@
 import { TrashIcon } from '@phosphor-icons/react'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 import {
 	AlertDialogAction,
@@ -13,10 +13,11 @@ import {
 } from '@/components/alert-dialog'
 import { IconButton } from '@/components/icon-button'
 import { NoteCardContainer } from '@/components/notes/note-card-container'
-import { useDeleteNote } from '@/hooks/notes'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import type { NoteEntity } from '@/lib/schemas'
 import { cn, onNextTick } from '@/lib/utils'
+import { Route } from '@/routes/_app/notes.index'
+import { deleteNoteFn } from '@/server/notes.functions'
 
 type NoteCardProps = {
 	note: NoteEntity
@@ -77,9 +78,12 @@ type DeleteNoteDialogProps = {
 }
 
 const DeleteNoteDialog = ({ note, onOpenChange }: DeleteNoteDialogProps) => {
-	const deleteNote = useDeleteNote()
+	const router = useRouter()
 
-	const handleDelete = () => deleteNote(note.id)
+	const handleDelete = async () => {
+		await deleteNoteFn({ data: { id: note.id } })
+		await router.invalidate({ filter: (match) => match.routeId === Route.id })
+	}
 
 	return (
 		<AlertDialogRoot onOpenChange={onOpenChange}>

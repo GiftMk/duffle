@@ -8,7 +8,7 @@ import '@/index.css'
 import { LoadingPage } from '@/components/loading-page'
 import { ThemeProvider } from '@/components/sidebar/theme-provider'
 import { TooltipProvider } from '@/components/tooltip'
-import { ensureCurrentUserFn } from '@/server/session.functions'
+import { getCurrentUserFn } from '@/server/auth.functions'
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 	{
@@ -18,7 +18,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 				return { user: null }
 			}
 
-			return { user: await ensureCurrentUserFn() }
+			return { user: await getCurrentUserFn() }
 		},
 		pendingComponent: LoadingPage,
 		shellComponent: RootDocument,
