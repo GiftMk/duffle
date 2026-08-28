@@ -8,6 +8,7 @@ import { uuidv7 } from 'uuidv7'
 import { FadeIn, SpringPopIn } from '@/components/animations'
 import { GETTING_STARTED_MARKDOWN } from '@/lib/constants'
 import { noteQueryOptions } from '@/lib/queries/note'
+import { Route as NotesIndexRoute } from '@/routes/_app/notes.index'
 import { createNoteFn, getLatestNoteFn } from '@/server/notes.functions'
 
 export const Route = createFileRoute('/')({
@@ -47,7 +48,10 @@ function RouteComponent() {
 			})
 			if (note) {
 				queryClient.setQueryData(noteQueryOptions(note.id).queryKey, note)
-				router.invalidate()
+				router.invalidate({
+					filter: (match) =>
+						match.routeId === NotesIndexRoute.id || match.routeId === Route.id,
+				})
 			}
 			id = note?.id
 		}

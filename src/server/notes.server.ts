@@ -13,6 +13,14 @@ const noteProjection = () => ({
 	updatedAt: notesTable.updatedAt,
 })
 
+// Excludes `markdown`/`body`, which list and search views never render.
+const noteSummaryProjection = () => ({
+	id: notesTable.id,
+	title: notesTable.title,
+	createdAt: notesTable.createdAt,
+	updatedAt: notesTable.updatedAt,
+})
+
 export const getNoteQuery = async (
 	db: Database,
 	userId: string,
@@ -33,7 +41,7 @@ export const getNotesQuery = async (
 	limit?: number,
 ) => {
 	let query = db
-		.select(noteProjection())
+		.select(noteSummaryProjection())
 		.from(notesTable)
 		.where(eq(notesTable.userId, userId))
 		.orderBy(desc(notesTable.updatedAt), asc(notesTable.title))
@@ -168,7 +176,7 @@ export const searchQuery = async (
 
 	return await db
 		.with(titleMatches, bodyMatches, fused)
-		.select(noteProjection())
+		.select(noteSummaryProjection())
 		.from(fused)
 		.innerJoin(notesTable, eq(notesTable.id, fused.id))
 		.orderBy(desc(fused.score), desc(notesTable.updatedAt))

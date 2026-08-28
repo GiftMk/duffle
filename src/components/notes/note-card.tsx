@@ -14,13 +14,13 @@ import {
 import { IconButton } from '@/components/icon-button'
 import { NoteCardContainer } from '@/components/notes/note-card-container'
 import { ICON_SIZE_MD } from '@/lib/constants'
-import type { NoteEntity } from '@/lib/schemas'
+import type { NoteSummary } from '@/lib/schemas'
 import { cn, onNextTick } from '@/lib/utils'
 import { Route } from '@/routes/_app/notes.index'
 import { deleteNoteFn } from '@/server/notes.functions'
 
 type NoteCardProps = {
-	note: NoteEntity
+	note: NoteSummary
 }
 
 export const NoteCard = ({ note }: NoteCardProps) => {
@@ -79,7 +79,7 @@ export const NoteCard = ({ note }: NoteCardProps) => {
 }
 
 type DeleteNoteDialogProps = {
-	note: NoteEntity
+	note: NoteSummary
 	onOpenChange?: (open: boolean) => void
 }
 

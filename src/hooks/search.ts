@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import type { NoteEntity } from '@/lib/schemas'
+import type { NoteSummary } from '@/lib/schemas'
 import { searchFn } from '@/server/notes.functions'
 import { useDebounce } from './use-debounce'
 
@@ -26,7 +26,7 @@ export const getSearchState = ({
 type UseSearchResult = {
 	query: string
 	setQuery: (query: string) => void
-	results: NoteEntity[]
+	results: NoteSummary[]
 	state: SearchState
 	isRefreshing: boolean
 	clear: () => void
