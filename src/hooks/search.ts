@@ -1,9 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import type { RefObject } from 'react'
 import { useState } from 'react'
-import { useDimensions } from '@/hooks/use-dimensions'
 import type { NoteEntity } from '@/lib/schemas'
-import { clamp } from '@/lib/utils'
 import { searchFn } from '@/server/notes.functions'
 import { useDebounce } from './use-debounce'
 
@@ -71,27 +68,4 @@ export const useSearch = (): UseSearchResult => {
 		isRefreshing: state === 'results' && isSearching,
 		clear,
 	}
-}
-
-type GridColumnsOptions = {
-	minCardWidth: number
-	gap: number
-	maxColumns: number
-}
-
-export const computeGridColumns = (
-	width: number,
-	{ minCardWidth, gap, maxColumns }: GridColumnsOptions,
-): number => {
-	if (width <= 0) return 1
-	const columns = Math.floor((width + gap) / (minCardWidth + gap))
-	return clamp(columns, 1, maxColumns)
-}
-
-export const useGridColumns = (
-	ref: RefObject<Element | null>,
-	options: GridColumnsOptions,
-): number => {
-	const { width } = useDimensions(ref)
-	return computeGridColumns(width, options)
 }

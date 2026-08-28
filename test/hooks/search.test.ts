@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
-import { computeGridColumns, getSearchState } from '@/hooks/search'
+import { getSearchState } from '@/hooks/search'
 
-// getSearchState/computeGridColumns share a module with useSearch, which
-// imports server functions that eagerly connect to a database at import
-// time outside of the app's dev server. Stub them out so this file can
-// test the pure helpers without a real database.
+// getSearchState shares a module with useSearch, which imports server
+// functions that eagerly connect to a database at import time outside of
+// the app's dev server. Stub them out so this file can test the pure
+// helper without a real database.
 vi.mock('@/server/notes.functions', () => ({
 	searchFn: vi.fn(),
 	updateNoteFn: vi.fn(),
@@ -59,26 +59,5 @@ describe('getSearchState', () => {
 		})
 
 		expect(state).toBe('empty')
-	})
-})
-
-const OPTIONS = { minCardWidth: 260, gap: 24, maxColumns: 5 }
-
-describe('computeGridColumns', () => {
-	it('returns 1 column while the width has not been measured yet', () => {
-		expect(computeGridColumns(0, OPTIONS)).toBe(1)
-	})
-
-	it('fits as many columns as the width allows', () => {
-		// 3 cards + 2 gaps = 3 * 260 + 2 * 24 = 828
-		expect(computeGridColumns(828, OPTIONS)).toBe(3)
-	})
-
-	it('never exceeds maxColumns even when the width is huge', () => {
-		expect(computeGridColumns(10_000, OPTIONS)).toBe(5)
-	})
-
-	it('never goes below 1 column even when the width is tiny', () => {
-		expect(computeGridColumns(50, OPTIONS)).toBe(1)
 	})
 })

@@ -3,7 +3,6 @@ import { useRoughSvg } from '@/hooks/use-rough-svg'
 import { AccountButton } from './account-button'
 import { HomeButton } from './home-button'
 import { NotesButton } from './notes-button'
-import { SearchButton } from './search-button'
 import { ThemeToggle } from './theme-toggle'
 
 export const Sidebar = () => {
@@ -29,7 +28,6 @@ export const Sidebar = () => {
 			/>
 			<section className='relative flex flex-col items-center gap-4'>
 				<HomeButton />
-				<SearchButton />
 				<NotesButton />
 				<ThemeToggle />
 				<AccountButton />
