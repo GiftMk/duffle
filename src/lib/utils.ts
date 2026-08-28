@@ -60,7 +60,5 @@ export const splitMarkdown = (
 
 export const emptyNote = () => ({
 	id: uuidv7(),
-	title: '',
-	body: '',
 	markdown: '# ',
 })

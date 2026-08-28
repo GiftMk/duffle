@@ -42,7 +42,7 @@ export const getLatestNoteFn = createServerFn({ method: 'GET' })
 
 export const createNoteFn = createServerFn({ method: 'POST' })
 	.middleware([withDb])
-	.validator(noteSchema.omit({ updatedAt: true, createdAt: true }))
+	.validator(noteSchema.pick({ id: true, markdown: true }))
 	.handler(async ({ data, context }) => {
 		const user = await getCurrentUser()
 		return await createNoteQuery(context.db, user.id, data)

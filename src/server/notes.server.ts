@@ -49,12 +49,20 @@ export const getNotesQuery = async (
 export const createNoteQuery = async (
 	db: Database,
 	userId: string,
-	note: Omit<NoteEntity, 'updatedAt' | 'createdAt'>,
+	note: Pick<NoteEntity, 'id' | 'markdown'>,
 ) => {
+	const { title, body } = splitMarkdown(note.markdown)
 	const now = utcNow()
 	const [row] = await db
 		.insert(notesTable)
-		.values({ userId, ...note, updatedAt: now, createdAt: now })
+		.values({
+			userId,
+			...note,
+			title: title ?? '',
+			body: body ?? '',
+			updatedAt: now,
+			createdAt: now,
+		})
 		.returning()
 
 	return row
