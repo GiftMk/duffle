@@ -1,18 +1,22 @@
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { debounce } from 'es-toolkit'
 import { MarkdownEditor } from '@/components/editor'
 import { NoteNotFound } from '@/components/note-not-found'
-import { getNoteFn, updateNoteFn } from '@/server/notes.functions'
+import { noteQueryOptions } from '@/lib/queries/note'
+import { updateNoteFn } from '@/server/notes.functions'
 
 export const Route = createFileRoute('/_app/notes/$noteId')({
 	component: RouteComponent,
-	loader: ({ params }) => getNoteFn({ data: { id: params.noteId } }),
+	loader: ({ params, context }) =>
+		context.queryClient.ensureQueryData(noteQueryOptions(params.noteId)),
 })
 
 const updateNote = debounce(updateNoteFn, 250)
 
 function RouteComponent() {
-	const note = Route.useLoaderData()
+	const { noteId } = Route.useParams()
+	const { data: note } = useSuspenseQuery(noteQueryOptions(noteId))
 
 	if (!note) {
 		return <NoteNotFound />

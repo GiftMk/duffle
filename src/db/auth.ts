@@ -33,6 +33,12 @@ export const createAuth = ({
 		}),
 		baseURL,
 		secret,
+		session: {
+			cookieCache: {
+				enabled: true,
+				maxAge: 5 * 60,
+			},
+		},
 		socialProviders: {
 			github: {
 				clientId: githubClientId,

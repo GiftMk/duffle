@@ -1,8 +1,10 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useQueryClient } from '@tanstack/react-query'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { AddNoteCard } from '@/components/notes/add-note-card'
 import { NoteCard } from '@/components/notes/note-card'
 import { NotesSearchInput } from '@/components/notes/notes-search-input'
 import { useSearch } from '@/hooks/search'
+import { noteQueryOptions } from '@/lib/queries/note'
 import { emptyNote } from '@/lib/utils'
 import { createNoteFn, getNotesFn } from '@/server/notes.functions'
 
@@ -14,11 +16,15 @@ export const Route = createFileRoute('/_app/notes/')({
 function RouteComponent() {
 	const notes = Route.useLoaderData()
 	const navigate = useNavigate()
+	const router = useRouter()
+	const queryClient = useQueryClient()
 	const { query, setQuery, results, state, isRefreshing } = useSearch()
 
 	const handleAddNote = async () => {
 		const note = await createNoteFn({ data: emptyNote() })
 		if (note) {
+			queryClient.setQueryData(noteQueryOptions(note.id).queryKey, note)
+			router.invalidate()
 			navigate({ to: '/notes/$noteId', params: { noteId: note.id } })
 		}
 	}

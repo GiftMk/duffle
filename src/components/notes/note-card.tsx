@@ -25,11 +25,16 @@ type NoteCardProps = {
 
 export const NoteCard = ({ note }: NoteCardProps) => {
 	const navigate = useNavigate()
+	const router = useRouter()
 	const [canNavigate, setCanNavigate] = useState(true)
 
 	const handleClick = () => {
 		if (!canNavigate) return
 		navigate({ to: '/notes/$noteId', params: { noteId: note.id } })
+	}
+
+	const handlePointerEnter = () => {
+		router.preloadRoute({ to: '/notes/$noteId', params: { noteId: note.id } })
 	}
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -52,6 +57,7 @@ export const NoteCard = ({ note }: NoteCardProps) => {
 			tabIndex={0}
 			onClick={handleClick}
 			onKeyDown={handleKeyDown}
+			onPointerEnter={handlePointerEnter}
 			className='group relative bg-surface-50 px-4 text-sm text-typography-950'
 		>
 			<div
