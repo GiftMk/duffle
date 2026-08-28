@@ -62,9 +62,7 @@ div[data-milkdown-root="true"] {
 		color: var(--color-typography-950);
 		caret-color: var(--color-primary-500);
 
-		/* Same specificity as caret-color above, so without the extra
-		   .ProseMirror qualifier this can lose the cascade and double up
-		   with .fake-cursor depending on CSS import order. */
+		/* Ensures the browser cursor is hidden when codemark is rendering it's pseudo-cursor inside inline code-blocks */
 		&.no-cursor {
 			caret-color: transparent;
 		}
