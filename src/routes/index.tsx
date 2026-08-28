@@ -3,8 +3,9 @@ import { useHotkey } from '@tanstack/react-hotkeys'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useRef } from 'react'
 import { TypeAnimation } from 'react-type-animation'
+import { uuidv7 } from 'uuidv7'
 import { FadeIn, SpringPopIn } from '@/components/animations'
-import { emptyNote } from '@/lib/utils'
+import { GETTING_STARTED_MARKDOWN } from '@/lib/constants'
 import { createNoteFn, getLatestNoteFn } from '@/server/notes.functions'
 
 export const Route = createFileRoute('/')({
@@ -37,7 +38,9 @@ function RouteComponent() {
 		if (latestNote) {
 			id = latestNote.id
 		} else {
-			const note = await createNoteFn({ data: emptyNote() })
+			const note = await createNoteFn({
+				data: { id: uuidv7(), markdown: GETTING_STARTED_MARKDOWN },
+			})
 			id = note?.id
 		}
 
