@@ -62,6 +62,11 @@ div[data-milkdown-root="true"] {
 		color: var(--color-typography-950);
 		caret-color: var(--color-primary-500);
 
+		/* Ensures the browser cursor is hidden when codemark is rendering it's pseudo-cursor inside inline code-blocks */
+		&.no-cursor {
+			caret-color: transparent;
+		}
+
 		.fake-cursor {
 			animation-name: codemark-caret-blink;
 		}
