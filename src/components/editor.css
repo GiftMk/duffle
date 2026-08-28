@@ -62,6 +62,13 @@ div[data-milkdown-root="true"] {
 		color: var(--color-typography-950);
 		caret-color: var(--color-primary-500);
 
+		/* Same specificity as caret-color above, so without the extra
+		   .ProseMirror qualifier this can lose the cascade and double up
+		   with .fake-cursor depending on CSS import order. */
+		&.no-cursor {
+			caret-color: transparent;
+		}
+
 		.fake-cursor {
 			animation-name: codemark-caret-blink;
 		}
