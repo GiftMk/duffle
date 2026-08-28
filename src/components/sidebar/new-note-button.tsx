@@ -6,6 +6,8 @@ import { Tooltip } from '@/components/tooltip'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import { noteQueryOptions } from '@/lib/queries/note'
 import { cn, emptyNote } from '@/lib/utils'
+import { Route as NotesIndexRoute } from '@/routes/_app/notes.index'
+import { Route as HomeRoute } from '@/routes/index'
 import { createNoteFn } from '@/server/notes.functions'
 
 type NewNoteButtonProps = {
@@ -21,7 +23,11 @@ export const NewNoteButton = ({ disabled }: NewNoteButtonProps) => {
 		const note = await createNoteFn({ data: emptyNote() })
 		if (note) {
 			queryClient.setQueryData(noteQueryOptions(note.id).queryKey, note)
-			router.invalidate()
+			router.invalidate({
+				filter: (match) =>
+					match.routeId === NotesIndexRoute.id ||
+					match.routeId === HomeRoute.id,
+			})
 			navigate({ to: '/notes/$noteId', params: { noteId: note.id } })
 		}
 	}

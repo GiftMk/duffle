@@ -6,6 +6,7 @@ import { NotesSearchInput } from '@/components/notes/notes-search-input'
 import { useSearch } from '@/hooks/search'
 import { noteQueryOptions } from '@/lib/queries/note'
 import { emptyNote } from '@/lib/utils'
+import { Route as HomeRoute } from '@/routes/index'
 import { createNoteFn, getNotesFn } from '@/server/notes.functions'
 
 export const Route = createFileRoute('/_app/notes/')({
@@ -24,7 +25,10 @@ function RouteComponent() {
 		const note = await createNoteFn({ data: emptyNote() })
 		if (note) {
 			queryClient.setQueryData(noteQueryOptions(note.id).queryKey, note)
-			router.invalidate()
+			router.invalidate({
+				filter: (match) =>
+					match.routeId === Route.id || match.routeId === HomeRoute.id,
+			})
 			navigate({ to: '/notes/$noteId', params: { noteId: note.id } })
 		}
 	}
