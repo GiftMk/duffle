@@ -10,3 +10,12 @@ export const noteSchema = z.object({
 })
 
 export type NoteEntity = z.infer<typeof noteSchema>
+
+export const noteSummarySchema = noteSchema.pick({
+	id: true,
+	title: true,
+	createdAt: true,
+	updatedAt: true,
+})
+
+export type NoteSummary = z.infer<typeof noteSummarySchema>
