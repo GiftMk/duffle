@@ -16,7 +16,6 @@ import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react'
 import {
 	ProsemirrorAdapterProvider,
 	useNodeViewFactory,
-	usePluginViewFactory,
 } from '@prosemirror-adapter/react'
 import './editor.css'
 import '@milkdown/kit/prose/view/style/prosemirror.css'
@@ -34,7 +33,6 @@ import { headingLevelIndicator } from '@/prosemirror/heading-level-indicator'
 import { imageBlock } from '@/prosemirror/image-block'
 import { inlineCode } from '@/prosemirror/inline-code'
 import { listItem } from '@/prosemirror/list-item'
-import { SlashCommands, slash } from '@/prosemirror/slash-commands'
 
 // codemark handles backtick input rules for inline code itself
 const commonmarkPreset = commonmark.filter(
@@ -48,18 +46,12 @@ type EditorContentProps = {
 
 const EditorContent = ({ defaultValue, onChange }: EditorContentProps) => {
 	const nodeViewFactory = useNodeViewFactory()
-	const pluginViewFactory = usePluginViewFactory()
 
 	const { get, loading } = useEditor((root) => {
 		return Editor.make()
 			.config((ctx) => {
 				ctx.set(rootCtx, root)
 				ctx.set(defaultValueCtx, defaultValue)
-				ctx.set(slash.key, {
-					view: pluginViewFactory({
-						component: SlashCommands,
-					}),
-				})
 				ctx.update(listenerCtx, (prev) => {
 					prev.markdownUpdated((_, markdown) => {
 						onChange(markdown)
@@ -79,7 +71,6 @@ const EditorContent = ({ defaultValue, onChange }: EditorContentProps) => {
 			.use(codemark)
 			.use(listItem(nodeViewFactory))
 			.use(imageBlock(nodeViewFactory))
-			.use(slash)
 			.use(listener)
 			.use(clipboard)
 			.use(headingLevelIndicator)

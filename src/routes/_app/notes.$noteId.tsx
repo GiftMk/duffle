@@ -1,7 +1,9 @@
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { debounce } from 'es-toolkit'
+import { useMemo } from 'react'
 import { MarkdownEditor } from '@/components/editor'
+import { EditorErrorBoundary } from '@/components/editor-error-boundary'
 import { NoteNotFound } from '@/components/note-not-found'
 import { noteQueryOptions } from '@/lib/queries/note'
 import { Route as NotesIndexRoute } from '@/routes/_app/notes.index'
@@ -20,16 +22,17 @@ function RouteComponent() {
 	const router = useRouter()
 	const { data: note } = useSuspenseQuery(noteQueryOptions(noteId))
 
-	const updateNote = debounce(
-		async (data: { id: string; markdown: string }) => {
-			await updateNoteFn({ data })
-			router.invalidate({
-				filter: (match) =>
-					match.routeId === NotesIndexRoute.id ||
-					match.routeId === HomeRoute.id,
-			})
-		},
-		250,
+	const updateNote = useMemo(
+		() =>
+			debounce(async (data: { id: string; markdown: string }) => {
+				await updateNoteFn({ data })
+				router.invalidate({
+					filter: (match) =>
+						match.routeId === NotesIndexRoute.id ||
+						match.routeId === HomeRoute.id,
+				})
+			}, 250),
+		[router],
 	)
 
 	if (!note) {
@@ -44,10 +47,8 @@ function RouteComponent() {
 	}
 
 	return (
-		<MarkdownEditor
-			key={note.id}
-			defaultValue={note.markdown}
-			onChange={handleChange}
-		/>
+		<EditorErrorBoundary key={note.id}>
+			<MarkdownEditor defaultValue={note.markdown} onChange={handleChange} />
+		</EditorErrorBoundary>
 	)
 }

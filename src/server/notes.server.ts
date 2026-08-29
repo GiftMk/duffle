@@ -13,7 +13,6 @@ const noteProjection = () => ({
 	updatedAt: notesTable.updatedAt,
 })
 
-// Excludes `markdown`/`body`, which list and search views never render.
 const noteSummaryProjection = () => ({
 	id: notesTable.id,
 	title: notesTable.title,
