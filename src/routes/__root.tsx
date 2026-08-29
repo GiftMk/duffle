@@ -5,6 +5,7 @@ import {
 	Scripts,
 } from '@tanstack/react-router'
 import '@/index.css'
+import { Analytics } from '@vercel/analytics/next'
 import { LoadingPage } from '@/components/loading-page'
 import { ThemeProvider } from '@/components/sidebar/theme-provider'
 import { TooltipProvider } from '@/components/tooltip'
@@ -42,6 +43,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 						<TooltipProvider delay={300}>{children}</TooltipProvider>
 					</ThemeProvider>
 				</QueryClientProvider>
+				<Analytics />
 				<Scripts />
 			</body>
 		</html>
