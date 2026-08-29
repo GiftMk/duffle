@@ -5,7 +5,7 @@ import {
 	Scripts,
 } from '@tanstack/react-router'
 import '@/index.css'
-import { Analytics } from '@vercel/analytics/next'
+import { Analytics } from '@vercel/analytics/react'
 import { LoadingPage } from '@/components/loading-page'
 import { ThemeProvider } from '@/components/sidebar/theme-provider'
 import { TooltipProvider } from '@/components/tooltip'
