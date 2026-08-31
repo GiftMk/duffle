@@ -17,7 +17,6 @@ import { useDeleteNote } from '@/hooks/notes'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import type { NoteSummary } from '@/lib/schemas'
 import { cn, onNextTick } from '@/lib/utils'
-import { Route as HomeRoute } from '@/routes/index'
 
 type NoteCardProps = {
 	note: NoteSummary
@@ -84,14 +83,10 @@ type DeleteNoteDialogProps = {
 }
 
 const DeleteNoteDialog = ({ note, onOpenChange }: DeleteNoteDialogProps) => {
-	const router = useRouter()
 	const deleteNote = useDeleteNote()
 
-	const handleDelete = async () => {
+	const handleDelete = () => {
 		deleteNote(note.id)
-		await router.invalidate({
-			filter: (match) => match.routeId === HomeRoute.id,
-		})
 	}
 
 	return (

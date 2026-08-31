@@ -1,6 +1,6 @@
 import { ArrowFatRightIcon } from '@phosphor-icons/react/dist/ssr'
 import { useHotkey } from '@tanstack/react-hotkeys'
-import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useRef } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { FadeIn, SpringPopIn } from '@/components/animations'
@@ -31,7 +31,6 @@ const SubHeading = () => (
 function RouteComponent() {
 	const latestNote = Route.useLoaderData()
 	const navigate = useNavigate()
-	const router = useRouter()
 	const actionButtonRef = useRef<HTMLButtonElement>(null)
 
 	const handleClick = async () => {
@@ -42,7 +41,6 @@ function RouteComponent() {
 		} else {
 			const note = newNoteEntity(GETTING_STARTED_MARKDOWN)
 			notesCollection.insert(note)
-			await router.invalidate({ filter: (match) => match.routeId === Route.id })
 			id = note.id
 		}
 
