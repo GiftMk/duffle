@@ -3,7 +3,7 @@ import { type Selection, TextSelection } from '@milkdown/prose/state'
 import type { EditorView } from '@milkdown/prose/view'
 import { useInstance } from '@milkdown/react'
 import { usePluginViewContext } from '@prosemirror-adapter/react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const isInCodeBlock = (selection: Selection) =>
 	selection.$from.parent.type.name === 'code_block'
@@ -100,7 +100,7 @@ export const useSlashProvider = () => {
 		}
 	}, [view])
 
-	const hide = useCallback(() => providerRef.current?.hide(), [])
+	const hide = () => providerRef.current?.hide()
 
 	return { container, value, open, hide, view }
 }

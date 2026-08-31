@@ -40,7 +40,7 @@ export const getNotesQuery = async (
 	limit?: number,
 ) => {
 	let query = db
-		.select(noteSummaryProjection())
+		.select(noteProjection())
 		.from(notesTable)
 		.where(eq(notesTable.userId, userId))
 		.orderBy(desc(notesTable.updatedAt), asc(notesTable.title))

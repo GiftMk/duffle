@@ -1,49 +1,27 @@
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { debounce } from 'es-toolkit'
-import { useMemo } from 'react'
+import { createFileRoute } from '@tanstack/react-router'
 import { MarkdownEditor } from '@/components/editor'
 import { EditorErrorBoundary } from '@/components/editor-error-boundary'
 import { NoteNotFound } from '@/components/note-not-found'
-import { noteQueryOptions } from '@/lib/queries/note'
-import { Route as NotesIndexRoute } from '@/routes/_app/notes.index'
-import { Route as HomeRoute } from '@/routes/index'
-import { updateNoteFn } from '@/server/notes.functions'
+import { useNote, useUpdateNote } from '@/hooks/notes'
+import { notesCollection } from '@/lib/collections'
 
 export const Route = createFileRoute('/_app/notes/$noteId')({
+	ssr: false,
 	component: RouteComponent,
-	loader: ({ params, context }) =>
-		context.queryClient.ensureQueryData(noteQueryOptions(params.noteId)),
+	loader: () => notesCollection.preload(),
 })
 
 function RouteComponent() {
 	const { noteId } = Route.useParams()
-	const queryClient = useQueryClient()
-	const router = useRouter()
-	const { data: note } = useSuspenseQuery(noteQueryOptions(noteId))
-
-	const updateNote = useMemo(
-		() =>
-			debounce(async (data: { id: string; markdown: string }) => {
-				await updateNoteFn({ data })
-				router.invalidate({
-					filter: (match) =>
-						match.routeId === NotesIndexRoute.id ||
-						match.routeId === HomeRoute.id,
-				})
-			}, 250),
-		[router],
-	)
+	const note = useNote(noteId)
+	const updateNote = useUpdateNote()
 
 	if (!note) {
 		return <NoteNotFound />
 	}
 
 	const handleChange = (markdown: string) => {
-		queryClient.setQueryData(noteQueryOptions(note.id).queryKey, (current) =>
-			current ? { ...current, markdown } : current,
-		)
-		updateNote({ id: note.id, markdown })
+		updateNote(note.id, markdown)
 	}
 
 	return (
