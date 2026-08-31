@@ -1,36 +1,28 @@
-import { useQueryClient } from '@tanstack/react-query'
-import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
+import { uuidv7 } from 'uuidv7'
 import { AddNoteCard } from '@/components/notes/add-note-card'
 import { NoteCard } from '@/components/notes/note-card'
 import { NotesSearchInput } from '@/components/notes/notes-search-input'
+import { useNewNote, useNotes } from '@/hooks/notes'
 import { useSearch } from '@/hooks/search'
-import { noteQueryOptions } from '@/lib/queries/note'
-import { emptyNote } from '@/lib/utils'
-import { Route as HomeRoute } from '@/routes/index'
-import { createNoteFn, getNotesFn } from '@/server/notes.functions'
+import { notesCollection } from '@/lib/collections'
 
 export const Route = createFileRoute('/_app/notes/')({
+	ssr: false,
 	component: RouteComponent,
-	loader: async () => getNotesFn(),
+	loader: () => notesCollection.preload(),
 })
 
 function RouteComponent() {
-	const notes = Route.useLoaderData()
-	const navigate = useNavigate()
-	const router = useRouter()
-	const queryClient = useQueryClient()
+	const [pendingNoteId] = useState(() => uuidv7())
+	const notes = useNotes().filter((note) => note.id !== pendingNoteId)
+	const newNote = useNewNote()
 	const { query, setQuery, results, state, isRefreshing } = useSearch()
 
-	const handleAddNote = async () => {
-		const note = await createNoteFn({ data: emptyNote() })
-		if (note) {
-			queryClient.setQueryData(noteQueryOptions(note.id).queryKey, note)
-			router.invalidate({
-				filter: (match) =>
-					match.routeId === Route.id || match.routeId === HomeRoute.id,
-			})
-			navigate({ to: '/notes/$noteId', params: { noteId: note.id } })
-		}
+	const handleAddNote = () => {
+		const note = newNote.create()
+		newNote.open(note.id)
 	}
 
 	const hasQuery = query.trim().length > 0

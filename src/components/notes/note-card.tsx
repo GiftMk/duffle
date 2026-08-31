@@ -13,11 +13,11 @@ import {
 } from '@/components/alert-dialog'
 import { IconButton } from '@/components/icon-button'
 import { NoteCardContainer } from '@/components/notes/note-card-container'
+import { useDeleteNote } from '@/hooks/notes'
 import { ICON_SIZE_MD } from '@/lib/constants'
 import type { NoteSummary } from '@/lib/schemas'
 import { cn, onNextTick } from '@/lib/utils'
-import { Route } from '@/routes/_app/notes.index'
-import { deleteNoteFn } from '@/server/notes.functions'
+import { Route as HomeRoute } from '@/routes/index'
 
 type NoteCardProps = {
 	note: NoteSummary
@@ -85,10 +85,13 @@ type DeleteNoteDialogProps = {
 
 const DeleteNoteDialog = ({ note, onOpenChange }: DeleteNoteDialogProps) => {
 	const router = useRouter()
+	const deleteNote = useDeleteNote()
 
 	const handleDelete = async () => {
-		await deleteNoteFn({ data: { id: note.id } })
-		await router.invalidate({ filter: (match) => match.routeId === Route.id })
+		deleteNote(note.id)
+		await router.invalidate({
+			filter: (match) => match.routeId === HomeRoute.id,
+		})
 	}
 
 	return (

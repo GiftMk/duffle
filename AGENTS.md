@@ -4,7 +4,7 @@ Duffle is a collaborative markdown editing app that works on the concept of brai
 
 It's a single TanStack Start app with a flat `src/`: `components/`, `hooks/`, `lib/` (utils, auth client, schemas, query cache helpers), `prosemirror/` (the editor's prosemirror extensions), `db/` (drizzle schemas and connection), `routes/` (file-based routes), and `server/` (server functions and middleware).
 
-Notes data flows through TanStack Query with optimistic updates (see `src/hooks/notes.ts`); route loaders prefill the query cache via `context.queryClient.ensureQueryData(notesQuery)` and SSR is enabled (`defaultSsr: true` in `src/start.ts`).
+Notes data flows through TanStack DB: a module-level `notesCollection` (query collection backed by TanStack Query) lives in `src/lib/collections.ts`, with live-query/mutation hooks in `src/hooks/notes.ts` (`useNotes`, `useNote`, `useNewNote`, `useUpdateNote`, `useDeleteNote`). Route loaders warm the collection via `notesCollection.preload()`. Collections are client-side only, so the notes routes set `ssr: false` — preloading during SSR would run on the server and could share one user's notes across requests. SSR stays enabled for the other routes (`defaultSsr: true` in `src/start.ts`).
 
 # General Instructions
 

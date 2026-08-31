@@ -46,7 +46,25 @@ export const splitMarkdown = (
 	return { title, body }
 }
 
-export const emptyNote = () => ({
-	id: uuidv7(),
-	markdown: '# ',
-})
+export const newNoteEntity = (
+	markdown: string,
+): {
+	id: string
+	title: string
+	body: string
+	markdown: string
+	createdAt: string
+	updatedAt: string
+} => {
+	const timestamp = utcNow()
+	const { title, body } = splitMarkdown(markdown)
+
+	return {
+		id: uuidv7(),
+		title: title ?? '',
+		body: body ?? '',
+		markdown,
+		createdAt: timestamp,
+		updatedAt: timestamp,
+	}
+}
